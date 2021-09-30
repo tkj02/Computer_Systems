@@ -6,7 +6,7 @@
 int main(void){
 	
 	// Prompting user for number of players 
-	int k = 0;
+	int k;
 	printf("How many players? ");
 	scanf("%d", &k);
 	if (k < 2){
@@ -19,14 +19,14 @@ int main(void){
 	}
 
 	// Prompting user for a seed value
-	int seedValue = 0;
+	int seedValue;
 	printf("Random seed: ");
 	scanf("%d", &seedValue);
 	if (seedValue < 0){
 		fprintf(stderr, "Invalid random seed. Using 2021 instead.\n");
 		seedValue = 2021;
 	}	
-	if (seedValue > (signed)UINT_MAX){
+	if ((unsigned)seedValue > UINT_MAX){
 		fprintf(stderr, "Invalid random seed. Using 2021 instead.\n");
 		seedValue = 2021;
 	}
@@ -40,25 +40,26 @@ int main(void){
 	
 	// Forming players array
 	int players[] = {0, 1};
-	for (int i = 2; i < k; i += 1){
+	for (int i = 2; i <= k-1; i += 1){
 		players[i] = i;
 		i += 1;
 	}
 
 	// Forming points array
 	int points[] = {0, 0};
-	for (int j = 2; j < k; j += 1){
+	for (int j = 2; j <= k-1; j += 1){
 	       points[j] = 0;
 	       j += 1;
 	}
 
 	// Simulating pig roll
-	for (int p = 0; p < k; p += 1){
-		printf("%s rolls the pig\n", names[p]);
+	for (int p = 0; p <= k-1; p += 1){
+		printf("%s rolls the pig... ", names[p]);
 		srandom(seedValue);
 		int roll = (random() % 7);
 		while (pig[roll] != SIDE){
 			if (pig[roll] == JOWLER){
+				printf("pig lands on jowler ");
 				points[p] += 5;
 				if (points[p] >= 100){
 					break;
@@ -68,6 +69,7 @@ int main(void){
 				}
 			}
 			if (pig[roll] == RAZORBACK){
+				printf("pig lands on razorback ");
                         	points[p] += 10;
                         	if (points[p] >= 100){
                                 	break;
@@ -77,6 +79,7 @@ int main(void){
                         	}
 			}
 			if (pig[roll] == TROTTER){
+				printf("pig lands on trotter ");
                         	points[p] += 10;
                         	if (points[p] >= 100){
                                 	break;
@@ -86,6 +89,7 @@ int main(void){
                         	}
 			}
 			if (pig[roll] == SNOUTER){
+				printf("pig lands on snouter ");
                         	points[p] += 15;
                         	if (points[p] >= 100){
                                 	break;
@@ -94,8 +98,12 @@ int main(void){
                                 	continue;
                         	}
 			}
+			if (pig[roll] == SIDE){
+				break;
+			}
 		}
                 if (pig[roll] == SIDE){
+			printf("pig lands on side\n");
                         if (p == k-1){
                                 p = 0;
                         }
