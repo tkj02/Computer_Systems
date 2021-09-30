@@ -23,9 +23,13 @@ int main(void){
 	printf("Random seed: ");
 	scanf("%d", &seedValue);
 	if (seedValue < 0){
-	       fprintf(stderr, "Invalid random seed. Using 2021 instead.\n");}	
-	//if (seedValue > int(4294967295)){
-		//fprintf(stderr, "Invalid random seed. Using 2021 instead.\n");}
+		fprintf(stderr, "Invalid random seed. Using 2021 instead.\n");
+		seedValue = 2021;
+	}	
+	if (seedValue > (signed)UINT_MAX){
+		fprintf(stderr, "Invalid random seed. Using 2021 instead.\n");
+		seedValue = 2021;
+	}
 	
 
 	// Enumerating Positions
@@ -50,18 +54,58 @@ int main(void){
 
 	// Simulating pig roll
 	for (int p = 0; p < k; p += 1){
-		printf("%s rolls the pig", names[p]);
-		int roll = (srandom(seedValue) % 7);
-		if (pig[roll] == SIDE){
-			if (p == k-1){
-				p = 0;
+		printf("%s rolls the pig\n", names[p]);
+		srandom(seedValue);
+		int roll = (random() % 7);
+		while (pig[roll] != SIDE){
+			if (pig[roll] == JOWLER){
+				points[p] += 5;
+				if (points[p] >= 100){
+					break;
+				}
+				else{
+					continue;
+				}
 			}
-			else{
-				p += 1;
+			if (pig[roll] == RAZORBACK){
+                        	points[p] += 10;
+                        	if (points[p] >= 100){
+                                	break;
+                       		}
+                        	else{
+                                	continue;
+                        	}
 			}
-			continue;
+			if (pig[roll] == TROTTER){
+                        	points[p] += 10;
+                        	if (points[p] >= 100){
+                                	break;
+                        	}
+                        	else{
+                                	continue;
+                        	}
+			}
+			if (pig[roll] == SNOUTER){
+                        	points[p] += 15;
+                        	if (points[p] >= 100){
+                                	break;
+                        	}
+                        	else{	
+                                	continue;
+                        	}
+			}
 		}
-	}
+                if (pig[roll] == SIDE){
+                        if (p == k-1){
+                                p = 0;
+                        }
+                        else{
+                                p += 1;
+                        }
+                        continue;
+                }
+        }
+
 
 	// Ending game
 	// Will print name of winner and their points
