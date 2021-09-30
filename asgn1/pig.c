@@ -31,18 +31,40 @@ int main(void){
 	// Enumerating Positions
 	typedef enum {SIDE, RAZORBACK, TROTTER, SNOUTER, JOWLER} Position;
 
-	// Forming arrays for players and pig
-	// players array
+	// Forming pig array
+        const Position pig[7] = {SIDE, SIDE, RAZORBACK, TROTTER, SNOUTER, JOWLER, JOWLER};
+	
+	// Forming players array
 	int players[] = {0, 1};
 	for (int i = 2; i < k; i += 1){
 		players[i] = i;
 		i += 1;
-	}	
+	}
 
-	// pig array
-	const Position pig[7] = {SIDE, SIDE, RAZORBACK, TROTTER, SNOUTER, JOWLER, JOWLER};
+	// Forming points array
+	int points[] = {0, 0};
+	for (int j = 2; j < k; j += 1){
+	       points[j] = 0;
+	       j += 1;
+	}
 
-	return 0;
+	// Simulating pig roll
+	for (int p = 0; p < k; p += 1){
+		printf("%s rolls the pig", names[p]);
+		int roll = (srandom(seedValue) % 7);
+		if (pig[roll] == SIDE){
+			if (p == k-1){
+				p = 0;
+			}
+			else{
+				p += 1;
+			}
+			continue;
+		}
+	}
+
+	// Ending game
+	// Will print name of winner and their points
 
 
 }
