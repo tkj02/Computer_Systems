@@ -3,6 +3,8 @@
 #include <limits.h>
 #include "names.h"
 
+// Implementation of a game of Pass the Pigs
+
 int main(void){
 	
 	// Prompting user for number of players 
@@ -26,7 +28,7 @@ int main(void){
 		fprintf(stderr, "Invalid random seed. Using 2021 instead.\n");
 		seedValue = 2021;
 	}	
-	if ((unsigned)seedValue > UINT_MAX){
+	if ((long)seedValue > UINT_MAX){
 		fprintf(stderr, "Invalid random seed. Using 2021 instead.\n");
 		seedValue = 2021;
 	}
@@ -37,13 +39,6 @@ int main(void){
 
 	// Forming pig array
         const Position pig[7] = {SIDE, SIDE, RAZORBACK, TROTTER, SNOUTER, JOWLER, JOWLER};
-	
-	// Forming players array
-	int players[] = {0, 1};
-	for (int i = 2; i <= k-1; i += 1){
-		players[i] = i;
-		i += 1;
-	}
 
 	// Forming points array
 	int points[] = {0, 0};
@@ -62,10 +57,6 @@ int main(void){
 				printf("pig lands on jowler ");
 				points[p] += 5;
 				if (points[p] >= 100){
-					break;
-				}
-				else{
-					continue;
 				}
 			}
 			if (pig[roll] == RAZORBACK){
@@ -74,9 +65,6 @@ int main(void){
                         	if (points[p] >= 100){
                                 	break;
                        		}
-                        	else{
-                                	continue;
-                        	}
 			}
 			if (pig[roll] == TROTTER){
 				printf("pig lands on trotter ");
@@ -84,25 +72,15 @@ int main(void){
                         	if (points[p] >= 100){
                                 	break;
                         	}
-                        	else{
-                                	continue;
-                        	}
 			}
 			if (pig[roll] == SNOUTER){
 				printf("pig lands on snouter ");
                         	points[p] += 15;
-                        	if (points[p] >= 100){
-                                	break;
-                        	}
-                        	else{	
-                                	continue;
-                        	}
+                      		if (points[p] >= 100){
+                               		break;
+				}
 			}
-			if (pig[roll] == SIDE){
-				break;
-			}
-		}
-                if (pig[roll] == SIDE){
+		if (pig[roll] == SIDE){
 			printf("pig lands on side\n");
                         if (p == k-1){
                                 p = 0;
@@ -110,12 +88,13 @@ int main(void){
                         else{
                                 p += 1;
                         }
-                        continue;
-                }
-        }
+		}
+		}
+	}
 
 
 	// Ending game
+	//printf("__ wins with ___ points!", names[_], points[])
 	// Will print name of winner and their points
 
 
