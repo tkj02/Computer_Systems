@@ -22,27 +22,27 @@ int main(void){
 	int seedValue = 0;
 	printf("Random seed: ");
 	scanf("%d", &seedValue);
-	if (seedValue > (4294967295)){
-		fprintf(stderr, "Invalid random seed. Using 2021 instead.\n");}
+	if (seedValue < 0){
+	       fprintf(stderr, "Invalid random seed. Using 2021 instead.\n");}	
+	//if (seedValue > int(4294967295)){
+		//fprintf(stderr, "Invalid random seed. Using 2021 instead.\n");}
 	
 
 	// Enumerating Positions
 	typedef enum {SIDE, RAZORBACK, TROTTER, SNOUTER, JOWLER} Position;
 
-	// Forming arrays for players and  pig
-		// players array
-		int players = list();
-		int i = 0;
-		for (i = 0, i < k, i += 1){
-			players.Add(i);
-			i += 1;
-		printf(players);
-		}
-	
-		// pig array
-		const Position pig [7] = {SIDE, SIDE, RAZORBACK, TROTTER, SNOUTER, JOWLER, JOWLER};
+	// Forming arrays for players and pig
+	// players array
+	int players[] = {0, 1};
+	for (int i = 2; i < k; i += 1){
+		players[i] = i;
+		i += 1;
+	}	
 
+	// pig array
+	const Position pig[7] = {SIDE, SIDE, RAZORBACK, TROTTER, SNOUTER, JOWLER, JOWLER};
 
+	return 0;
 
 
 }
