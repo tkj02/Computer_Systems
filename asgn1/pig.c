@@ -48,9 +48,9 @@ int main(void){
         }
 
         // Simulating pig roll
+	srandom(seedValue);
         for (int p = 0; p <= k-1; p += 1){
-                printf("\n%s rolls the pig... ", names[p]);
-                srandom(seedValue);
+                printf("%s rolls the pig... ", names[p]);
                 int roll = (random() % 7);
                 while (pig[roll] != SIDE){
                         if (pig[roll] == JOWLER){
@@ -70,27 +70,26 @@ int main(void){
                                 points[p] += 15;
                         }
                         if (points[p] >= 100){
-                                break;
+                                goto endOfGame;
                         }
                         roll = random()%7;
                         continue;
-                if (pig[roll] == SIDE){
+		}
+		if (pig[roll] == SIDE){
                         printf("pig lands on side\n");
                         if (p == k-1){
-                                p = 0;
+                                p = -1;
                         }
-                        else{
-                                p += 1;
-                        }
+
+      
                 }
-        }
 }
 
 
         // Ending game
-        for (int i = 0; i <= k-1; i += 1){
-                if (points[i] >= 100){
-                        printf("\n%s wins with %d points!", names[i], points[i]);
-                }
-        }
+	endOfGame: for (int i = 0; i <= k-1; i += 1){
+			   if (points[i] >= 100){
+				   printf("\n%s wins with %d points!\n", names[i], points[i]);
+			   }
+	}
 }
