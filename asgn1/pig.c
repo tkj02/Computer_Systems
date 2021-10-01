@@ -56,46 +56,44 @@ int main(void){
 			if (pig[roll] == JOWLER){
 				printf("pig lands on jowler ");
 				points[p] += 5;
-				if (points[p] >= 100){
-				}
 			}
 			if (pig[roll] == RAZORBACK){
 				printf("pig lands on razorback ");
-                        	points[p] += 10;
-                        	if (points[p] >= 100){
-                                	break;
-                       		}
+                	       	points[p] += 10;
 			}
 			if (pig[roll] == TROTTER){
 				printf("pig lands on trotter ");
-                        	points[p] += 10;
-                        	if (points[p] >= 100){
-                                	break;
-                        	}
+				points[p] += 10;
 			}
 			if (pig[roll] == SNOUTER){
 				printf("pig lands on snouter ");
-                        	points[p] += 15;
-                      		if (points[p] >= 100){
-                               		break;
-				}
+                       		points[p] += 15;
 			}
+			if (points[p] >= 100){
+				break;
+			}
+		       	else{
+				roll = random()%7;
+                                continue;
+                        }
 		if (pig[roll] == SIDE){
 			printf("pig lands on side\n");
-                        if (p == k-1){
-                                p = 0;
-                        }
-                        else{
-                                p += 1;
-                        }
-		}
+                       	if (p == k-1){
+                               	p = 0;
+                       	}
+                       	else{
+                               	p += 1;
+                       	}
 		}
 	}
+	continue;
+}
 
 
 	// Ending game
-	//printf("__ wins with ___ points!", names[_], points[])
-	// Will print name of winner and their points
-
-
+	for (int i = 0; i <= k-1; i += 1){
+		if (points[i] >= 100){
+			printf("%s wins with %d points!", names[i], points[i]);
+		}
+	}
 }
