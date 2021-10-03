@@ -48,7 +48,7 @@ int main(void){
         srandom(seed_value);
 	int p = 0;
 	while (p < k){
-                printf("%s rolls the pig... ", names[p]);
+		printf("%s rolls the pig... ", names[p]);
                 int roll = (random() % 7);
                 while (pig[roll] != SIDE){
                         if (pig[roll] == JOWLER){
@@ -71,7 +71,6 @@ int main(void){
                                  break;
                         }
                         roll = (random()%7);
-                        continue;
                 }
 		if (points[p] >= 100){
                                  break;
