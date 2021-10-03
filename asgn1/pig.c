@@ -49,7 +49,7 @@ int main(void) {
 
     // Simulates pig roll
     // Each player, starting with the first and until the last, takes turns
-    // rolling the pig (represented by random() % seven).
+    // rolling the pig (where its positions are represented by random() % seven).
     // Players keep rolling until they roll SIDE (which starts the next
     // player's turn) or until they reach a hundred or more points (where
     // they win and end the game).
