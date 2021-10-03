@@ -1,7 +1,8 @@
+#include "names.h"
+
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <limits.h>
-#include "names.h"
 
 // This program is an implementation of the game Pass the Pigs.
 // The user will be asked to input the number of players and a random seed.
@@ -22,7 +23,6 @@ int main(void) {
         players = 2;
     }
 
-
     // Prompts user for a seed value and checks if the input is valid
     int seed_value;
     printf("Random seed: ");
@@ -30,16 +30,16 @@ int main(void) {
     if (seed_value < 0) {
         fprintf(stderr, "Invalid random seed. Using 2021 instead.\n");
         seed_value = 2021;
-    } else if ((long)seed_value > UINT_MAX) {
+    } else if ((long) seed_value > UINT_MAX) {
         fprintf(stderr, "Invalid random seed. Using 2021 instead.\n");
         seed_value = 2021;
     }
 
     // Defines type Positions and enumerates positions
-    typedef enum {SIDE, RAZORBACK, TROTTER, SNOUTER, JOWLER} Position;
+    typedef enum { SIDE, RAZORBACK, TROTTER, SNOUTER, JOWLER } Position;
 
     // Forms pig array (reflects the probability of each of the rolls)
-    const Position pig[7] = {SIDE, SIDE, RAZORBACK, TROTTER, SNOUTER, JOWLER, JOWLER};
+    const Position pig[7] = { SIDE, SIDE, RAZORBACK, TROTTER, SNOUTER, JOWLER, JOWLER };
 
     // Forms points array (reflects each player's initial points)
     int points[10];
@@ -52,7 +52,7 @@ int main(void) {
     // rolling the pig (represented by random() % seven).
     // Players keep rolling until they roll SIDE (which starts the next
     // player's turn) or until they reach a hundred or more points (where
-    // they win and end the game). 
+    // they win and end the game).
     srandom(seed_value);
     int p = 0;
     while (p < players) {
@@ -71,7 +71,8 @@ int main(void) {
             } else if (pig[roll] == SNOUTER) {
                 printf("pig lands on snout ");
                 points[p] += 15;
-            } if (points[p] >= 100) {
+            }
+            if (points[p] >= 100) {
                 break;
             }
             roll = (random() % 7);
@@ -81,7 +82,7 @@ int main(void) {
         }
         if (pig[roll] == SIDE) {
             printf("pig lands on side\n");
-            if (p == players-1) {
+            if (p == players - 1) {
                 p = 0;
             } else {
                 p += 1;
