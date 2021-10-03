@@ -81,7 +81,7 @@ int main(void) {
             break;
         }
         if (pig[roll] == SIDE) {
-            printf(" pig lands on side");
+            printf(" pig lands on side\n");
             if (p == players - 1) {
                 p = 0;
             } else {
