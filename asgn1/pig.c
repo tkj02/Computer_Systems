@@ -56,20 +56,20 @@ int main(void) {
     srandom(seed_value);
     int p = 0;
     while (p < players) {
-        printf("%s rolls the pig... ", names[p]);
+        printf("%s rolls the pig...", names[p]);
         int roll = (random() % 7);
         while (pig[roll] != SIDE) {
             if (pig[roll] == JOWLER) {
-                printf("pig lands on ear ");
+                printf(" pig lands on ear");
                 points[p] += 5;
             } else if (pig[roll] == RAZORBACK) {
-                printf("pig lands on back ");
+                printf(" pig lands on back");
                 points[p] += 10;
             } else if (pig[roll] == TROTTER) {
-                printf("pig lands upright ");
+                printf(" pig lands upright");
                 points[p] += 10;
             } else if (pig[roll] == SNOUTER) {
-                printf("pig lands on snout ");
+                printf(" pig lands on snout");
                 points[p] += 15;
             }
             if (points[p] >= 100) {
