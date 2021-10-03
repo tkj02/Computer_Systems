@@ -12,7 +12,7 @@
 int main(void) {
 
     // Prompts user for the number of players and checks if the input is valid
-    int players;
+    int players = 0;
     printf("How many players? ");
     scanf("%d", &players);
     if (players < 2) {
@@ -24,7 +24,7 @@ int main(void) {
     }
 
     // Prompts user for a seed value and checks if the input is valid
-    int seed_value;
+    int seed_value = 0;
     printf("Random seed: ");
     scanf("%d", &seed_value);
     if (seed_value < 0) {
@@ -81,12 +81,10 @@ int main(void) {
             break;
         }
         if (pig[roll] == SIDE) {
-            printf(" pig lands on side");
+            printf(" pig lands on side\n");
             if (p == players - 1) {
-                printf("\n");
                 p = 0;
             } else {
-                printf("\n");
                 p += 1;
             }
         }
