@@ -81,7 +81,7 @@ int main(void) {
             break;
         }
         if (pig[roll] == SIDE) {
-            printf(" pig lands on side\n");
+            printf(" pig lands on side");
             if (p == players - 1) {
                 p = 0;
             } else {
@@ -93,7 +93,7 @@ int main(void) {
     // Finds winner and prints their name and amount of points
     for (int i = 0; i < players; i += 1) {
         if (points[i] >= 100) {
-            printf("\n%s wins with %d points!\n", names[i], points[i]);
+            printf("\n%s wins with %d points!", names[i], points[i]);
             break;
         }
     }
