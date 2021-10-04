@@ -12,7 +12,7 @@
 int main(void) {
 
     // Prompts user for the number of players and checks if the input is valid
-    int players = 0;
+    int players = 2;
     printf("How many players? ");
     scanf("%d", &players);
     if (players < 2) {
@@ -24,9 +24,9 @@ int main(void) {
     }
 
     // Prompts user for a seed value and checks if the input is valid
-    int seed_value = 0;
+    int64_t seed_value = 2021;
     printf("Random seed: ");
-    scanf("%d", &seed_value);
+    scanf("%ld", &seed_value);
     if (seed_value < 0) {
         fprintf(stderr, "Invalid random seed. Using 2021 instead.\n");
         seed_value = 2021;
@@ -42,10 +42,8 @@ int main(void) {
     const Position pig[7] = { SIDE, SIDE, RAZORBACK, TROTTER, SNOUTER, JOWLER, JOWLER };
 
     // Forms points array (reflects each player's initial points)
-    int points[10];
-    for (int j = 2; j < players; j += 1) {
-        points[j] = 0;
-    }
+    // Set to hold max number of players (if less than max, higher indexes are ignored)
+    int points[10] = { 0 };
 
     // Simulates pig roll
     // Each player, starting with the first and until the last, takes turns
@@ -54,48 +52,40 @@ int main(void) {
     // player's turn) or until they reach a hundred or more points (where
     // they win and end the game).
     srandom(seed_value);
-    int p = 0;
-    while (p < players) {
-        printf("%s rolls the pig...", names[p]);
+    int current_player = 0;
+    while (current_player < players) {
+        printf("%s rolls the pig...", names[current_player]);
         int roll = (random() % 7);
         while (pig[roll] != SIDE) {
             if (pig[roll] == JOWLER) {
                 printf(" pig lands on ear");
-                points[p] += 5;
+                points[current_player] += 5;
             } else if (pig[roll] == RAZORBACK) {
                 printf(" pig lands on back");
-                points[p] += 10;
+                points[current_player] += 10;
             } else if (pig[roll] == TROTTER) {
                 printf(" pig lands upright");
-                points[p] += 10;
+                points[current_player] += 10;
             } else if (pig[roll] == SNOUTER) {
                 printf(" pig lands on snout");
-                points[p] += 15;
+                points[current_player] += 15;
             }
-            if (points[p] >= 100) {
+            if (points[current_player] >= 100) {
                 break;
             }
             roll = (random() % 7);
         }
-        if (points[p] >= 100) {
+        if (points[current_player] >= 100) {
+            printf("\n%s wins with %d points!\n", names[current_player], points[current_player]);
             break;
         }
         if (pig[roll] == SIDE) {
             printf(" pig lands on side\n");
-            if (p == players - 1) {
-                p = 0;
+            if (current_player == players - 1) {
+                current_player = 0;
             } else {
-                p += 1;
+                current_player += 1;
             }
         }
     }
-
-    // Finds winner and prints their name and amount of points
-    for (int i = 0; i < players; i += 1) {
-        if (points[i] >= 100) {
-            printf("\n%s wins with %d points!\n", names[i], points[i]);
-            break;
-        }
-    }
-    return 0;
 }
