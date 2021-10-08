@@ -1,12 +1,13 @@
 #include <stdio.h>
-#include <math.h>
 #include "mathlib.h"
+
+static int counter = 0;
 
 double pi_euler(void){
     int k = 1;
     double x = 0;
     int y = 0;
-    int counter = 0;
+    counter = 0;
     while ((1/(k*k)) > EPSILON){
         x = (1/(k*k));
         y += x;
@@ -17,7 +18,5 @@ double pi_euler(void){
 }
 
 int pi_euler_terms(void){
-    int counter = 0;
-    pi_euler();
     return counter;
 }
