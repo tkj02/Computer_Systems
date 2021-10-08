@@ -2,30 +2,29 @@
 #include <math.h>
 #include "mathlib.h"
 
-double absolute_func(double value) {
-    if(value < 0){
-        value = -value;
-    }
-    return value;
-}
-
-int counter = 0;
+static double x;
 
 double sqrt_newton(double x) {
         double y = 1.0;
         double z = 0.0;
-        //int counter = 0;
-        while (absolute_func(y-z) > EPSILON){
+        static int counter = 0;
+        while (absolute(y-z) > EPSILON){
                 z=y;
-                y = 0.5 * (y+x/y);
+                y = (y+x/y)/2;
                 counter++;
         }
         return y;
 }
 
 int sqrt_newton_iters() {
-    double x;
-    sqrt_newton(x);
-    return counter;
+    	double y = 1.0;
+        double z = 0.0;
+        static int counter = 0;
+        while (absolute(y-z) > EPSILON){
+                z=y;
+                y = (y+x/y)/2;
+                counter++;
+        }
+	return counter;
 }
 
