@@ -13,7 +13,7 @@ double pi_euler(void){
         k++;
         counter++;
     }
-    return sqrt(6*y);
+    return sqrt_newton(6*y);
 }
 
 int pi_euler_terms(void){
