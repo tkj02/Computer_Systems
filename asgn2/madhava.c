@@ -20,22 +20,14 @@ double pi_madhava(void) {
         } else {
             numerator *= -3.0;
             denominator = (2.0 * counter) + 1.0;
-    	    fraction = 1.0 / numerator;
+            fraction = 1.0 / numerator;
             first_term += fraction / denominator;
-	}
-	counter++;
+        }
+        counter++;
     }
     return (first_term * sqrt_newton(12));
-    //printf("%2.10f", first_term);
 }
 
 int pi_madhava_terms(void) {
     return counter;
 }
-
-int main_(){
-	double solution = pi_madhava();
-	printf("%2.10f", solution);
-	return 0;
-}
-
