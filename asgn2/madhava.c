@@ -6,28 +6,36 @@
 static int counter = 0;
 
 double pi_madhava(void) {
-    double first_term = 1;
-    double second_term = 0;
-    double fraction = 0;
-    double numerator = 0;
-    double denominator = 0;
+    double first_term = 1.0;
+    double second_term = 0.0;
+    double fraction = 0.0;
+    double numerator = 0.0;
+    double denominator = 0.0;
     counter = 0;
-    while (absolute(first_term - second_term) > EPSILON) {
+    while (counter < 2 || absolute(first_term - second_term) > EPSILON) {
         second_term = first_term;
         if (counter == 0) {
-            numerator = 1;
-            denominator = 1;
-	    counter++;
+            numerator = 1.0;
+            denominator = 1.0;
         } else {
-            numerator *= 3;
-            denominator = (2 * counter) + 1;
-	    counter++;
-        fraction = 1 / numerator;
-        second_term = fraction / denominator;
+            numerator *= -3.0;
+            denominator = (2.0 * counter) + 1.0;
+    	    fraction = 1.0 / numerator;
+            first_term += fraction / denominator;
+	}
+	counter++;
     }
-    return (second_term * sqrt_newton(12));
+    return (first_term * sqrt_newton(12));
+    //printf("%2.10f", first_term);
 }
 
 int pi_madhava_terms(void) {
     return counter;
 }
+
+int main_(){
+	double solution = pi_madhava();
+	printf("%2.10f", solution);
+	return 0;
+}
+
