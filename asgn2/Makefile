@@ -29,7 +29,7 @@ viete.o: viete.c mathlib.h
 	$(CC) $(CFLAGS) -o viete.o -c viete.c
 
 clean:
-	rm -f mathlib-test.o e.o euler.o madhava.o newton.o bbp.o viete.o
+	rm -f mathlib-test mathlib-test.o e.o euler.o madhava.o newton.o bbp.o viete.o
 
 format:
 	clang-format -i -style=file *.[ch]
