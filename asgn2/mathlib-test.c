@@ -7,6 +7,8 @@
 
 #define OPTIONS "aebmrvnsh"
 
+void help(void);
+
 int main(int argc, char **argv) {
     int opt = 0;
 
@@ -36,39 +38,59 @@ int main(int argc, char **argv) {
         }
     }
 
-    //  if (test_e){
-    //	    double e = M_E;
-    //          double my_e = e();
-    //        double diff = absolute(e-my_e);
-    //      printf("e() = %16.15lf, M_E = %16.15lf, diff = %16.15lf", my_e, e, diff);
-    // }
+    if (test_e) {
+        double math_e = M_E;
+        double my_e = e();
+        double diff = absolute(math_e - my_e);
+        printf("e() = %16.15lf, M_E = %16.15lf, diff = %16.15lf\n", my_e, math_e, diff);
+        if (test_stats == true) {
+            printf("e() terms = %d\n", e_terms());
+            //		test_stats = false;
+        }
+    }
 
     if (test_bbp) {
         double pi = M_PI;
         double my_bbp = pi_bbp();
         double diff = absolute(pi - my_bbp);
-        printf("pi_bbp() = %16.15lf, M_PI = %16.15lf, diff = %16.15lf", my_bbp, pi, diff);
+        printf("pi_bbp() = %16.15lf, M_PI = %16.15lf, diff = %16.15lf\n", my_bbp, pi, diff);
+        if (test_stats == true) {
+            printf("bbp() terms = %d\n", pi_bbp_terms());
+            //              test_stats = false;
+        }
     }
 
     if (test_madhava) {
         double pi = M_PI;
         double my_madhava = pi_madhava();
         double diff = absolute(pi - my_madhava);
-        printf("pi_madhava() = %16.15lf, M_PI = %16.15lf, diff = %16.15lf", my_madhava, pi, diff);
+        printf("pi_madhava() = %16.15lf, M_PI = %16.15lf, diff = %16.15lf\n", my_madhava, pi, diff);
+        if (test_stats == true) {
+            printf("madhava() terms = %d\n", pi_madhava_terms());
+            //            test_stats = false;
+        }
     }
 
     if (test_euler) {
         double pi = M_PI;
         double my_euler = pi_euler();
         double diff = absolute(pi - my_euler);
-        printf("pi_euler() = %16.15lf, M_PI = %16.15lf, diff = %16.15lf", my_euler, pi, diff);
+        printf("pi_euler() = %16.15lf, M_PI = %16.15lf, diff = %16.15lf\n", my_euler, pi, diff);
+        if (test_stats == true) {
+            printf("euler() terms = %d\n", pi_euler_terms());
+            //          test_stats = false;
+        }
     }
 
     if (test_viete) {
         double pi = M_PI;
         double my_viete = pi_viete();
         double diff = absolute(pi - my_viete);
-        printf("pi_viete() = %16.15lf, M_PI = %16.15lf, diff = %16.15lf", my_viete, pi, diff);
+        printf("pi_viete() = %16.15lf, M_PI = %16.15lf, diff = %16.15lf\n", my_viete, pi, diff);
+        if (test_stats == true) {
+            printf("viete() terms = %d\n", pi_viete_factors());
+            //        test_stats = false;
+        }
     }
 
     if (test_newton) {
@@ -76,28 +98,35 @@ int main(int argc, char **argv) {
             double my_sqrt = sqrt_newton(i);
             double m_sqrt = sqrt(i);
             double diff = absolute(my_sqrt - m_sqrt);
-            printf("sqrt_newton(%16.6lf) = %16.15lf, sqrt(%16.6lf) = %16.15lf, diff = %16.15lf\n",
-                i, my_sqrt, i, m_sqrt, diff);
+            printf("sqrt_newton(%1.6lf) = %16.15lf, sqrt(%6.6lf) = %16.15lf, diff = %16.15lf\n", i,
+                my_sqrt, i, m_sqrt, diff);
         }
     }
 
     if (test_stats) {
+        if (test_e == false && test_bbp == false && test_madhava == false && test_euler == false
+            && test_viete == false) {
+            help();
+        }
     }
 
     if (test_help) {
-        printf("SYNOPSIS\n   A test harness for the small numberical library.\n\n");
-        printf("USAGE\n   ./mathlib-test [-aebmrvnsh]\n\n");
-        printf("OPTIONS\n");
-        printf("  -a   Run all tests.\n");
-        printf("  -e   Runs e test.\n");
-        printf("  -b   Runs BBP pi test.\n");
-        printf("  -m   Runs Madhava pi test.\n");
-        printf("  -r   Runs Euler pi test.\n");
-        printf("  -v   Runs Viete pi test.\n");
-        printf("  -n   Runs Newton square root tests.\n");
-        printf("  -s   Print verbose statistics.\n");
-        printf("  -h   Display program synopsis and useage.\n");
+        help();
     }
-
     return 0;
+}
+
+void help(void) {
+    printf("SYNOPSIS\n   A test harness for the small numberical library.\n\n");
+    printf("USAGE\n   ./mathlib-test [-aebmrvnsh]\n\n");
+    printf("OPTIONS\n");
+    printf("  -a   Run all tests.\n");
+    printf("  -e   Runs e test.\n");
+    printf("  -b   Runs BBP pi test.\n");
+    printf("  -m   Runs Madhava pi test.\n");
+    printf("  -r   Runs Euler pi test.\n");
+    printf("  -v   Runs Viete pi test.\n");
+    printf("  -n   Runs Newton square root tests.\n");
+    printf("  -s   Print verbose statistics.\n");
+    printf("  -h   Display program synopsis and useage.\n");
 }
