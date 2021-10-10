@@ -2,22 +2,20 @@
 
 #include <stdio.h>
 
-static int counter = 0;
+static unsigned long counter = 0;
 
 double pi_euler(void) {
-    double x = 0;
-    int y = 0;
-    int k = 1;
-    counter = 0;
-    while (absolute(y-x) > EPSILON) {
-        x = y;
-	x = (1 / (k * k));
-        k++;
+    double first_term = 0.0;
+    double second_term = 0.0;
+    counter = 1;
+    while (counter < 2 || (absolute(first_term - second_term) > EPSILON)) {
+        second_term = first_term;
+        first_term += (1.0 / (counter * counter));
         counter++;
     }
-    return sqrt_newton(6 * y);
+    return sqrt_newton(6 * first_term);
 }
 
 int pi_euler_terms(void) {
-    return counter;
+    return (counter - 1);
 }
