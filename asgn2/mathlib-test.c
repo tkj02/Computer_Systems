@@ -25,7 +25,7 @@ int main(int argc, char **argv) {
         switch (opt) {
         case 'a':
             test_e = test_bbp = test_madhava = test_euler = test_viete = test_newton = test_stats
-                = test_help = true;
+                = true;
             break;
         case 'e': test_e = true; break;
         case 'b': test_bbp = true; break;
