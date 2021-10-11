@@ -45,7 +45,6 @@ int main(int argc, char **argv) {
         printf("e() = %16.15lf, M_E = %16.15lf, diff = %16.15lf\n", my_e, math_e, diff);
         if (test_stats == true) {
             printf("e() terms = %d\n", e_terms());
-            //		test_stats = false;
         }
     }
 
@@ -56,7 +55,6 @@ int main(int argc, char **argv) {
         printf("pi_bbp() = %16.15lf, M_PI = %16.15lf, diff = %16.15lf\n", my_bbp, pi, diff);
         if (test_stats == true) {
             printf("bbp() terms = %d\n", pi_bbp_terms());
-            //              test_stats = false;
         }
     }
 
@@ -67,7 +65,6 @@ int main(int argc, char **argv) {
         printf("pi_madhava() = %16.15lf, M_PI = %16.15lf, diff = %16.15lf\n", my_madhava, pi, diff);
         if (test_stats == true) {
             printf("madhava() terms = %d\n", pi_madhava_terms());
-            //            test_stats = false;
         }
     }
 
@@ -78,7 +75,6 @@ int main(int argc, char **argv) {
         printf("pi_euler() = %16.15lf, M_PI = %16.15lf, diff = %16.15lf\n", my_euler, pi, diff);
         if (test_stats == true) {
             printf("euler() terms = %d\n", pi_euler_terms());
-            //          test_stats = false;
         }
     }
 
@@ -89,7 +85,6 @@ int main(int argc, char **argv) {
         printf("pi_viete() = %16.15lf, M_PI = %16.15lf, diff = %16.15lf\n", my_viete, pi, diff);
         if (test_stats == true) {
             printf("viete() terms = %d\n", pi_viete_factors());
-            //        test_stats = false;
         }
     }
 
