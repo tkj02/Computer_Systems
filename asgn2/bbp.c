@@ -7,7 +7,6 @@ static int counter = 0;
 double pi_bbp(void) {
     double first_term = 0;
     double second_term = 0;
-    //double fraction = 0;
     double coeff = 0;
     double f_coeff = 0;
     counter = 0;
