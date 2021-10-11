@@ -24,8 +24,7 @@ int main(int argc, char **argv) {
     while ((opt = getopt(argc, argv, OPTIONS)) != -1) {
         switch (opt) {
         case 'a':
-            test_e = test_bbp = test_madhava = test_euler = test_viete = test_newton = test_stats
-                = true;
+            test_e = test_bbp = test_madhava = test_euler = test_viete = test_newton = true;
             break;
         case 'e': test_e = true; break;
         case 'b': test_bbp = true; break;
