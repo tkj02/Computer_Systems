@@ -1,6 +1,5 @@
 #include "mathlib.h"
 
-#include <math.h>
 #include <stdio.h>
 
 static int counter = 0;
