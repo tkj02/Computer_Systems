@@ -19,9 +19,9 @@ Files:
 - README.md             Contains a summary of this assignment
 
 Assistance:
-- Watch Eugene’s recorded section on YuJa (learned about the assignment overall)
+- Watch Eugene’s recorded section on YuJa (learned about the assignment overall and how gnuplot works)
 - Attended Sloan’s office hours on October 8 (learned about using static variables)
-- Attended Chrtisian’s office hours on October 8 (learned about implementing exponents and how to use the condition in my while loops)
+- Attended Chrtisian’s office hours on October 8 (learned about implementing exponents and how to use the absolute condition in my while loops)
 - Attended Brian’s section on October 8 (learned about a method to implement viete.c)
 
 There are no known bugs/errors according to scan-build, and the program outputs the correct content and format in comparison to the example mathlib-test file under resources.
