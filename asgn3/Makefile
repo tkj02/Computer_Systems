@@ -25,7 +25,7 @@ quick.o: quick.c quick.h stats.h
 stats.o: stats.c stats.h
 	$(CC) $(CLFAFS) -o stats.o -c stats.c
 clean:
-	rm -f sorting sorting.o insert.o heap.o shell.o quick.o
+	rm -f sorting sorting.o insert.o heap.o shell.o quick.o stats.o
 
 format:
 	clang-format -i -style=file *.[ch]
