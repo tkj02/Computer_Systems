@@ -17,7 +17,7 @@ heap.o: heap.c heap.h stats.h
 	$(CC) $(CLFAFS) -o heap.o -c heap.c
 
 shell.o: shell.c shell.h stats.h
-	$(CC) $(CLFAFS) -o shell.o -c shell.c $(LFLAGS)
+	$(CC) $(CLFAFS) -o shell.o -c shell.c
 
 quick.o: quick.c quick.h stats.h
 	$(CC) $(CLFAFS) -o quick.o -c quick.c
