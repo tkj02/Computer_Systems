@@ -22,10 +22,10 @@ void shell_sort(Stats *stats, uint32_t *A, uint32_t n) {
             uint32_t j = i;
             uint32_t temp = move(stats, A[i]);
             while (j >= g && temp < A[j - g]) {
-                A[j] = A[j - g];
+                A[j] = move(stats, A[j - g]);
                 j -= g;
             }
-            A[j] = temp;
+            A[j] = move(stats, temp);
         }
     }
 }
