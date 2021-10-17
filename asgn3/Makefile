@@ -10,16 +10,16 @@ sorting: sorting.o insert.o heap.o shell.o quick.o
 sorting.o: sorting.c stats.h
 	$(CC) $(CFLAGS) -o sorting.o -c sorting.c
 
-insert.o: insert.c stats.h
+insert.o: insert.c insert.h stats.h
 	$(CC) $(CLFAFS) -o insert.o -c insert.c
 
-heap.o: heap.c stats.h
+heap.o: heap.c heap.h stats.h
 	$(CC) $(CLFAFS) -o heap.o -c heap.c
 
-shell.o: heap.c stats.h
-	$(CC) $(CLFAFS) -o shell.o -c shell.c
+shell.o: shell.c shell.h stats.h
+	$(CC) $(CLFAFS) -o shell.o -c shell.c $(LFLAGS)
 
-quick.o: quick.c stats.h
+quick.o: quick.c quick.h stats.h
 	$(CC) $(CLFAFS) -o quick.o -c quick.c
 
 clean:
