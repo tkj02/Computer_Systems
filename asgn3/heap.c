@@ -1,6 +1,5 @@
 #include "stats.h"
 
-#include <math.h>
 #include <stdbool.h>
 #include <stdio.h>
 
@@ -17,7 +16,7 @@ void fix_heap(uint32_t *A, uint32_t first, uint32_t last) {
     bool found = false;
     uint32_t mother = first;
     uint32_t great = max_child(A, mother, last);
-    while (mother <= floor(last / 2) && mother != found) {
+    while (mother <= (last / 2) && mother != found) {
         if (A[mother - 1] < A[great - 1]) {
             uint32_t temp = A[mother - 1];
             A[mother - 1] = A[great - 1];
@@ -30,7 +29,7 @@ void fix_heap(uint32_t *A, uint32_t first, uint32_t last) {
 }
 
 void build_heap(uint32_t *A, uint32_t first, uint32_t last) {
-    for (uint32_t father = floor(last / 2); father < first - 1; --father) {
+    for (uint32_t father = (last / 2); father < first - 1; --father) {
         fix_heap(A, father, last);
     }
 }
