@@ -20,14 +20,60 @@
 #define SIZE_BIT      5
 #define HEX_30_BITS   0x3FFFFFFF
 
+// Creates static variables of default values (for -r, -n, and -p)
 static uint32_t seed = 13371453;
 static uint32_t size = 100;
 static uint32_t print_size = 100;
 
-uint32_t *create_sample(uint32_t size, uint32_t seed);
+// Creates array of random elements
+// ptr = pointer (here and everywhere else)
+uint32_t *create_array(uint32_t size, uint32_t seed) {
+    uint32_t *ptr;
+    ptr = malloc(size * sizeof(uint32_t));
+    if (ptr == NULL) {
+        return NULL;
+    }
+    srandom(seed);
+    for (uint32_t i = 0; i < size; i++) {
+        *(ptr + i) = random() & HEX_30_BITS;
+    }
+    return ptr;
+}
 
-void init_random(uint32_t *ptr, uint32_t size, uint32_t seed);
+// Creates random elemets (for -a, -e, -i, -s, and -q)
+void init_random(uint32_t *ptr, uint32_t size, uint32_t seed) {
+    srandom(seed);
+    for (uint32_t i = 0; i < size; i++) {
+        *(ptr + i) = random() & HEX_30_BITS;
+    }
+}
 
+// Prints statistics (and elements if asked) for each sort
+void print_result(Stats *stat_ptr, char *label, uint32_t *data_ptr) {
+    printf("%s, %d"
+           " elements,",
+        label, size);
+    printf(" %lu"
+           " moves,",
+        stat_ptr->moves);
+    printf(" %lu"
+           " compares\n",
+        stat_ptr->compares);
+    if (print_size > size) {
+        print_size = size;
+    }
+    for (uint32_t i = 0; i < print_size; i++) {
+        if (i > 0 && i % 5 == 0) {
+            printf("\n");
+        }
+        printf("%13" PRIu32, *(data_ptr + i));
+    }
+    printf("\n");
+}
+
+// Main function
+// Makes use of set.h's inserts and members
+// Makes use of create_array, init_random, and print_results
 int main(int argc, char **argv) {
     Stats insert_stats;
     Stats shell_stats;
@@ -62,16 +108,14 @@ int main(int argc, char **argv) {
             break;
         case 'r':
             // random seed
-            s = insert_set(RANDOM_BIT, s);
             seed = atoi(optarg);
             break;
         case 'n':
             // array size
-            s = insert_set(SIZE_BIT, s);
             size = atoi(optarg);
             break;
         case 'p':
-            // # of elementst
+            // # of elements
             print_size = atoi(optarg);
             break;
         case 'h':
@@ -100,12 +144,12 @@ int main(int argc, char **argv) {
         return -1;
     }
 #else
-    test_pattern = create_sample(size, seed);
+    test_pattern = create_array(size, seed);
     if (test_pattern == NULL) {
         return -1;
     }
 #endif
-    void print_result(Stats * stat_ptr, char *label, uint32_t *data_ptr);
+
     if (member_set(HEAP_BIT, s)) {
         init_random(test_pattern, size, seed);
         reset(&heap_stats);
@@ -136,49 +180,4 @@ int main(int argc, char **argv) {
 
     free(test_pattern);
     return 0;
-}
-
-uint32_t *create_sample(uint32_t size, uint32_t seed) {
-    uint32_t *ptr;
-    ptr = malloc(size * sizeof(uint32_t));
-    if (ptr == NULL) {
-        return NULL;
-    }
-    srandom(seed);
-    for (uint32_t i = 0; i < size; i++) {
-        *(ptr + i) = random() & HEX_30_BITS;
-    }
-    return ptr;
-}
-
-void print_result(Stats *stat_ptr, char *label, uint32_t *data_ptr) {
-    printf("%s,  %d"
-           " elements,",
-        label, size);
-    printf(" %lu"
-           " moves,",
-        stat_ptr->moves);
-    printf(" %lu"
-           " compares\n",
-        stat_ptr->compares);
-    //printf("%s, %13" PRIu32 " elements", label, size);
-    //printf("%13" PRIu64 " moves", stat_ptr->moves);
-    //printf("%13" PRIu64 " compares\n", stat_ptr->compares);
-    if (print_size > size) {
-        print_size = size;
-    }
-    for (uint32_t i = 0; i < print_size; i++) {
-        if (i > 0 && i % 5 == 0) {
-            printf("\n");
-        }
-        printf("%13" PRIu32, *(data_ptr + i));
-    }
-    printf("\n");
-}
-
-void init_random(uint32_t *ptr, uint32_t size, uint32_t seed) {
-    srandom(seed);
-    for (uint32_t i = 0; i < size; i++) {
-        *(ptr + i) = random() & HEX_30_BITS;
-    }
 }
