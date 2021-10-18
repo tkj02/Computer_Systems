@@ -3,13 +3,19 @@
 #include <math.h>
 #include <stdio.h>
 
+// Shell Algorithm Implementation
+// Creates gap that is then reduced until gap is one
+// Very similar to Insertion Algorithm Implementation
+// Follows assignment document pseudocode
+
+// Creates static variables for gap implementation
 static uint32_t i = 0;
 
 static uint32_t gap_array[32];
 
 uint32_t array_size;
 
-void new_gap(uint32_t n) {
+void gaps(uint32_t n) {
     uint32_t range = (uint32_t)(log(3 + 2 * n) / log(3));
     uint32_t index = 0;
     for (uint32_t i = range; i > 0; --i) {
@@ -19,7 +25,7 @@ void new_gap(uint32_t n) {
 }
 
 void shell_sort(Stats *stats, uint32_t *A, uint32_t n) {
-    new_gap(n);
+    gaps(n);
     for (uint32_t ii = 0; ii < array_size; ii++) {
         uint32_t gap = gap_array[ii];
         for (uint32_t i = gap; i < n; i++) {
