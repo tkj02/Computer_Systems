@@ -2,6 +2,10 @@
 
 #include <stdio.h>
 
+// Quick Algorithm Implementation
+// Partitions array into two separate arrays and compares elements to pivot
+// Follows assignment document pseudocode
+
 uint32_t partition(Stats *stats, uint32_t *A, uint32_t low, uint32_t high) {
     uint32_t i = low - 1;
     for (uint32_t j = low; j < high; j++) {
