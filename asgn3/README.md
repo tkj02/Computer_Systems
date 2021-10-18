@@ -39,23 +39,23 @@ Files:
         - Contains a summary of this assignment
 
 Command Line Options:
-- a 
+- -a 
 > employ all algorithms
-- e
+- -e
 > enable heap sort
-- i 
+- -i 
 > enable insertion sort
-- s 
+- -s 
 > enable shell sort
-- q 
+- -q 
 > enable quick sort
-- r 
+- -r 
 > set random seed to seed (default = 13371453)
-- n 
+- -n 
 > set array size to size (default = 100)
-- p 
+- -p 
 > print elements from array (default = 100)
-- h
+- -h
 > print program usage
 
 Assistance:
