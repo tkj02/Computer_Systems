@@ -41,7 +41,8 @@ Files:
 Command Line Options:
 - a 
 > employ all algorithms
-- e enable heap sort
+- e
+> enable heap sort
 - i 
 > enable insertion sort
 - s 
@@ -49,13 +50,11 @@ Command Line Options:
 - q 
 > enable quick sort
 - r 
-> seed, set random seed to seed (default = 13371453)
+> set random seed to seed (default = 13371453)
 - n 
 > set array size to size (default = 100)
 - p 
-> print # of elements from array (default = 100)
-- n 
-> specified # of elements, then print entire array and nothing more
+> print elements from array (default = 100)
 - h
 > print program usage
 
