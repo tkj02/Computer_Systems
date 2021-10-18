@@ -8,35 +8,35 @@ Files:
 - insert.c
         - Contains implementation for insertion sort
 - insert.h
-        Specifies the interface to insert.c
+        - Specifies the interface to insert.c
 - heap.c 
-        Contains implementation for heap sort
+        - Contains implementation for heap sort
 - heap.h
-        Specifies the interface to heap.c
+        - Specifies the interface to heap.c
 - shell.c
-        Contains implementation for shell sort
+        - Contains implementation for shell sort
 - shell.h
-        Specifies the interface to shell.c
+        - Specifies the interface to shell.c
 - quick.c
-        Contains implementation for quick sort
+        - Contains implementation for quick sort
 - quick.h
-        Specifies the interface to quick.c
+        - Specifies the interface to quick.c
 - sorting.c
-        Contains the main test harness for implemented sorts
+        - Contains the main test harness for implemented sorts
 - stats.c
-        Contains implementation of the statistics module
+        - Contains implementation of the statistics module
 - stats.h
-        Specifies the interface to the statistics module.
+        - Specifies the interface to the statistics module.
 - set.h
-        Implements and specifies the interface for set usage
+        - Implements and specifies the interface for set usage
 - Makefile
-        Contains information for compiling, formatting, and removing .o files and executables
+        - Contains information for compiling, formatting, and removing .o files and executables
 - DESIGN.pdf
-        Contains a detailed explanation of the files, all pseudocode, and notes
+        - Contains a detailed explanation of the files, all pseudocode, and notes
 - WRITEUP.pdf
-        Contains outputs and graphs comparing the algorithms to each other
+        - Contains outputs and graphs comparing the algorithms to each other
 - README.md
-        Contains a summary of this assignment
+        - Contains a summary of this assignment
 
 Assistance:
 - Watched Eugene’s recorded section on YuJa (learned about the assignment overall and how the algorithms work)
