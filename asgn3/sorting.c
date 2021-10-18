@@ -16,8 +16,6 @@
 #define INSERTION_BIT 1
 #define SHELL_BIT     2
 #define QUICK_BIT     3
-#define RANDOM_BIT    4
-#define SIZE_BIT      5
 #define HEX_30_BITS   0x3FFFFFFF
 
 // Creates static variables of default values (for -r, -n, and -p)
@@ -30,9 +28,6 @@ static uint32_t print_size = 100;
 uint32_t *create_array(uint32_t size, uint32_t seed) {
     uint32_t *ptr;
     ptr = malloc(size * sizeof(uint32_t));
-    if (ptr == NULL) {
-        return NULL;
-    }
     srandom(seed);
     for (uint32_t i = 0; i < size; i++) {
         *(ptr + i) = random() & HEX_30_BITS;
