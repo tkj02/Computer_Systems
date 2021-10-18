@@ -38,6 +38,27 @@ Files:
 - README.md
         - Contains a summary of this assignment
 
+Command Line Options:
+- a 
+> employ all algorithms
+- e enable heap sort
+- i 
+> enable insertion sort
+- s 
+> enable shell sort
+- q 
+> enable quick sort
+- r 
+> seed, set random seed to seed (default = 13371453)
+- n 
+> set array size to size (default = 100)
+- p 
+> print # of elements from array (default = 100)
+- n 
+> specified # of elements, then print entire array and nothing more
+- h
+> print program usage
+
 Assistance:
 - Watched Eugene’s recorded section on YuJa (learned about the assignment overall and how the algorithms work)
 - Watched Chrtisian’s recorded section on YuJa (learned to set up sorting.c and how to use set (insert_set and member_set especially))
