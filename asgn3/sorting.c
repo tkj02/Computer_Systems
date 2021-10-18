@@ -39,6 +39,10 @@ int main(int argc, char **argv) {
         switch (opt) {
         case 'a':
             // all sorts
+            s = insert_set(HEAP_BIT, s);
+            s = insert_set(INSERTION_BIT, s);
+            s = insert_set(SHELL_BIT, s);
+            s = insert_set(QUICK_BIT, s);
             break;
         case 'e':
             // heap
@@ -49,8 +53,8 @@ int main(int argc, char **argv) {
             s = insert_set(INSERTION_BIT, s);
             break;
         case 's':
-            s = insert_set(SHELL_BIT, s);
             // shell
+            s = insert_set(SHELL_BIT, s);
             break;
         case 'q':
             // quick
@@ -72,22 +76,24 @@ int main(int argc, char **argv) {
             break;
         case 'h':
             // program usage
-	    printf("SYNOPSIS\n   A collection of comparison-based sorting algorithms.\n\n");
-	    printf("USAGE\n   ./sorting [-haeisqn:p:r:] [-n length] [-p elements] [-r seed]\n\n");
-	    printf("OPTIONS\n");
-	    printf("   -h              display program help and usage\n");
-	    printf("   -a              enable all sorts.\n");
-	    printf("   -e              enable Heap Sort.\n");
-	    printf("   -i              enable Insertion Sort.\n");
-	    printf("   -s              enable Shell Sort.\n");
-	    printf("   -q              enable Quick Sort.\n");
-	    printf("   -n length       specify number of array elements (default: 100).\n");
-	    printf("   -p elements     specify number of elements to print (default: 100).\n");
-	    printf("   -r seed         specify random seed (default: 13371453).\n");
+            printf("SYNOPSIS\n   A collection of comparison-based sorting algorithms.\n\n");
+            printf("USAGE\n   ./sorting [-haeisqn:p:r:] [-n length] [-p elements] [-r seed]\n\n");
+            printf("OPTIONS\n");
+            printf("   -h              display program help and usage\n");
+            printf("   -a              enable all sorts.\n");
+            printf("   -e              enable Heap Sort.\n");
+            printf("   -i              enable Insertion Sort.\n");
+            printf("   -s              enable Shell Sort.\n");
+            printf("   -q              enable Quick Sort.\n");
+            printf("   -n length       specify number of array elements (default: 100).\n");
+            printf("   -p elements     specify number of elements to print (default: 100).\n");
+            printf("   -r seed         specify random seed (default: 13371453).\n");
             break;
         }
     }
+
     uint32_t *test_pattern;
+
 #if 1
     test_pattern = malloc(size * sizeof(uint32_t));
     if (test_pattern == NULL) {
@@ -100,12 +106,11 @@ int main(int argc, char **argv) {
     }
 #endif
     void print_result(Stats * stat_ptr, char *label, uint32_t *data_ptr);
-
-    if (member_set(INSERTION_BIT, s)) {
+    if (member_set(HEAP_BIT, s)) {
         init_random(test_pattern, size, seed);
-        reset(&insert_stats);
-        insertion_sort(&insert_stats, test_pattern, size);
-        print_result(&insert_stats, "Insertion Sort", test_pattern);
+        reset(&heap_stats);
+        heap_sort(&heap_stats, test_pattern, size);
+        print_result(&heap_stats, "Heap Sort", test_pattern);
     }
 
     if (member_set(SHELL_BIT, s)) {
@@ -115,11 +120,11 @@ int main(int argc, char **argv) {
         print_result(&shell_stats, "Shell Sort", test_pattern);
     }
 
-    if (member_set(HEAP_BIT, s)) {
+    if (member_set(INSERTION_BIT, s)) {
         init_random(test_pattern, size, seed);
-        reset(&heap_stats);
-        heap_sort(&heap_stats, test_pattern, size);
-        print_result(&heap_stats, "Heap Sort", test_pattern);
+        reset(&insert_stats);
+        insertion_sort(&insert_stats, test_pattern, size);
+        print_result(&insert_stats, "Insertion Sort", test_pattern);
     }
 
     if (member_set(QUICK_BIT, s)) {
@@ -147,9 +152,18 @@ uint32_t *create_sample(uint32_t size, uint32_t seed) {
 }
 
 void print_result(Stats *stat_ptr, char *label, uint32_t *data_ptr) {
-    printf("%s, %13" PRIu32 " elements", label, size);
-    printf("%13" PRIu64 " moves", stat_ptr->moves);
-    printf("%13" PRIu64 " compares\n", stat_ptr->compares);
+    printf("%s,  %d"
+           " elements,",
+        label, size);
+    printf(" %lu"
+           " moves,",
+        stat_ptr->moves);
+    printf(" %lu"
+           " compares\n",
+        stat_ptr->compares);
+    //printf("%s, %13" PRIu32 " elements", label, size);
+    //printf("%13" PRIu64 " moves", stat_ptr->moves);
+    //printf("%13" PRIu64 " compares\n", stat_ptr->compares);
     if (print_size > size) {
         print_size = size;
     }
