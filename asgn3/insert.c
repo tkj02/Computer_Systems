@@ -2,6 +2,10 @@
 
 #include <stdio.h>
 
+// Insertion Algorithm Implementation
+// Compares with previous element(s) in array
+// Follows assignment document pseudocode
+
 void insertion_sort(Stats *stats, uint32_t *A, uint32_t n) {
     for (int i = 1; i < n; i++) {
         int j = i;
