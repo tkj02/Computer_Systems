@@ -3,6 +3,11 @@
 #include <stdbool.h>
 #include <stdio.h>
 
+// Heap Algorithm Implementation
+// Compares parents and children in max heap form
+// Finds the max child, fixes the heap, and then builds it
+// Follows assignment document pseudocode
+
 uint32_t max_child(Stats *stats, uint32_t *A, uint32_t first, uint32_t last) {
     uint32_t left = 2 * first;
     uint32_t right = left + 1;
