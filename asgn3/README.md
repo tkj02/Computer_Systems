@@ -6,7 +6,7 @@ Build and Run: To compile sorting.c and create the executable file sorting, run 
 
 Files:
 - insert.c
-        Contains implementation for insertion sort
+        - Contains implementation for insertion sort
 - insert.h
         Specifies the interface to insert.c
 - heap.c 
