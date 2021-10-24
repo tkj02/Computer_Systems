@@ -59,11 +59,11 @@ bool path_pop_vertex(Path *p, uint32_t *v, Graph *G) {
 }
 
 uint32_t path_vertices(Path *p) {
-    return p->vertices;
+    return stack_size(p->vertices);
 }
 
 uint32_t path_length(Path *p) {
-    return stack_size(p->length);
+    return p->length;
 }
 
 void path_copy(Path *dst, Path *src) {
