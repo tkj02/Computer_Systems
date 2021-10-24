@@ -35,6 +35,9 @@ bool graph_add_edge(Graph *G, uint32_t i, uint32_t j, uint32_t k) {
         return false;
     }
     G->matrix[i][j] = k;
+    if (G->undirected) {
+        G->matrix[j][i] = k;
+    }
     return true;
 }
 
@@ -60,14 +63,14 @@ bool graph_visited(Graph *G, uint32_t v) {
 }
 
 void graph_mark_visited(Graph *G, uint32_t v) {
-    if (v > G->vertices) {
+    if (v >= 0 && v <= G->vertices) {
         G->visited[v] = true;
     }
     G->visited[v] = false;
 }
 
 void graph_mark_unvisited(Graph *G, uint32_t v) {
-    if (v > G->vertices) {
+    if (v >= 0 && v <= G->vertices) {
         G->visited[v] = false;
     }
     G->visited[v] = true;
