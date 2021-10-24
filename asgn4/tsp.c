@@ -14,6 +14,7 @@
 #define BUFFERSIZE  100
 #define CITYNAMELEN 64
 
+// DFS Function
 void dfs(Graph *G, uint32_t v, Path *current, Path *shortest, char *cities, FILE *outfile) {
     graph_mark_visited(G, v);
     printf("in dfs v %d\n", v);
@@ -30,13 +31,14 @@ void dfs(Graph *G, uint32_t v, Path *current, Path *shortest, char *cities, FILE
         (void) shortest;
         (void) cities;
         (void) outfile;
-       // dfs(G, w, current, shortest, cities, outfile);
+        // dfs(G, w, current, shortest, cities, outfile);
     }
     graph_mark_unvisited(G, v);
 }
 
 int fgetscopy(char *dst, char *src);
 
+// Main Function
 int main(int argc, char **argv) {
 
     int opt = 0;
