@@ -4,8 +4,8 @@ LFLAGS = -lm
 
 all: tsp
 
-tsp: tsp.o graph.o path.o stack.o
-	$(CC) -o tsp tsp.o graph.o path.o stack.o $(LFLAGS)
+tsp: tsp.o graph.o stack.o path.o
+	$(CC) -o tsp tsp.o graph.o stack.o path.o $(LFLAGS)
 
 tsp.o: tsp.c
 	$(CC) $(CFLAGS) -o tsp.o -c tsp.c
@@ -13,11 +13,11 @@ tsp.o: tsp.c
 graph.o: graph.c graph.h
 	$(CC) $(CFLAGS) -o graph.o -c graph.c
 
-path.o: path.c path.h
-	$(CC) $(CFLAGS) -o path.o -c path.c
-
 stack.o: stack.c stack.h
 	$(CC) $(CFLAGS) -o stack.o -c stack.c
+
+path.o: path.c path.h
+	$(CC) $(CFLAGS) -o path.o -c path.c
 
 clean:
 	rm -f tsp tsp.o graph.o path.o stack.o
