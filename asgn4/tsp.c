@@ -7,21 +7,43 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 
-#define OPTIONS "hvui:o:"
+#define OPTIONS     "hvui:o:"
+#define BUFFERSIZE  100
+#define CITYNAMELEN 64
 
-static FILE *input = NULL;
-static FILE *output = NULL;
+void dfs(Graph *G, uint32_t v, Path *current, Path *shortest, char *cities, FILE *outfile) {
+    graph_mark_visited(G, v);
+    printf("in dfs v %d\n", v);
+    for (uint32_t w = 0; w < graph_vertices(G); w++) {
+        uint32_t weight = graph_edge_weight(G, v, w);
+        printf("v %d w %d weight %d\n", v, w, weight);
+        if (weight == 0) {
+            continue;
+        }
+        if (graph_visited(G, w)) {
+            continue;
+        }
+        (void) current;
+        (void) shortest;
+        (void) cities;
+        (void) outfile;
+       // dfs(G, w, current, shortest, cities, outfile);
+    }
+    graph_mark_unvisited(G, v);
+}
+
+int fgetscopy(char *dst, char *src);
 
 int main(int argc, char **argv) {
 
     int opt = 0;
     bool no_input = true;
     bool undirected = false;
-    uint32_t vertices = 0;
-    char *input_file = NULL;
-    //    char *output_file = NULL;
+    FILE *fp = stdin;
+    FILE *outfp = stdout;
 
     while ((opt = getopt(argc, argv, OPTIONS)) != -1) {
         no_input = false;
@@ -39,29 +61,98 @@ int main(int argc, char **argv) {
             //print all paths
         case 'u':
             //specify graph to be undirected
+            undirected = true;
         case 'i':
             //specify input file
-            input_file = optarg;
+            fp = fopen(optarg, "r");
+            if (fp == NULL) {
+                printf("error file open %s\n", optarg);
+            }
+            printf("file open ok %s\n", optarg);
             break;
         case 'o':
             //specify output file
-            input_file = optarg;
+            outfp = fopen(optarg, "w");
+            if (outfp == NULL) {
+                printf("error file write %s\n", optarg);
+                goto errorexit;
+            }
             break;
         }
     }
 
-    input = stdin;
-    output = stdout;
+    char buffer[BUFFERSIZE];
+    char *retptr;
+    int vertexcount;
+    char *cities;
+    Graph *gptr;
+    uint32_t node_i, node_j, node_k;
+    Path *current_path;
+    Path *shortest_path;
 
-    Graph *locations = graph_create(vertices, undirected);
-
-    if (locations == NULL) {
-        //print error to stderr, clean memory, delete functions
-        //return 1
+    retptr = fgets(buffer, BUFFERSIZE, fp);
+    sscanf(buffer, "%d", &vertexcount);
+    printf("vertex count: %d\n", vertexcount);
+    cities = malloc(CITYNAMELEN * vertexcount);
+    if (cities == NULL) {
+        printf("malloc failed");
+        goto errorexit;
     }
-    //call path_create, call dfs
-    //print shortest path
-    //clean memory
+    if (vertexcount < 1 || vertexcount > VERTICES) {
+        printf("invalid vertices\n");
+        goto errorexit;
+    }
+    for (int i = 0; i < vertexcount; i++) {
+        retptr = fgets(buffer, BUFFERSIZE, fp);
+        if (retptr == NULL) {
+            goto errorexit;
+        }
+        fgetscopy(&cities[i * CITYNAMELEN], buffer);
+    }
+    for (int i = 0; i < vertexcount; i++) {
+        printf("%d %s\n", i, &cities[i * CITYNAMELEN]);
+    }
 
+    gptr = graph_create(vertexcount, undirected);
+    while (1) {
+        retptr = fgets(buffer, BUFFERSIZE, fp);
+        if (retptr == NULL) {
+            break;
+        }
+        sscanf(buffer, "%d %d %d", &node_i, &node_j, &node_k);
+        if (node_i < 0 || node_i > VERTICES || node_j < 0 || node_j > VERTICES) {
+            printf("invalid matrix values\n");
+            goto errorexit;
+        }
+        printf("%d %d %d\n", node_i, node_j, node_k);
+        graph_add_edge(gptr, node_i, node_j, node_k);
+    }
+    printf("from graph print:\n");
+    graph_print(gptr);
+
+    current_path = path_create();
+    shortest_path = path_create();
+
+    dfs(gptr, START_VERTEX, current_path, shortest_path, cities, outfp);
+
+errorexit:
+    if (fp != stdin) {
+        fclose(fp);
+    }
+    return 0;
+}
+
+int fgetscopy(char *dst, char *src) {
+    char ch;
+    while ((ch = *src)) {
+        if ((ch == '\n') || (ch == '\r')) {
+            *dst = 0;
+            break;
+        }
+        *dst = *src;
+        dst++;
+        src++;
+    }
+    *dst = 0;
     return 0;
 }
