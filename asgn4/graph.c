@@ -13,10 +13,10 @@ typedef struct Graph {
 } Graph;
 
 Graph *graph_create(uint32_t vertices, bool undirected) {
-    Graph *G = (Graph *)calloc(1, sizeof(Graph));
-    if(G){
-	    G->vertices = vertices;
-	    G->undirected = undirected;
+    Graph *G = (Graph *) calloc(1, sizeof(Graph));
+    if (G) {
+        G->vertices = vertices;
+        G->undirected = undirected;
     }
     return G;
 }
@@ -39,43 +39,43 @@ bool graph_add_edge(Graph *G, uint32_t i, uint32_t j, uint32_t k) {
 }
 
 bool graph_has_edge(Graph *G, uint32_t i, uint32_t j) {
-    if (i < G->vertices && j < G->vertices && G->matrix[i][j] > 0){
+    if (i < G->vertices && j < G->vertices && G->matrix[i][j] > 0) {
         return true;
     }
     return false;
 }
 
 uint32_t graph_edge_weight(Graph *G, uint32_t i, uint32_t j) {
-    if (i < G->vertices && j < G->vertices && G->matrix[i][j] > 0){
-	return G->matrix[i][j];
+    if (i < G->vertices && j < G->vertices && G->matrix[i][j] > 0) {
+        return G->matrix[i][j];
     }
-        return 0;
+    return 0;
 }
 
 bool graph_visited(Graph *G, uint32_t v) {
-    if (G->visited[v]){
-    	return true;
+    if (G->visited[v]) {
+        return true;
     }
     return false;
 }
 
 void graph_mark_visited(Graph *G, uint32_t v) {
-    if (v > G->vertices){
+    if (v > G->vertices) {
         G->visited[v] = true;
     }
 }
 
 void graph_mark_unvisited(Graph *G, uint32_t v) {
-    if (v > G->vertices){
+    if (v > G->vertices) {
         G->visited[v] = false;
     }
 }
 
 void graph_print(Graph *G) {
-	for (uint32_t i = 0; i < G->vertices; i++){
-		for (uint32_t j = 0; j < G->vertices; j++){
-			printf("%u ", G->matrix[i][j]);
-		}
-		printf("\n");
-	}
+    for (uint32_t i = 0; i < G->vertices; i++) {
+        for (uint32_t j = 0; j < G->vertices; j++) {
+            printf("%u ", G->matrix[i][j]);
+        }
+        printf("\n");
+    }
 }
