@@ -158,6 +158,7 @@ int main(int argc, char **argv) {
     path_delete(&current_path);
     path_delete(&shortest_path);
     graph_delete(&gptr);
+    void free(void *cities_ar);
 
 // Closes file if error present
 errorexit:
