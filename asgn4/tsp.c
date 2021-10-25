@@ -17,25 +17,24 @@
 // DFS Function
 void dfs(Graph *G, uint32_t v, Path *current, Path *shortest, char *cities[], FILE *outfile) {
     graph_mark_visited(G, v);
-    printf("in dfs v %d\n", v);
+    //printf("in dfs v %d\n", v);
     for (uint32_t w = 0; w < graph_vertices(G); w++) {
         uint32_t weight = graph_edge_weight(G, v, w);
-        printf("v %d w %d weight %d\n", v, w, weight);
+        //printf("v %d w %d weight %d\n", v, w, weight);
         if (weight == 0) {
             continue;
         }
         if (graph_visited(G, w)) {
             continue;
         }
-        //current->length += graph_edge_weight(G, v, w);
-        //path_push_vertex(current, v, G);
-        printf("pushing vertice %d\n", v);
+        //printf("pushing vertice %d\n", v);
         dfs(G, w, current, shortest, cities, outfile);
         path_push_vertex(current, v, G);
     }
     graph_mark_unvisited(G, v);
 }
 
+// Own strdup() Function
 int fgetscopy(char *dst, char *src) {
     char ch;
     while ((ch = *src)) {
@@ -59,11 +58,20 @@ int main(int argc, char **argv) {
     bool undirected = false;
     FILE *fp = stdin;
     FILE *outfp = stdout;
+    char buffer[BUFFERSIZE];
+    char *retptr;
+    int vertexcount;
+    char *cities_ar;
+    uint32_t node_i, node_j, node_k;
+    Graph *gptr;
+    Path *current_path;
+    Path *shortest_path;
 
     while ((opt = getopt(argc, argv, OPTIONS)) != -1) {
         no_input = false;
         switch (opt) {
         case 'h':
+	    //print help message
             printf("SYNOPSIS\n  Traveling Salesman Problem using DFS.\n\n");
             printf("USAGE\n  ./tsp [-u] [-v] [-h] [-i infile] [-o outfile]\n\n");
             printf("OPTIONS\n");
@@ -81,9 +89,8 @@ int main(int argc, char **argv) {
             //specify input file
             fp = fopen(optarg, "r");
             if (fp == NULL) {
-                printf("error file open %s\n", optarg);
+                printf("error opening file %s\n", optarg);
             }
-            printf("file open ok %s\n", optarg);
             break;
         case 'o':
             //specify output file
@@ -96,18 +103,8 @@ int main(int argc, char **argv) {
         }
     }
 
-    char buffer[BUFFERSIZE];
-    char *retptr;
-    int vertexcount;
-    char *cities_ar;
-    Graph *gptr;
-    uint32_t node_i, node_j, node_k;
-    Path *current_path;
-    Path *shortest_path;
-
     retptr = fgets(buffer, BUFFERSIZE, fp);
     sscanf(buffer, "%d", &vertexcount);
-    printf("vertex count: %d\n", vertexcount);
     cities_ar = malloc(CITYNAMELEN * vertexcount);
 
     if (vertexcount < 1 || vertexcount > VERTICES) {
@@ -124,9 +121,9 @@ int main(int argc, char **argv) {
         fgetscopy(&cities_ar[i * CITYNAMELEN], buffer);
         cities[i] = &cities_ar[i * CITYNAMELEN];
     }
-    for (int i = 0; i < vertexcount; i++) {
-        printf("%d %s\n", i, cities[i]);
-    }
+   // for (int i = 0; i < vertexcount; i++) {
+   //     printf("%d %s\n", i, cities[i]);
+   // }
 
     gptr = graph_create(vertexcount, undirected);
     while (1) {
@@ -139,18 +136,17 @@ int main(int argc, char **argv) {
             printf("invalid matrix values\n");
             goto errorexit;
         }
-        printf("%d %d %d\n", node_i, node_j, node_k);
+    //    printf("%d %d %d\n", node_i, node_j, node_k);
         graph_add_edge(gptr, node_i, node_j, node_k);
     }
-    printf("from graph print:\n");
-    graph_print(gptr);
-
+    
     current_path = path_create();
     shortest_path = path_create();
 
     dfs(gptr, START_VERTEX, current_path, shortest_path, cities, outfp);
     path_push_vertex(current_path, START_VERTEX, gptr);
     path_print(current_path, outfp, cities);
+    printf("Total recursive calls: \n");
 
 errorexit:
     if (fp != stdin) {
