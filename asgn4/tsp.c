@@ -16,9 +16,11 @@
 
 // DFS Function
 // Conducts Depth-first Search to find paths
+uint32_t recursive_calls = 0;
 void dfs(Graph *G, uint32_t v, Path *current, Path *shortest, char *cities[], FILE *outfile) {
     graph_mark_visited(G, v);
     //printf("in dfs v %d\n", v);
+    path_push_vertex(current, v, G);
     for (uint32_t w = 0; w < graph_vertices(G); w++) {
         uint32_t weight = graph_edge_weight(G, v, w);
         //printf("v %d w %d weight %d\n", v, w, weight);
@@ -29,10 +31,12 @@ void dfs(Graph *G, uint32_t v, Path *current, Path *shortest, char *cities[], FI
             continue;
         }
         //printf("pushing vertice %d\n", v);
-        dfs(G, w, current, shortest, cities, outfile);
-        path_push_vertex(current, v, G);
+        recursive_calls++;
+	dfs(G, w, current, shortest, cities, outfile);
+        //path_push_vertex(current, v, G);
+    	graph_mark_unvisited(G, v);
     }
-    graph_mark_unvisited(G, v);
+    //graph_mark_unvisited(G, v);
 }
 
 // Own strdup() Function
@@ -153,12 +157,9 @@ int main(int argc, char **argv) {
     dfs(gptr, START_VERTEX, current_path, shortest_path, cities, outfp);
     path_push_vertex(current_path, START_VERTEX, gptr);
     path_print(current_path, outfp, cities);
-    printf("Total recursive calls: \n");
+    printf("Total recursive calls: %u \n", recursive_calls+1);
 
     //Frees memory
-    path_delete(&current_path);
-    path_delete(&shortest_path);
-    graph_delete(&gptr);
 
 // Closes file if error present
 errorexit:
