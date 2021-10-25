@@ -160,6 +160,9 @@ int main(int argc, char **argv) {
     printf("Total recursive calls: %u \n", recursive_calls + 1);
 
     //Frees memory
+    path_delete(&current_path);
+    path_delete(&shortest_path);
+    graph_delete(&gptr);
 
 // Closes file if error present
 errorexit:
