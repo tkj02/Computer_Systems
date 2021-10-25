@@ -19,24 +19,19 @@
 uint32_t recursive_calls = 0;
 void dfs(Graph *G, uint32_t v, Path *current, Path *shortest, char *cities[], FILE *outfile) {
     graph_mark_visited(G, v);
-    //printf("in dfs v %d\n", v);
     path_push_vertex(current, v, G);
     for (uint32_t w = 0; w < graph_vertices(G); w++) {
         uint32_t weight = graph_edge_weight(G, v, w);
-        //printf("v %d w %d weight %d\n", v, w, weight);
         if (weight == 0) {
             continue;
         }
         if (graph_visited(G, w)) {
             continue;
         }
-        //printf("pushing vertice %d\n", v);
         recursive_calls++;
         dfs(G, w, current, shortest, cities, outfile);
-        //path_push_vertex(current, v, G);
         graph_mark_unvisited(G, v);
     }
-    //graph_mark_unvisited(G, v);
 }
 
 // Own strdup() Function
