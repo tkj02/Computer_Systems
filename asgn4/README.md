@@ -17,7 +17,7 @@ Files:
 - README.md describes program and Makefile
 - DESIGN.pdf includes design/design process, pseudocode, and explanations 
 
-Command Line Arguments
+Command Line Arguments:
 - h: prints help message describing the purpose of the graph and the command-line options it accepts, exiting the program afterwards
 - v: enables verbose printing (prints all Hamiltonian paths found as well as the total number of recursive calls to dfs)
 - u: specifies that the graph should be undirected
