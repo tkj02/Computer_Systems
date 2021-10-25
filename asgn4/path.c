@@ -33,6 +33,7 @@ bool path_push_vertex(Path *p, uint32_t v, Graph *G) {
     } else {
         uint32_t current_top;
         return_stat = stack_peek(p->vertices, &current_top);
+        printf("%d", current_top);
         if (return_stat) {
             p->length += graph_edge_weight(G, current_top, v);
             return true;
@@ -69,9 +70,11 @@ uint32_t path_length(Path *p) {
 void path_copy(Path *dst, Path *src) {
     dst->length = src->length;
     stack_copy(dst->vertices, src->vertices);
+    return;
 }
 
 void path_print(Path *p, FILE *outfile, char *cities[]) {
     fprintf(outfile, "Path length: %d", p->length);
     stack_print(p->vertices, outfile, cities);
+    return;
 }
