@@ -17,7 +17,6 @@
 // Variables for DFS Function
 bool verbose_flag = false;
 int recur_call_count = 0;
-int tab_len = 0;
 uint32_t recursive_calls = 0;
 
 // DFS Function
@@ -26,40 +25,40 @@ void dfs(Graph *G, uint32_t v, Path *current, Path *shortest, char *cities[], FI
 
     // More variables
     recur_call_count++;
-    uint32_t tempRd;
+    uint32_t temp_rd;
     uint32_t weight;
     int len = graph_vertices(G);
-    bool baseCond = true;
+    bool retStat;
+    bool base_condition = true;
     path_push_vertex(current, v, G);
 
     // Checks weight of <v, w> and if vertex was visited
     for (int w = 0; w < len; w++) {
         weight = graph_edge_weight(G, v, w);
         if ((weight != 0) && !graph_visited(G, w)) {
-            baseCond = false;
+            base_condition = false;
             break;
         }
     }
 
     // Checks if all vertices were visited (goes into loop if true)
-    if (baseCond) {
+    if (base_condition) {
         // Gets first vertex from current path
         if (path_vertices(current) == graph_vertices(G)) {
             Path *tempPath = path_create();
-            bool retStat;
-            uint32_t rdNodeValue;
+            uint32_t node_value;
             path_copy(tempPath, current);
 
             // Parsing through temporary path of all vertices
             while (path_vertices(tempPath)) {
-                retStat = path_pop_vertex(tempPath, &rdNodeValue, G);
+                retStat = path_pop_vertex(tempPath, &node_value, G);
             }
 
             // Frees memory of temporary path
             path_delete(&tempPath);
 
             // Adds final vertex
-            path_push_vertex(current, rdNodeValue, G);
+            path_push_vertex(current, node_value, G);
 
             // Checks -v condition
             if (verbose_flag) {
@@ -72,7 +71,7 @@ void dfs(Graph *G, uint32_t v, Path *current, Path *shortest, char *cities[], FI
             }
 
             // Removes extra vertex
-            path_pop_vertex(current, &rdNodeValue, G);
+            path_pop_vertex(current, &node_value, G);
         }
     }
 
@@ -95,7 +94,7 @@ void dfs(Graph *G, uint32_t v, Path *current, Path *shortest, char *cities[], FI
         dfs(G, w, current, shortest, cities, outfile);
 
         graph_mark_unvisited(G, w);
-        path_pop_vertex(current, &tempRd, G);
+        path_pop_vertex(current, &temp_rd, G);
     }
 }
 
