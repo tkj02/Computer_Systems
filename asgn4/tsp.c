@@ -23,8 +23,8 @@ uint32_t recursive_calls = 0;
 // DFS Function
 // Conducts Depth-first Search to find paths
 void dfs(Graph *G, uint32_t v, Path *current, Path *shortest, char *cities[], FILE *outfile) {
-    
-    // More variables 
+
+    // More variables
     recur_call_count++;
     uint32_t tempRd;
     uint32_t weight;
@@ -33,7 +33,7 @@ void dfs(Graph *G, uint32_t v, Path *current, Path *shortest, char *cities[], FI
     path_push_vertex(current, v, G);
 
     // Checks weight of <v, w> and if vertex was visited
-    for(int w=0; w<len; w++) {
+    for (int w = 0; w < len; w++) {
         weight = graph_edge_weight(G, v, w);
         if ((weight != 0) && !graph_visited(G, w)) {
             baseCond = false;
@@ -43,55 +43,55 @@ void dfs(Graph *G, uint32_t v, Path *current, Path *shortest, char *cities[], FI
 
     // Checks if all vertices were visited (goes into loop if true)
     if (baseCond) {
-	// Gets first vertex from current path
+        // Gets first vertex from current path
         if (path_vertices(current) == graph_vertices(G)) {
             Path *tempPath = path_create();
             bool retStat;
             uint32_t rdNodeValue;
             path_copy(tempPath, current);
-            
-	    // Parsing through temporary path of all vertices
-	    while (path_vertices(tempPath)) {
+
+            // Parsing through temporary path of all vertices
+            while (path_vertices(tempPath)) {
                 retStat = path_pop_vertex(tempPath, &rdNodeValue, G);
             }
 
-	    // Frees memory of temporary path
+            // Frees memory of temporary path
             path_delete(&tempPath);
 
-	    // Adds final vertex
+            // Adds final vertex
             path_push_vertex(current, rdNodeValue, G);
-            
-	    // Checks -v condition
-	    if (verbose_flag) {
+
+            // Checks -v condition
+            if (verbose_flag) {
                 path_print(current, outfile, cities);
             }
 
-	    // Checks shortest vs current path
+            // Checks shortest vs current path
             if ((path_length(shortest) == 0) || (path_length(current) < path_length(shortest))) {
                 path_copy(shortest, current);
             }
 
-	    // Removes extra vertex
+            // Removes extra vertex
             path_pop_vertex(current, &rdNodeValue, G);
         }
     }
-    
+
     // Checks visited vertices
     graph_mark_visited(G, v);
 
     // Goes through all vertices of graph
     for (uint32_t w = 0; w < graph_vertices(G); w++) {
         weight = graph_edge_weight(G, v, w);
-        
-	if (weight == 0) {
+
+        if (weight == 0) {
             continue;
         }
         if (graph_visited(G, w)) {
             continue;
         }
 
-	// Recursive call
-	recursive_calls++;
+        // Recursive call
+        recursive_calls++;
         dfs(G, w, current, shortest, cities, outfile);
 
         graph_mark_unvisited(G, w);
@@ -151,7 +151,7 @@ int main(int argc, char **argv) {
             break;
         case 'v':
             // Prints all paths
-	    verbose_flag = true;
+            verbose_flag = true;
             break;
         case 'u':
             // Specifies graph to be undirected
@@ -163,7 +163,7 @@ int main(int argc, char **argv) {
             if (fp == NULL) {
                 printf("error opening file %s\n", optarg);
                 goto errorexit;
-	    }
+            }
             break;
         case 'o':
             // Specifies output file
@@ -231,7 +231,7 @@ errorexit:
     if (fp != stdin) {
         fclose(fp);
     }
-    if (outfp != stdout){
+    if (outfp != stdout) {
         fclose(outfp);
     }
     if (cities != NULL) {
