@@ -63,13 +63,13 @@ bool graph_visited(Graph *G, uint32_t v) {
 }
 
 void graph_mark_visited(Graph *G, uint32_t v) {
-    if (v >= 0 && v <= G->vertices) {
+    if (v <= G->vertices) {
         G->visited[v] = true;
     }
 }
 
 void graph_mark_unvisited(Graph *G, uint32_t v) {
-    if (v >= 0 && v <= G->vertices) {
+    if (v <= G->vertices) {
         G->visited[v] = false;
     }
 }

@@ -17,7 +17,6 @@
 // Variables for DFS Function
 bool verbose_flag = false;
 int recur_call_count = 0;
-uint32_t recursive_calls = 0;
 
 // DFS Function
 // Conducts Depth-first Search to find paths
@@ -90,7 +89,6 @@ void dfs(Graph *G, uint32_t v, Path *current, Path *shortest, char *cities[], FI
         }
 
         // Recursive call
-        recursive_calls++;
         dfs(G, w, current, shortest, cities, outfile);
 
         graph_mark_unvisited(G, w);
@@ -218,7 +216,7 @@ int main(int argc, char **argv) {
     // Calls DFS and prints path information
     dfs(gptr, START_VERTEX, current_path, shortest_path, cities, outfp);
     path_print(shortest_path, outfp, cities);
-    printf("Total recursive calls: %u \n", recursive_calls + 1);
+    printf("Total recursive calls: %u \n", recur_call_count + 1);
 
     //Frees memory
     graph_delete(&gptr);
