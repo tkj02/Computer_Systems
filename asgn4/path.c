@@ -44,8 +44,8 @@ bool path_push_vertex(Path *p, uint32_t v, Graph *G) {
 }
 
 bool path_pop_vertex(Path *p, uint32_t *v, Graph *G) {
-    uint32_t x;
-    *v = 0;
+    uint32_t x = 0;
+    //*v = 0;
     bool return_stat;
     if (stack_pop(p->vertices, &x) == false) {
         return false;
