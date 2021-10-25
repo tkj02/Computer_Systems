@@ -15,7 +15,7 @@
 #define CITYNAMELEN 64
 
 // DFS Function
-void dfs(Graph *G, uint32_t v, Path *current, Path *shortest, char *cities, FILE *outfile) {
+void dfs(Graph *G, uint32_t v, Path *current, Path *shortest, char *cities[], FILE *outfile) {
     graph_mark_visited(G, v);
     printf("in dfs v %d\n", v);
     for (uint32_t w = 0; w < graph_vertices(G); w++) {
@@ -27,16 +27,29 @@ void dfs(Graph *G, uint32_t v, Path *current, Path *shortest, char *cities, FILE
         if (graph_visited(G, w)) {
             continue;
         }
-        (void) current;
-        (void) shortest;
-        (void) cities;
-        (void) outfile;
-        // dfs(G, w, current, shortest, cities, outfile);
+        //current->length += graph_edge_weight(G, v, w);
+        //path_push_vertex(current, v, G);
+        printf("pushing vertice %d\n", v);
+        dfs(G, w, current, shortest, cities, outfile);
+        path_push_vertex(current, v, G);
     }
     graph_mark_unvisited(G, v);
 }
 
-int fgetscopy(char *dst, char *src);
+int fgetscopy(char *dst, char *src) {
+    char ch;
+    while ((ch = *src)) {
+        if ((ch == '\n') || (ch == '\r')) {
+            *dst = 0;
+            break;
+        }
+        *dst = *src;
+        dst++;
+        src++;
+    }
+    *dst = 0;
+    return 0;
+}
 
 // Main Function
 int main(int argc, char **argv) {
@@ -86,7 +99,7 @@ int main(int argc, char **argv) {
     char buffer[BUFFERSIZE];
     char *retptr;
     int vertexcount;
-    char *cities;
+    char *cities_ar;
     Graph *gptr;
     uint32_t node_i, node_j, node_k;
     Path *current_path;
@@ -95,24 +108,24 @@ int main(int argc, char **argv) {
     retptr = fgets(buffer, BUFFERSIZE, fp);
     sscanf(buffer, "%d", &vertexcount);
     printf("vertex count: %d\n", vertexcount);
-    cities = malloc(CITYNAMELEN * vertexcount);
-    if (cities == NULL) {
-        printf("malloc failed");
-        goto errorexit;
-    }
+    cities_ar = malloc(CITYNAMELEN * vertexcount);
+
     if (vertexcount < 1 || vertexcount > VERTICES) {
         printf("invalid vertices\n");
         goto errorexit;
     }
+    char **cities;
+    cities = malloc(sizeof(char *) * vertexcount);
     for (int i = 0; i < vertexcount; i++) {
         retptr = fgets(buffer, BUFFERSIZE, fp);
         if (retptr == NULL) {
             goto errorexit;
         }
-        fgetscopy(&cities[i * CITYNAMELEN], buffer);
+        fgetscopy(&cities_ar[i * CITYNAMELEN], buffer);
+        cities[i] = &cities_ar[i * CITYNAMELEN];
     }
     for (int i = 0; i < vertexcount; i++) {
-        printf("%d %s\n", i, &cities[i * CITYNAMELEN]);
+        printf("%d %s\n", i, cities[i]);
     }
 
     gptr = graph_create(vertexcount, undirected);
@@ -136,25 +149,12 @@ int main(int argc, char **argv) {
     shortest_path = path_create();
 
     dfs(gptr, START_VERTEX, current_path, shortest_path, cities, outfp);
+    path_push_vertex(current_path, START_VERTEX, gptr);
+    path_print(current_path, outfp, cities);
 
 errorexit:
     if (fp != stdin) {
         fclose(fp);
     }
-    return 0;
-}
-
-int fgetscopy(char *dst, char *src) {
-    char ch;
-    while ((ch = *src)) {
-        if ((ch == '\n') || (ch == '\r')) {
-            *dst = 0;
-            break;
-        }
-        *dst = *src;
-        dst++;
-        src++;
-    }
-    *dst = 0;
     return 0;
 }
