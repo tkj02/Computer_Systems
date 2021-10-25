@@ -45,20 +45,18 @@ bool path_push_vertex(Path *p, uint32_t v, Graph *G) {
 
 bool path_pop_vertex(Path *p, uint32_t *v, Graph *G) {
     uint32_t x = 0;
-    //*v = 0;
+    *v = 0;
     bool return_stat;
-    if (stack_pop(p->vertices, &x) == false) {
-        return false;
-    }
-    *v = x;
     uint32_t current_top;
-    return_stat = stack_peek(p->vertices, &current_top);
-    stack_pop(p->vertices, &x);
-    if (return_stat == false) {
-        return false;
+    uint32_t stack_top;
+    return_stat = stack_pop(p->vertices, &x);
+    if (return_stat) {
+        *v = x;
+        stack_top = stack_peek(p->vertices, &current_top);
+        p->length -= graph_edge_weight(G, x, stack_top);
+        return true;
     }
-    p->length -= graph_edge_weight(G, x, current_top);
-    return true;
+    return false;
 }
 
 uint32_t path_vertices(Path *p) {
@@ -72,7 +70,6 @@ uint32_t path_length(Path *p) {
 void path_copy(Path *dst, Path *src) {
     dst->length = src->length;
     stack_copy(dst->vertices, src->vertices);
-    return;
 }
 
 void path_print(Path *p, FILE *outfile, char *cities[]) {
