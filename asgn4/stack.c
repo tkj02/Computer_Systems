@@ -63,7 +63,7 @@ bool stack_pop(Stack *s, uint32_t *x) {
     if (stack_empty(s)) {
         return false;
     }
-    s->top--;
+    s->top -= 1;
     *x = s->items[s->top];
     return true;
 }
@@ -82,6 +82,7 @@ void stack_copy(Stack *dst, Stack *src) {
     for (uint32_t i = 0; i < src->capacity; i++) {
         dst->items[i] = src->items[i];
     }
+    return;
 }
 
 void stack_print(Stack *s, FILE *outfile, char *cities[]) {
