@@ -4,9 +4,9 @@
 #include <stdlib.h>
 
 typedef struct Stack {
-    uint32_t top; // Index of the next empty slot .
-    uint32_t capacity; // Number of items that can be pushed .
-    uint32_t *items; // Array of items , each with type uint32_t .
+    uint32_t top; // Index of the next empty slot.
+    uint32_t capacity; // Number of items that can be pushed.
+    uint32_t *items; // Array of items , each with type uint32_t.
 } Stack;
 
 Stack *stack_create(uint32_t capacity) {
