@@ -33,7 +33,8 @@ bool path_push_vertex(Path *p, uint32_t v, Graph *G) {
     } else {
         uint32_t current_top;
         return_stat = stack_peek(p->vertices, &current_top);
-        printf("%d", current_top);
+	stack_push(p->vertices, v);
+        //printf("current top %d\n", current_top);
         if (return_stat) {
             p->length += graph_edge_weight(G, current_top, v);
             return true;
@@ -45,6 +46,7 @@ bool path_push_vertex(Path *p, uint32_t v, Graph *G) {
 
 bool path_pop_vertex(Path *p, uint32_t *v, Graph *G) {
     uint32_t x;
+    *v = 0;
     bool return_stat;
     if (stack_pop(p->vertices, &x) == false) {
         return false;
@@ -70,11 +72,10 @@ uint32_t path_length(Path *p) {
 void path_copy(Path *dst, Path *src) {
     dst->length = src->length;
     stack_copy(dst->vertices, src->vertices);
-    return;
 }
 
 void path_print(Path *p, FILE *outfile, char *cities[]) {
-    fprintf(outfile, "Path length: %d", p->length);
+    fprintf(outfile, "Path length: %d \nPath: ", p->length);
     stack_print(p->vertices, outfile, cities);
-    return;
+    //fprintf(outfile, "Total recursive calls: %d", recursion_count);
 }
