@@ -63,7 +63,8 @@ int main(int argc, char **argv) {
     char buffer[BUFFERSIZE];
     char *retptr;
     int vertexcount;
-    char *cities_ar;
+    char *cities_ar = NULL;
+    char **cities = NULL;
     uint32_t node_i, node_j, node_k;
     Graph *gptr;
     Path *current_path;
@@ -118,7 +119,6 @@ int main(int argc, char **argv) {
     }
 
     // Sets up cities and allocates needed memory
-    char **cities;
     cities = malloc(sizeof(char *) * vertexcount);
     for (int i = 0; i < vertexcount; i++) {
         retptr = fgets(buffer, BUFFERSIZE, fp);
@@ -155,15 +155,20 @@ int main(int argc, char **argv) {
     printf("Total recursive calls: %u \n", recursive_calls + 1);
 
     //Frees memory
+    graph_delete(&gptr);
     path_delete(&current_path);
     path_delete(&shortest_path);
-    graph_delete(&gptr);
-    void free(void *cities_ar);
 
 // Closes file if error present
 errorexit:
     if (fp != stdin) {
         fclose(fp);
+    }
+    if (cities != NULL) {
+        free(cities);
+    }
+    if (cities_ar != NULL) {
+        free(cities_ar);
     }
     return 0;
 }
