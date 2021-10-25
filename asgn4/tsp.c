@@ -216,7 +216,7 @@ int main(int argc, char **argv) {
     // Calls DFS and prints path information
     dfs(gptr, START_VERTEX, current_path, shortest_path, cities, outfp);
     path_print(shortest_path, outfp, cities);
-    printf("Total recursive calls: %u \n", recur_call_count + 1);
+    printf("Total recursive calls: %u \n", recur_call_count);
 
     //Frees memory
     graph_delete(&gptr);
