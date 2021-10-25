@@ -164,6 +164,7 @@ errorexit:
     }
     if (cities != NULL) {
         free(cities);
+        *cities = NULL;
     }
     if (cities_ar != NULL) {
         free(cities_ar);
