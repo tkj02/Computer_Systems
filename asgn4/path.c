@@ -45,15 +45,15 @@ bool path_push_vertex(Path *p, uint32_t v, Graph *G) {
 
 bool path_pop_vertex(Path *p, uint32_t *v, Graph *G) {
     uint32_t x = 0;
-    *v = 0;
     bool return_stat;
     uint32_t current_top;
     uint32_t stack_top;
+    *v = 0;
     return_stat = stack_pop(p->vertices, &x);
     if (return_stat) {
         *v = x;
         stack_top = stack_peek(p->vertices, &current_top);
-        p->length -= graph_edge_weight(G, x, stack_top);
+        p->length -= graph_edge_weight(G, current_top, x);
         return true;
     }
     return false;
