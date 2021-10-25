@@ -32,9 +32,9 @@ void dfs(Graph *G, uint32_t v, Path *current, Path *shortest, char *cities[], FI
         }
         //printf("pushing vertice %d\n", v);
         recursive_calls++;
-	dfs(G, w, current, shortest, cities, outfile);
+        dfs(G, w, current, shortest, cities, outfile);
         //path_push_vertex(current, v, G);
-    	graph_mark_unvisited(G, v);
+        graph_mark_unvisited(G, v);
     }
     //graph_mark_unvisited(G, v);
 }
@@ -112,7 +112,7 @@ int main(int argc, char **argv) {
         }
     }
 
-    // Allocates needed memory to support cities   
+    // Allocates needed memory to support cities
     retptr = fgets(buffer, BUFFERSIZE, fp);
     sscanf(buffer, "%d", &vertexcount);
     cities_ar = malloc(CITYNAMELEN * vertexcount);
@@ -157,7 +157,7 @@ int main(int argc, char **argv) {
     dfs(gptr, START_VERTEX, current_path, shortest_path, cities, outfp);
     path_push_vertex(current_path, START_VERTEX, gptr);
     path_print(current_path, outfp, cities);
-    printf("Total recursive calls: %u \n", recursive_calls+1);
+    printf("Total recursive calls: %u \n", recursive_calls + 1);
 
     //Frees memory
 
