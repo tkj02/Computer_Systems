@@ -15,6 +15,7 @@
 #define CITYNAMELEN 64
 
 // DFS Function
+// Conducts Depth-first Search to find paths
 void dfs(Graph *G, uint32_t v, Path *current, Path *shortest, char *cities[], FILE *outfile) {
     graph_mark_visited(G, v);
     //printf("in dfs v %d\n", v);
@@ -35,6 +36,7 @@ void dfs(Graph *G, uint32_t v, Path *current, Path *shortest, char *cities[], FI
 }
 
 // Own strdup() Function
+// Removes extra newline character
 int fgetscopy(char *dst, char *src) {
     char ch;
     while ((ch = *src)) {
@@ -53,6 +55,7 @@ int fgetscopy(char *dst, char *src) {
 // Main Function
 int main(int argc, char **argv) {
 
+    // Initializes necessary variables
     int opt = 0;
     bool no_input = true;
     bool undirected = false;
@@ -67,11 +70,13 @@ int main(int argc, char **argv) {
     Path *current_path;
     Path *shortest_path;
 
+    // getopt function
+    // Checks command line options
     while ((opt = getopt(argc, argv, OPTIONS)) != -1) {
         no_input = false;
         switch (opt) {
         case 'h':
-	    //print help message
+            // Prints help message
             printf("SYNOPSIS\n  Traveling Salesman Problem using DFS.\n\n");
             printf("USAGE\n  ./tsp [-u] [-v] [-h] [-i infile] [-o outfile]\n\n");
             printf("OPTIONS\n");
@@ -81,19 +86,19 @@ int main(int argc, char **argv) {
             printf("  -i infile      Input containing graph (default: stdin)\n");
             printf("  -o outfile     Output of computed path (default: stdout)\n");
         case 'v':
-            //print all paths
+            // Prints all paths
         case 'u':
-            //specify graph to be undirected
+            // Specifies graph to be undirected
             undirected = true;
         case 'i':
-            //specify input file
+            // Specifies input file
             fp = fopen(optarg, "r");
             if (fp == NULL) {
                 printf("error opening file %s\n", optarg);
             }
             break;
         case 'o':
-            //specify output file
+            // Specifies output file
             outfp = fopen(optarg, "w");
             if (outfp == NULL) {
                 printf("error file write %s\n", optarg);
@@ -103,6 +108,7 @@ int main(int argc, char **argv) {
         }
     }
 
+    // Allocates needed memory to support cities   
     retptr = fgets(buffer, BUFFERSIZE, fp);
     sscanf(buffer, "%d", &vertexcount);
     cities_ar = malloc(CITYNAMELEN * vertexcount);
@@ -111,6 +117,8 @@ int main(int argc, char **argv) {
         printf("invalid vertices\n");
         goto errorexit;
     }
+
+    // Sets up cities and allocates needed memory
     char **cities;
     cities = malloc(sizeof(char *) * vertexcount);
     for (int i = 0; i < vertexcount; i++) {
@@ -121,10 +129,8 @@ int main(int argc, char **argv) {
         fgetscopy(&cities_ar[i * CITYNAMELEN], buffer);
         cities[i] = &cities_ar[i * CITYNAMELEN];
     }
-   // for (int i = 0; i < vertexcount; i++) {
-   //     printf("%d %s\n", i, cities[i]);
-   // }
 
+    // Creates graph and checks conditions for i, j, and k
     gptr = graph_create(vertexcount, undirected);
     while (1) {
         retptr = fgets(buffer, BUFFERSIZE, fp);
@@ -136,18 +142,25 @@ int main(int argc, char **argv) {
             printf("invalid matrix values\n");
             goto errorexit;
         }
-    //    printf("%d %d %d\n", node_i, node_j, node_k);
         graph_add_edge(gptr, node_i, node_j, node_k);
     }
-    
+
+    // Creates paths for current and shortest
     current_path = path_create();
     shortest_path = path_create();
 
+    // Calls DFS and prints path information
     dfs(gptr, START_VERTEX, current_path, shortest_path, cities, outfp);
     path_push_vertex(current_path, START_VERTEX, gptr);
     path_print(current_path, outfp, cities);
     printf("Total recursive calls: \n");
 
+    //Frees memory
+    path_delete(&current_path);
+    path_delete(&shortest_path);
+    graph_delete(&gptr);
+
+// Closes file if error present
 errorexit:
     if (fp != stdin) {
         fclose(fp);
