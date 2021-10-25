@@ -24,7 +24,7 @@ Command Line Arguments
 - i (infile): specifies the input file path that has locations and edges of a graph (default is set as stdin)
 - o (outfile): specifies the output file path that the program prints to (default output is set as stdout)
 
-Example Graph Files (contain predetermined locations and edge weights)
+Example Graph Files (contain predetermined locations and edge weights):
 - diego.graph
 - mythical.graph
 - short.graph
