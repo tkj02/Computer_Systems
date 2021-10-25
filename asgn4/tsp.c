@@ -56,7 +56,6 @@ int main(int argc, char **argv) {
 
     // Initializes necessary variables
     int opt = 0;
-    bool no_input = true;
     bool undirected = false;
     FILE *fp = stdin;
     FILE *outfp = stdout;
@@ -73,7 +72,6 @@ int main(int argc, char **argv) {
     // getopt function
     // Checks command line options
     while ((opt = getopt(argc, argv, OPTIONS)) != -1) {
-        no_input = false;
         switch (opt) {
         case 'h':
             // Prints help message
@@ -136,7 +134,7 @@ int main(int argc, char **argv) {
         if (retptr == NULL) {
             break;
         }
-        sscanf(buffer, "%d %d %d", &node_i, &node_j, &node_k);
+        sscanf(buffer, "%u %u %u", &node_i, &node_j, &node_k);
         if (node_i < 0 || node_i > VERTICES || node_j < 0 || node_j > VERTICES) {
             printf("invalid matrix values\n");
             goto errorexit;
