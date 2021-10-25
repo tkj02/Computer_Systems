@@ -34,7 +34,6 @@ bool path_push_vertex(Path *p, uint32_t v, Graph *G) {
         uint32_t current_top;
         return_stat = stack_peek(p->vertices, &current_top);
         stack_push(p->vertices, v);
-        //printf("current top %d\n", current_top);
         if (return_stat) {
             p->length += graph_edge_weight(G, current_top, v);
             return true;
