@@ -72,6 +72,7 @@ uint32_t path_length(Path *p) {
 void path_copy(Path *dst, Path *src) {
     dst->length = src->length;
     stack_copy(dst->vertices, src->vertices);
+    return;
 }
 
 void path_print(Path *p, FILE *outfile, char *cities[]) {

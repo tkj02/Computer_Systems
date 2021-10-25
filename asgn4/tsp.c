@@ -83,8 +83,8 @@ int main(int argc, char **argv) {
             printf("  -h             Program usage and help.\n");
             printf("  -i infile      Input containing graph (default: stdin)\n");
             printf("  -o outfile     Output of computed path (default: stdout)\n");
-        case 'v':
-            // Prints all paths
+        //case 'v':
+        // Prints all paths
         case 'u':
             // Specifies graph to be undirected
             undirected = true;
@@ -135,7 +135,7 @@ int main(int argc, char **argv) {
             break;
         }
         sscanf(buffer, "%u %u %u", &node_i, &node_j, &node_k);
-        if (node_i < 0 || node_i > VERTICES || node_j < 0 || node_j > VERTICES) {
+        if (node_i > VERTICES || node_j > VERTICES) {
             printf("invalid matrix values\n");
             goto errorexit;
         }
