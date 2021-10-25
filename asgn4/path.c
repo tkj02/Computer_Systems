@@ -53,6 +53,7 @@ bool path_pop_vertex(Path *p, uint32_t *v, Graph *G) {
     *v = x;
     uint32_t current_top;
     return_stat = stack_peek(p->vertices, &current_top);
+    stack_pop(p->vertices, &x);
     if (return_stat == false) {
         return false;
     }
