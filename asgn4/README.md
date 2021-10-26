@@ -35,7 +35,7 @@ Example Graph Files (contain predetermined locations and edge weights):
 Assistance:
 - Watch Eugene’s recorded section on YuJa (learned about the assignment overall, how the graphs are set up, and how the stack works)
 - Watched part of Chrtisian’s recorded section on YuJa (got ideas on how to implement tsp.c and how to set up parameters when calling functions)
-- Attended Brian’s section on October 22 (learned about pushing and popping and how to decipher the example executable)
+- Attended Brian’s section on October 22 (learned about pushing and popping and how to decipher the example graphs)
 - Learned about pointers vs ampersands as well as when to use which from my dad
 - Consulted this website (https://www.tutorialspoint.com/data_structures_algorithms/depth_first_traversal.htm) to learn how DFS works
 
