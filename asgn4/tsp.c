@@ -90,6 +90,7 @@ void dfs(Graph *G, uint32_t v, Path *current, Path *shortest, char *cities[], FI
         recur_call_count++;
         dfs(G, w, current, shortest, cities, outfile);
 
+        // Marks w as visited and removes extra vertex
         graph_mark_unvisited(G, w);
         path_pop_vertex(current, &temp_rd, G);
     }
