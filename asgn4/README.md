@@ -29,6 +29,7 @@ Example Graph Files (contain predetermined locations and edge weights):
 - mythical.graph
 - short.graph
 - solarsystem.graph
+- texas.graph
 - ucsc.graph
 
 Assistance:
@@ -36,6 +37,7 @@ Assistance:
 - Watched part of Chrtisian’s recorded section on YuJa (got ideas on how to implement tsp.c and how to set up parameters when calling functions)
 - Attended Brian’s section on October 22 (learned about pushing and popping and how to decipher the example executable)
 - Learned about pointers vs ampersands as well as when to use which from my dad
+- Consulted this website (https://www.tutorialspoint.com/data_structures_algorithms/depth_first_traversal.htm) to learn how DFS works
 
 Citations:
 - Assignment document: I followed the pseudocode provided on the assignment document for the following portions of my code:
