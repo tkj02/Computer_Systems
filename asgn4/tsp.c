@@ -23,11 +23,10 @@ int recur_call_count = 0;
 void dfs(Graph *G, uint32_t v, Path *current, Path *shortest, char *cities[], FILE *outfile) {
 
     // More variables
-    recur_call_count++;
     uint32_t temp_rd;
     uint32_t weight;
     int len = graph_vertices(G);
-    bool retStat;
+    bool ret_stat;
     bool base_condition = true;
     path_push_vertex(current, v, G);
 
@@ -44,17 +43,17 @@ void dfs(Graph *G, uint32_t v, Path *current, Path *shortest, char *cities[], FI
     if (base_condition) {
         // Gets first vertex from current path
         if (path_vertices(current) == graph_vertices(G)) {
-            Path *tempPath = path_create();
+            Path *temp_path = path_create();
             uint32_t node_value;
-            path_copy(tempPath, current);
+            path_copy(temp_path, current);
 
             // Parsing through temporary path of all vertices
-            while (path_vertices(tempPath)) {
-                retStat = path_pop_vertex(tempPath, &node_value, G);
+            while (path_vertices(temp_path)) {
+                ret_stat = path_pop_vertex(temp_path, &node_value, G);
             }
 
             // Frees memory of temporary path
-            path_delete(&tempPath);
+            path_delete(&temp_path);
 
             // Adds final vertex
             path_push_vertex(current, node_value, G);
@@ -80,7 +79,6 @@ void dfs(Graph *G, uint32_t v, Path *current, Path *shortest, char *cities[], FI
     // Goes through all vertices of graph
     for (uint32_t w = 0; w < graph_vertices(G); w++) {
         weight = graph_edge_weight(G, v, w);
-
         if (weight == 0) {
             continue;
         }
@@ -89,6 +87,7 @@ void dfs(Graph *G, uint32_t v, Path *current, Path *shortest, char *cities[], FI
         }
 
         // Recursive call
+        recur_call_count++;
         dfs(G, w, current, shortest, cities, outfile);
 
         graph_mark_unvisited(G, w);
@@ -216,7 +215,7 @@ int main(int argc, char **argv) {
     // Calls DFS and prints path information
     dfs(gptr, START_VERTEX, current_path, shortest_path, cities, outfp);
     path_print(shortest_path, outfp, cities);
-    printf("Total recursive calls: %u \n", recur_call_count);
+    printf("Total recursive calls: %u\n", recur_call_count + 1);
 
     //Frees memory
     graph_delete(&gptr);
