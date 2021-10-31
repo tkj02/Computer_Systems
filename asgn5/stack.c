@@ -2,6 +2,7 @@
 #include "stack.h"
 #include <stdbool.h>
 #include <stdint.h>
+#include <stdlib.h>
 
 typedef struct Stack Stack;
 
@@ -16,15 +17,17 @@ Stack *stack_create(uint32_t capacity) {
     if (s) {
         s->top = 0;
         s->capacity = capacity;
-        s->items = = (uint32_t *) calloc(capacity, sizeof(uint32_t));
+        s->items = (uint32_t *) calloc(capacity, sizeof(uint32_t));
     }
     return s;
 }
 
 void stack_delete(Stack **s) {
-    free((*s)->items);
-    free(*s);
-    *s = NULL;
+    if (*s && (*s)->items) {
+        free((*s)->items);
+        free(*s);
+        *s = NULL;
+    }
 }
 
 bool stack_empty(Stack *s) {
