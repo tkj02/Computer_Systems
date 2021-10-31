@@ -2,14 +2,12 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-typedef struct Node Node;
-
-struct Node {
+typedef struct Node {
     Node *left;
     Node *right;
     uint8_t symbol;
     uint64_t frequency;
-};
+} Node;
 
 Node *node_create(uint8_t symbol, uint64_t frequency) {
     Node *n = (Node *) malloc(sizeof(Node));
