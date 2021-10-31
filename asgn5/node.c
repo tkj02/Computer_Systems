@@ -28,9 +28,7 @@ void node_delete(Node **n) {
 }
 
 Node *node_join(Node *left, Node *right) {
-    left->frequency = left_freq;
-    right->frequency = right_freq;
-    Node *new_node = node_create('$', left_freq + right_freq);
+    Node *new_node = node_create('$', left->frequency + right->frequency);
     return new_node;
 }
 
