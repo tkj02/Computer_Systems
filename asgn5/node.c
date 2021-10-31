@@ -1,11 +1,15 @@
+#include "node.h"
 #include <stdint.h>
+#include <stdlib.h>
 
-typedef struct Node {
+typedef struct Node Node;
+
+struct Node {
     Node *left;
     Node *right;
     uint8_t symbol;
     uint64_t frequency;
-} Node;
+};
 
 Node *node_create(uint8_t symbol, uint64_t frequency){
 	Node *n = (Node *) malloc(sizeof(Node));
@@ -38,8 +42,8 @@ void node_print(Node *n){
 		n->right = right;
 		printf("node's left symbol: %d", left->symbol);
 		printf("node's right symbol: %d", right->symbol);
-		printf("node's left freq: %d", left->frequency);
-		printf("node's right freq: %d", right->frequency);
+		printf("node's left freq: %lu", left->frequency);
+		printf("node's right freq: %lu", right->frequency);
 	}
 }
 
