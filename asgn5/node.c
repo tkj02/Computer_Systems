@@ -1,20 +1,16 @@
 #include "node.h"
+#include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
 
-struct Node {
-    Node *left;
-    Node *right;
-    uint8_t symbol;
-    uint64_t frequency;
-} Node;
+// Using Node struct from node.h
+// Hass Node *left, Node *right, uint8_t symbol, and uint64_t frequency
 
 Node *node_create(uint8_t symbol, uint64_t frequency) {
     Node *n = (Node *) malloc(sizeof(Node));
     if (n) {
         n->left = NULL;
         n->right = NULL;
-        n->next = NULL;
         n->symbol = symbol;
         n->frequency = frequency;
     }
