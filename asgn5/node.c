@@ -34,11 +34,9 @@ void node_print(Node *n) {
     printf("node symbol: %d", n->symbol);
     printf("node freq: %lu", n->frequency);
     if (n->left != NULL && n->right != NULL) {
-        n->left = left;
-        n->right = right;
-        printf("node's left symbol: %d", left->symbol);
-        printf("node's right symbol: %d", right->symbol);
-        printf("node's left freq: %lu", left->frequency);
-        printf("node's right freq: %lu", right->frequency);
+        printf("node's left symbol: %d", n->left->symbol);
+        printf("node's right symbol: %d", n->right->symbol);
+        printf("node's left freq: %lu", n->left->frequency);
+        printf("node's right freq: %lu", n->right->frequency);
     }
 }
