@@ -2,7 +2,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-typedef struct Node {
+struct Node {
     Node *left;
     Node *right;
     uint8_t symbol;
