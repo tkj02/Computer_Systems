@@ -1,6 +1,8 @@
 #include "node.h"
 #include "pq.h"
 #include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <stdint.h>
 
 typedef struct PriorityQueue PriorityQueue;
@@ -48,26 +50,27 @@ uint32_t pq_size(PriorityQueue *q) {
 }
 
 bool enqueue(PriorityQueue *q, Node *n) {
-    if (pq_full) {
+    if (pq_full(q)) {
         return false;
     }
-    if (pq_empty) {
-        q->tail = q->head = n;
+    if (pq_empty(q)) {
+        n = node_join(q->tail, q->head);
         return true;
     }
-    q->tail->next = n;
-    q->tail = n;
     return true;
 }
 
 bool dequeue(PriorityQueue *q, Node **n) {
-    if (pq_empty) {
+    if (pq_empty(q)) {
         return true;
     }
     //will add
-    return true;
+    *n = return true;
 }
 
 void pq_print(PriorityQueue *q) {
-    //print queue
+    for (uint32_t i = 0; i < q->head; i++) {
+        printf("%u\n", q);
+        //print nodes?
+    }
 }
