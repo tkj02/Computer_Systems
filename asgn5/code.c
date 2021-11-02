@@ -73,7 +73,7 @@ bool code_pop_bit(Code *c, uint8_t *bit) {
 }
 
 void code_print(Code *c) {
-	for (uint32_t i = 0; i < ALPHABET; i++){
-		printf("bit at index #%lu: %hu\n", i, bits[i/8]);
-	}
+    for (uint32_t i = 0; i < ALPHABET; i++) {
+        printf("bit at index #%lu: %hu\n", i, bits[i / 8]);
+    }
 }

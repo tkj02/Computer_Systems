@@ -67,7 +67,7 @@ bool stack_pop(Stack *s, Node **n) {
 }
 
 void stack_print(Stack *s) {
-    //check stack_create
-    //check push and pop return true
-    //check with example stack
+    for (uint32_t i = 0; i < s->top; i += 1) {
+        printf("%lu\n", s->items[i]);
+    }
 }
