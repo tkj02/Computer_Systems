@@ -38,7 +38,7 @@ bool pq_empty(PriorityQueue *q) {
 
 bool pq_full(PriorityQueue *q) {
     if (q->head == q->capacity) {
-	return true;
+        return true;
     }
     return false;
 }
@@ -51,9 +51,9 @@ bool enqueue(PriorityQueue *q, Node *n) {
     if (pq_full) {
         return false;
     }
-    if (q->tail == NULL){
-	    q->tail = q->head = n;
-	    return true;
+    if (pq_empty) {
+        q->tail = q->head = n;
+        return true;
     }
     q->tail->next = n;
     q->tail = n;
