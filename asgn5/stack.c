@@ -1,5 +1,7 @@
 #include "node.h"
 #include "stack.h"
+#include <stdio.h>
+#include <stdlib.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -17,7 +19,7 @@ Stack *stack_create(uint32_t capacity) {
     if (s) {
         s->top = 0;
         s->capacity = capacity;
-        s->items = (uint32_t *) calloc(capacity, sizeof(uint32_t));
+        s->items = (Node **) calloc(capacity, sizeof(Node **));
     }
     return s;
 }
@@ -68,6 +70,6 @@ bool stack_pop(Stack *s, Node **n) {
 
 void stack_print(Stack *s) {
     for (uint32_t i = 0; i < s->top; i += 1) {
-        printf("%lu\n", s->items[i]);
+        printf("%u\n", (uint32_t) s->items[i]);
     }
 }
