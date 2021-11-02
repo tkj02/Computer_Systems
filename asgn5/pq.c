@@ -9,7 +9,6 @@ struct PriorityQueue {
     uint32_t capacity;
     uint32_t head;
     uint32_t tail;
-    uint32_t size;
     Node **nodes;
 };
 
@@ -19,7 +18,6 @@ PriorityQueue *pq_create(uint32_t capacity) {
         q->capacity = capacity;
         q->head = 0;
         q->tail = 0;
-        q->size = 0;
         q->nodes = NULL;
         q->nodes = (Node **) malloc(capacity * sizeof(Node *));
     }
@@ -40,7 +38,7 @@ bool pq_empty(PriorityQueue *q) {
 
 bool pq_full(PriorityQueue *q) {
     if (q->head == q->capacity) {
-        return true;
+	return true;
     }
     return false;
 }
@@ -53,8 +51,12 @@ bool enqueue(PriorityQueue *q, Node *n) {
     if (pq_full) {
         return false;
     }
-    n = q->head;
-    q->head++;
+    if (q->tail == NULL){
+	    q->tail = q->head = n;
+	    return true;
+    }
+    q->tail->next = n;
+    q->tail = n;
     return true;
 }
 
@@ -62,8 +64,7 @@ bool dequeue(PriorityQueue *q, Node **n) {
     if (pq_empty) {
         return true;
     }
-    n = q->tail;
-    --s->head;
+    //will add
     return true;
 }
 

@@ -14,6 +14,7 @@ Node *node_create(uint8_t symbol, uint64_t frequency) {
     if (n) {
         n->left = NULL;
         n->right = NULL;
+	n->next = NULL;
         n->symbol = symbol;
         n->frequency = frequency;
     }
