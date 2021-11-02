@@ -52,7 +52,7 @@ bool stack_push(Stack *s, Node *n) {
     if (stack_full(s)) {
         return false;
     }
-    //push
+    s->items[s->top] = n;
     s->top++;
     return true;
 }
@@ -62,7 +62,7 @@ bool stack_pop(Stack *s, Node **n) {
         return false;
     }
     --s->top;
-    //pop
+    *n = s->items[s->top];
     return true;
 }
 
