@@ -6,8 +6,6 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-typedef struct Stack Stack;
-
 struct Stack {
     uint32_t top;
     uint32_t capacity;

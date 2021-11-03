@@ -4,7 +4,7 @@
 #include <stdlib.h>
 
 // Using Node struct from node.h
-// Hass Node *left, Node *right, uint8_t symbol, and uint64_t frequency
+// Has Node *left, Node *right, uint8_t symbol, and uint64_t frequency
 
 Node *node_create(uint8_t symbol, uint64_t frequency) {
     Node *n = (Node *) malloc(sizeof(Node));
