@@ -54,23 +54,29 @@ bool enqueue(PriorityQueue *q, Node *n) {
         return false;
     }
     if (pq_empty(q)) {
-        n = node_join(q->tail, q->head);
+	n = q->nodes[q->tail];
+        q->head++;
         return true;
     }
+    // for now:
+    //     add n to end of queue
+    //     check all previous nodes
+    //     if previous node > n, swap
+    //     do this until n <= previous node
     return true;
 }
 
 bool dequeue(PriorityQueue *q, Node **n) {
     if (pq_empty(q)) {
-        return true;
+        return false;
     }
-    //will add
-    *n = return true;
+    *n = q->nodes[q->head];
+    --q->head;
+    return true;
 }
 
 void pq_print(PriorityQueue *q) {
     for (uint32_t i = 0; i < q->head; i++) {
-        printf("%u\n", q);
-        //print nodes?
+        printf("%u\n", (uint32_t) q->nodes[i]);
     }
 }
