@@ -15,7 +15,7 @@
 #define OPTIONS "hi:o:v"
 
 int main(int argc, char **argv) {
-
+    int opt = 0;
     while ((opt = getopt(argc, argv, OPTIONS)) != -1) {
         switch (opt) {
         case 'h':
