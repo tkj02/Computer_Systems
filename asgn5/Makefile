@@ -4,14 +4,14 @@ LFLAGS = -lm
 
 all: encode decode
 
-encode: encode.o node.o code.o stack.o pq.o io.o huffman.o
-	$(CC) -o encode encode.o node.o code.o stack.o pq.o io.o huffman.o
+encode: encode.o node.o code.o stack.o pq.o huffman.o io.o
+	$(CC) -o encode encode.o node.o code.o stack.o pq.o huffman.o io.o
+
+decode: decode.o node.o code.o stack.o pq.o huffman.o io.o
+	$(CC) -o decode decode.o node.o code.o stack.o pq.o huffman.o i.o
 
 encode.o: encode.c
 	$(CC) $(CFLAGS) -o encode.o -c encode.c
-
-decode: decode.o node.o code.o stack.o pq.o io.o huffman.o
-	$(CC) -o decode decode.o node.o code.o stack.o pq.o io.o huffman.o
 
 decode.o: decode.c
 	$(CC) $(CFLAGS) -o decode.o -c decode.c
