@@ -5,14 +5,13 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-typedef struct PriorityQueue PriorityQueue;
-
-struct PriorityQueue {
+typedef struct PriorityQueue {
     uint32_t capacity;
     uint32_t head;
     uint32_t tail;
+    uint32_t size;
     Node **nodes;
-};
+} PriorityQueue;
 
 PriorityQueue *pq_create(uint32_t capacity) {
     PriorityQueue *q = (PriorityQueue *) malloc(sizeof(PriorityQueue));
@@ -54,15 +53,12 @@ bool enqueue(PriorityQueue *q, Node *n) {
         return false;
     }
     if (pq_empty(q)) {
-	n = q->nodes[q->tail];
+        n = q->nodes[q->tail];
         q->head++;
         return true;
     }
-    // for now:
-    //     add n to end of queue
-    //     check all previous nodes
-    //     if previous node > n, swap
-    //     do this until n <= previous node
+    //min heap to sort n by priority
+    n = q->nodes[q->head];
     return true;
 }
 
