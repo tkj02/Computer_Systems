@@ -30,20 +30,18 @@ int write_bytes(int outfile, uint8_t *buf, int nbytes) {
 }
 
 bool read_bit(int infile, uint8_t *bit) {
-    static uint8_t buffer_array[BLOCK] = { 0 };
+    static uint8_t buffer_array[BLOCK] = {0};
     static uint32_t bit_top = 0;
     static uint32_t bit_buffer_size = 0;
-
     if (bit_top == 0) {
-        //bit_buffer_size = read_bytes(infile, *buf, BLOCK);
+        bit_buffer_size = read_bytes(infile, buffer_array, BLOCK);
         if (bit_buffer_size == 0) {
             return false;
         }
     }
-    *bit = buffer_array[__];
+    *bit = buffer_array[bit_buffer_size];
     bit_top++;
     if (bit_top == bit_buffer_size * 8) {
-        //done reading
         bit_top = 0;
     }
     return true;
