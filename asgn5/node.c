@@ -24,7 +24,7 @@ void node_delete(Node **n) {
 
 Node *node_join(Node *left, Node *right) {
     Node *new_node = node_create('$', left->frequency + right->frequency);
-    return new_node;
+    return *new_node;
 }
 
 void node_print(Node *n) {
