@@ -1,15 +1,18 @@
 #include "code.h"
 #include "defines.h"
+#include <stdio.h>
 #include <stdbool.h>
 #include <stdint.h>
 
-typedef struct Code {
-    uint32_t top;
-    uint8_t bits[MAX_CODE_SIZE];
-} Code;
+// Using Code struct from code.h
+// Has uint32_t top and uint8_t bits[MAX_CODE_SIZE]
 
 Code code_init(void) {
-    Code *c = { .top = 0, .bits = { 0 } };
+    Code c;
+    c.top = 0;
+    for (uint8_t i = 0; i < MAX_CODE_SIZE; i++) {
+        c.bits[i] = 0;
+    }
     return c;
 }
 
@@ -32,33 +35,52 @@ bool code_full(Code *c) {
 }
 
 bool code_set_bit(Code *c, uint32_t i) {
-    if (i > ALPHABET) {
+    if (i >= ALPHABET) {
         return false;
     }
-    c->bits[i / 8] = 1;
+    int byte_index = i / 8;
+    int bit_index = i % 8;
+    uint8_t mask = 1 << bit_index;
+    c->bits[byte_index] = c->bits[byte_index] | mask;
     return true;
 }
 
 bool code_clr_bit(Code *c, uint32_t i) {
-    if (i > ALPHABET) {
+    if (i >= ALPHABET) {
         return false;
     }
-    c->bits[i / 8] = 0;
+    int byte_index = i / 8;
+    int bit_index = i % 8;
+    uint8_t mask = 1 << bit_index;
+    c->bits[byte_index] = c->bits[byte_index] & (~mask);
     return true;
 }
 
 bool code_get_bit(Code *c, uint32_t i) {
-    if (i > ALPHABET || c->bits[i / 8] == 0) {
+    if (i >= ALPHABET) {
         return false;
     }
-    return true;
+    int byte_index = i / 8;
+    int bit_index = i % 8;
+    uint8_t mask = 1 << bit_index;
+    if (c->bits[byte_index] & mask) {
+        return true;
+    }
+    return false;
 }
 
 bool code_push_bit(Code *c, uint8_t bit) {
     if (code_full(c)) {
         return false;
     }
-    c->bits[c->top] = bit;
+    int byte_index = c->top / 8;
+    int bit_index = c->top % 8;
+    uint8_t mask = 1 << bit_index;
+    if (bit == 0) {
+        c->bits[byte_index] &= ~mask;
+    } else {
+        c->bits[byte_index] |= mask;
+    }
     c->top++;
     return true;
 }
@@ -68,12 +90,19 @@ bool code_pop_bit(Code *c, uint8_t *bit) {
         return false;
     }
     --c->top;
-    *bit = c->bits[c->top];
+    int byte_index = c->top / 8;
+    int bit_index = c->top % 8;
+    uint8_t mask = 1 << bit_index;
+    if ((c->bits[byte_index] & mask) != 0) {
+        *bit = 1;
+    } else {
+        *bit = 0;
+    }
     return true;
 }
 
 void code_print(Code *c) {
-    for (uint32_t i = 0; i < ALPHABET; i++) {
-        printf("bit at index #%lu: %hu\n", i, bits[i / 8]);
+    for (uint32_t i = 0; i < MAX_CODE_SIZE; i++) {
+        printf("bit at index #%u: %hu\n", i, c->bits[i]);
     }
 }
