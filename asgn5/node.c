@@ -17,17 +17,19 @@ Node *node_create(uint8_t symbol, uint64_t frequency) {
     return n;
 }
 
-void node_delete1(Node **n) {
+void node_delete(Node **n) {
     free(*n);
     *n = NULL;
 }
 
-Node *node_join1(Node *left, Node *right) {
+Node *node_join(Node *left, Node *right) {
     Node *new_node = node_create('$', left->frequency + right->frequency);
+    new_node->left = left;
+    new_node->right = right;
     return new_node;
 }
 
-void node_print1(Node *n) {
+void node_print(Node *n) {
     printf("node symbol: %d", n->symbol);
     printf("node freq: %lu", n->frequency);
     if (n->left != NULL && n->right != NULL) {
