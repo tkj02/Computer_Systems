@@ -102,7 +102,5 @@ bool code_pop_bit(Code *c, uint8_t *bit) {
 }
 
 void code_print(Code *c) {
-    for (uint32_t i = 0; i < MAX_CODE_SIZE; i++) {
-        printf("bit at index #%u: %hu\n", i, c->bits[i]);
-    }
+    printf("number of bits: %d\n", code_size(c));
 }
