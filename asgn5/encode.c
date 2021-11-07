@@ -48,9 +48,19 @@ int create_hist(int fd) {
     return 0;
 }
 
+int get_unique_count() {
+    int unique_count = 0;
+    for (int i = 0; i < ALPHABET; i++) {
+        if (g_hist[i] == 0) {
+            continue;
+        }
+        unique_count++;
+    }
+    return unique_count;
+}
+
 int main(int argc, char **argv) {
 
-#if 1
     struct stat fileStat;
 
     int fd = open("test.txt", O_RDONLY);
@@ -83,7 +93,6 @@ int main(int argc, char **argv) {
         }
         printf("symbol %02x (%c) CodeCount: %d freq: %lu\n", i, (i > ' ' && i < 128) ? i : ' ',
             code_size(&g_table[i]), g_hist[i]);
-        // 	code_print(&g_table[i]);
     }
     close(fd);
     fd = open("test.txt", O_RDONLY);
@@ -91,6 +100,7 @@ int main(int argc, char **argv) {
         printf("error not found\n");
         return -1;
     }
+
     fstat(fd, &fileStat);
 
     int fw = open("test.out", O_RDWR | O_CREAT);
@@ -105,6 +115,16 @@ int main(int argc, char **argv) {
         printf("error allocating\n");
         return -1;
     }
+    Header hdr;
+    hdr.magic = MAGIC;
+    hdr.permissions = fileStat.st_mode;
+    hdr.tree_size = (3 * get_unique_count()) - 1;
+    hdr.file_size = fileStat.st_size;
+
+    write_bytes(fw, (uint8_t *) &hdr, sizeof(Header));
+
+    dump_tree(fw, hroot);
+
     while (1) {
         uint32_t return_len = read(fd, buffer, BLOCK);
         if (return_len < 1) {
@@ -190,8 +210,6 @@ int main(int argc, char **argv) {
         printf("%d bit: %d\n", i, bit);
     }
     return 0;
-
-#endif
 
     int opt = 0;
     while ((opt = getopt(argc, argv, OPTIONS)) != -1) {
