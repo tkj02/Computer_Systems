@@ -91,7 +91,7 @@ void write_code(int outfile, Code *c) {
 
 void flush_codes(int outfile) {
     if (index > 0) {
-        write_bytes(outfile, buffer, index / 8);
+        write_bytes(outfile, buffer, (index + 7) / 8);
     }
     index = 0;
 }
