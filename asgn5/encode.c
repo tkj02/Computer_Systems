@@ -52,8 +52,8 @@ int main(int argc, char **argv) {
 
     while ((opt = getopt(argc, argv, OPTIONS)) != -1) {
         switch (opt) {
-	
-	// Prints help message
+
+        // Prints help message
         case 'h':
             printf("SYNOPSIS\n  A Huffman encoder.\n  Compresses a file using the Huffman coding "
                    "algorithm.\n\n");
@@ -64,32 +64,30 @@ int main(int argc, char **argv) {
             printf("  -i infile      Input file to compress.\n");
             printf("  -o outfile     Output of compressed data.\n");
             break;
-	
-	    // Prints compression statistics
-	case 'v':
-	    v_flag = true;
-	    break;
 
-	// Opens infile
+            // Prints compression statistics
+        case 'v': v_flag = true; break;
+
+        // Opens infile
         case 'i':
-	    fi = open(optarg, O_RDONLY);
-	    if (fi == -1){
-	    	printf("file open for reading failed\n");
-		return -1;
-	    }
-	    break;
-	
-	// Opens outfile
+            fi = open(optarg, O_RDONLY);
+            if (fi == -1) {
+                printf("file open for reading failed\n");
+                return -1;
+            }
+            break;
+
+        // Opens outfile
         case 'o':
-	    fout = open(optarg, O_RDWR | O_CREAT);
+            fout = open(optarg, O_RDWR | O_CREAT);
             if (fout == -1) {
                 printf("file open for write failed for\n");
                 return -1;
             }
             fstat(fi, &fileStat);
-	    in_size = fileStat.st_size;
+            in_size = fileStat.st_size;
             fchmod(fout, fileStat.st_mode);
-	    break;
+            break;
         }
     }
 
@@ -133,7 +131,7 @@ int main(int argc, char **argv) {
     // Write bytes of header to outfile
     write_bytes(fout, (uint8_t *) &hdr, sizeof(Header));
 
-    // 
+    //
     dump_tree(fout, hroot);
 
     while (1) {
@@ -153,10 +151,9 @@ int main(int argc, char **argv) {
     close(fout);
     close(fi);
 
-    if (v_flag){
-    	temp = 100.0*(1.0-((float)out_size/(float)in_size));
-        printf("input size %lu output size %lu space saving %f\n",
-                            in_size, out_size, temp);
+    if (v_flag) {
+        temp = 100.0 * (1.0 - ((float) out_size / (float) in_size));
+        printf("input size %lu output size %lu space saving %f\n", in_size, out_size, temp);
     }
     return 0;
 }
