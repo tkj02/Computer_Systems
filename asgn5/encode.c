@@ -14,6 +14,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <sys/stat.h>
 
 #define OPTIONS "hi:o:v"
 
@@ -50,6 +51,8 @@ int create_hist(int fd) {
 int main(int argc, char **argv) {
 
 #if 1
+    struct stat fileStat;
+
     int fd = open("test.txt", O_RDONLY);
     if (fd == -1) {
         printf("error not found\n");
@@ -65,12 +68,15 @@ int main(int argc, char **argv) {
         Node *node = node_create(i, g_hist[i]);
         enqueue(pq, node);
     }
+    printf("Creating Tree \n");
     Node *hroot = build_tree(g_hist);
     if (hroot == NULL) {
         printf("error failed huff tree\n");
         return -1;
     }
+    printf("Creating Codes 222222 \n");
     build_codes(hroot, g_table);
+    printf("Created Code 33333\n");
     for (int i = 0; i < 256; i++) {
         if (code_size(&g_table[i]) == 0) {
             continue;
@@ -85,11 +91,15 @@ int main(int argc, char **argv) {
         printf("error not found\n");
         return -1;
     }
+    fstat(fd, &fileStat);
+
     int fw = open("test.out", O_RDWR | O_CREAT);
     if (fw == -1) {
         printf("error write file open\n");
         return -1;
     }
+    fchmod(fw, fileStat.st_mode);
+
     uint8_t *buffer = malloc(BLOCK);
     if (buffer == NULL) {
         printf("error allocating\n");
@@ -113,6 +123,7 @@ int main(int argc, char **argv) {
         printf("error no test.out for decode\n");
         return -1;
     }
+#if 0
     int bit_count = 0;
     uint8_t tbit;
     while(1){
@@ -121,17 +132,22 @@ int main(int argc, char **argv) {
 	}
 	bit_count++;
     }
-    printf("%d", bit_count);
+    printf("%d\n", bit_count);
     return 0;
+#endif
     fw = open("decode.out", O_RDWR | O_CREAT);
     if (fw == -1) {
         printf("error decode file open\n");
         return -1;
     }
-    while(1){
-	    if(decode(hroot, fd, fw) == false){
-	    	break;
-	    }
+    fchmod(fw, fileStat.st_mode);
+    int call_count = 0;
+    while (1) {
+        if (decode(hroot, fd, fw) == false) {
+            break;
+        }
+        call_count++;
+        //printf("call count %d\n", call_count);
     }
     close(fd);
     close(fw);
