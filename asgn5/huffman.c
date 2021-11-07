@@ -10,6 +10,9 @@
 
 bool read_bit(int infile, uint8_t *bit);
 
+// Builds Huffman tree
+// Dequeues children and joins to make parent
+// Dequeues remaining node for root
 Node *build_tree(uint64_t hist[static ALPHABET]) {
     bool return_stat;
     PriorityQueue *pq = pq_create(ALPHABET);
@@ -68,11 +71,9 @@ void building_codes(Node *root, Code table[static ALPHABET], Code *c) {
     tree_depth++;
     if (root == NULL)
         return;
-    //if (root->symbol != '$') {
     if (root->left == NULL && root->right == NULL) {
         table[root->symbol] = *c;
         recur_count1++;
-        //yy	printf("Adding code for 0x%02x Count: %d Depth:%d \n", root->symbol, recur_count1, tree_depth);
         tree_depth--;
         return;
     }
@@ -91,12 +92,10 @@ void building_codes(Node *root, Code table[static ALPHABET], Code *c) {
     code_pop_bit(c, &popped_bit);
     tree_depth--;
 }
-Code g_c;
 
 void build_codes(Node *root, Code table[static ALPHABET]) {
-    //Code c = code_init();
-    g_c = code_init();
-    building_codes(root, table, &g_c);
+    Code c = code_init();
+    building_codes(root, table, &c);
 }
 
 void dump_tree(int outfile, Node *root) {
@@ -123,31 +122,3 @@ Node *rebuild_tree(uint16_t nbytes, uint8_t tree[static nbytes]) {
 void delete_tree(Node **root) {
 }
 #endif
-
-int recur_count = 0;
-
-bool decode(Node *root, int infile, int outfile) {
-
-    if (root == NULL) {
-        return false;
-    }
-    // if (root->symbol != '$') {
-    if (root->left == NULL && root->right == NULL) {
-        write(outfile, &root->symbol, 1);
-        recur_count++;
-        //printf("recursive count %d\n",recur_count);
-        return true;
-    }
-    uint8_t bit;
-    bool flag;
-    flag = read_bit(infile, &bit);
-    if (flag == false) {
-        return false;
-    }
-    if (bit == 0) {
-        return decode(root->left, infile, outfile);
-    } else {
-        return decode(root->right, infile, outfile);
-    }
-    return false;
-}
