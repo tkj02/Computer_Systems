@@ -39,7 +39,6 @@ bool read_bit(int infile, uint8_t *bit) {
     static uint32_t end = -1;
     if (index == 0) {
         uint32_t bits_read = read_bytes(infile, buffer_array, BLOCK);
-        //printf("bits read %u\n", bits_read);
         if (bits_read < BLOCK) {
             end = bits_read * 8 + 1;
         }
@@ -51,7 +50,6 @@ bool read_bit(int infile, uint8_t *bit) {
     int bit_index = index % 8;
     uint8_t temp = buffer_array[byte_index];
     uint8_t mask = 1 << bit_index;
-    //printf("bi %d byi %d temp %d \n", bit_index, byte_index, temp);
     if ((temp & mask) != 0) {
         *bit = 1;
     } else {
