@@ -5,6 +5,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <unistd.h>
+
+bool read_bit(int infile, uint8_t *bit);
 
 Node *build_tree(uint64_t hist[static ALPHABET]) {
     bool return_stat;
@@ -86,3 +89,27 @@ Node *rebuild_tree(uint16_t nbytes, uint8_t tree[static nbytes]) {
 void delete_tree(Node **root) {
 }
 #endif
+
+bool decode(Node *root, int infile, int outfile){
+	if (root == NULL){
+		return false;
+	}
+	if (root->symbol != '$'){
+		write(outfile, &root->symbol, 1);
+		return true;
+	}
+	uint8_t bit;
+	bool flag;
+	flag = read_bit(infile, &bit);
+	if (flag == false){
+		return false;
+	}
+	if (bit == 0){
+		decode(root->left, infile, outfile);
+	}
+	else{
+		decode(root->right, infile, outfile);
+	}
+	return true;
+}
+
