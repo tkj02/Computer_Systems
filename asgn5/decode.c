@@ -23,7 +23,13 @@ int main(int argc, char **argv) {
     int opt = 0;
     int fi = 0;
     int fout = 1;
+    uint64_t in_size;
+    uint64_t out_size = 0;
+    float temp;
+    bool v_flag = false;
+
     struct stat fileStat;
+
     while ((opt = getopt(argc, argv, OPTIONS)) != -1) {
         switch (opt) {
         case 'h':
@@ -36,7 +42,7 @@ int main(int argc, char **argv) {
             printf("  -i infile      Input file to compress.\n");
             printf("  -o outfile     Output of compressed data.\n");
             break;
-        case 'v': break;
+        case 'v': v_flag = true; break;
         case 'i':
             fi = open(optarg, O_RDONLY);
             if (fi == -1) {
@@ -89,7 +95,13 @@ int main(int argc, char **argv) {
     free(buffer);
     stack_delete(&stack);
 
-#if 1
+    fstat(fout, &fileStat);
+    out_size = fileStat.st_size;
+
+    if (v_flag) {
+        temp = 100.0 * (1.0 - ((float) out_size / (float) in_size));
+        printf("input size %lu output size %lu space saving %f\n", in_size, out_size, temp);
+    }
 
     int call_count = 0;
     while (1) {
@@ -97,8 +109,29 @@ int main(int argc, char **argv) {
             break;
         }
         call_count++;
-        //printf("call count %d\n", call_count);
     }
     return 0;
 }
-#endif
+
+bool decode(Node *root, int infile, int outfile) {
+
+    if (root == NULL) {
+        return false;
+    }
+    if (root->left == NULL && root->right == NULL) {
+        write(outfile, &root->symbol, 1);
+        return true;
+    }
+    uint8_t bit;
+    bool flag;
+    flag = read_bit(infile, &bit);
+    if (flag == false) {
+        return false;
+    }
+    if (bit == 0) {
+        return decode(root->left, infile, outfile);
+    } else {
+        return decode(root->right, infile, outfile);
+    }
+    return false;
+}
