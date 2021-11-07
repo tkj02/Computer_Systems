@@ -2,6 +2,7 @@
 #include "pq.h"
 #include "node.h"
 #include "code.h"
+#include "io.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -98,10 +99,25 @@ void build_codes(Node *root, Code table[static ALPHABET]) {
     building_codes(root, table, &g_c);
 }
 
-#if 0
 void dump_tree(int outfile, Node *root) {
+	if (root == NULL){
+		return;
+	}
+	dump_tree(outfile, root->left);
+	dump_tree(outfile, root->right);
+	uint8_t ch[2];
+	if (root->left == NULL && root->right == NULL){
+		ch[0] = 'L';
+		ch[1] = root->symbol;
+		write_bytes(outfile, ch, 2);
+	}
+	else {
+		ch[0] = 'I';
+		write_bytes(outfile, ch, 1);
+	}
 }
 
+#if 0
 Node *rebuild_tree(uint16_t nbytes, uint8_t tree[static nbytes]) {
 }
 
@@ -116,7 +132,8 @@ bool decode(Node *root, int infile, int outfile) {
     if (root == NULL) {
         return false;
     }
-    if (root->symbol != '$') {
+   // if (root->symbol != '$') {
+   if (root->left == NULL && root->right == NULL){
         write(outfile, &root->symbol, 1);
         recur_count++;
         //printf("recursive count %d\n",recur_count);
