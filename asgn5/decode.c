@@ -90,12 +90,19 @@ int main(int argc, char **argv) {
     huffroot = rebuild_tree(hdr.tree_size, buffer);
 
     free(buffer);
-
+#if 1
+    for(uint64_t i = 0; i<hdr.file_size; i++){
+    	if (decode(huffroot, fi, fout) == false) {
+            break;
+        }
+    }
+#else
     while (1) {
         if (decode(huffroot, fi, fout) == false) {
             break;
         }
     }
+ #endif
     fstat(fout, &fileStat);
     out_size = fileStat.st_size;
 
