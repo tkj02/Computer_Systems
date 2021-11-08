@@ -41,7 +41,7 @@ Assistance:
 - Watched part of Chrtisian’s recorded section on YuJa (got ideas on how to implement pq.c and node.c)
 - Attended Brian’s section on October 29 and November 5 (learned enqueuing and dequeuing in more detail and got ideas on how to use byte and bit indices in code.c)
 - Learned about reading and writing files from my dad who taught me ways that I could implement it in encode.c and decode.c (specifically using lseek(), O_RDONLY, O_RDWR, and O_CREAT)
-- Referred to my assignment three files, especially for reading/writing files and completing stack.c as they were similar to what I needed to do here
+- Referred to my assignment four files, especially for reading/writing files and completing stack.c as they were similar to what I needed to do here
 - Consulted portions of chapters 6, 7, and 8 of the textbook The C Programming Language
 - Consulted these websites/videos to understand concepts better
     - https://www.cs.usfca.edu/~galles/visualization/Heap.html
