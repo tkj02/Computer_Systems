@@ -28,7 +28,7 @@ Node *build_tree(uint64_t hist[static ALPHABET]) {
         Node *node = node_create(i, hist[i]);
         enqueue(pq, node);
     }
-    while (pq_size(pq) >= 2) {
+    while (pq_size(pq) > 1) {
         Node *nl, *nr, *np;
         return_stat = dequeue(pq, &nl);
         if (return_stat == false) {
@@ -66,9 +66,15 @@ Node *build_tree(uint64_t hist[static ALPHABET]) {
     pq_delete(&pq);
     return NULL;
 }
+
+// Global variables for build_codes
 int recur_count1 = 0;
 int tree_depth = 0;
 
+// Used by build_codes
+// Pushes code bits and checks with root/children are null
+// Recursively calls itself to parse through all nodes
+// Goes through all leftmost nodes, then rightmost nodes
 void building_codes(Node *root, Code table[static ALPHABET], Code *c) {
     uint8_t popped_bit;
     tree_depth++;
@@ -96,11 +102,15 @@ void building_codes(Node *root, Code table[static ALPHABET], Code *c) {
     tree_depth--;
 }
 
+// Makes corresponding codes
+// Uses building_codes to call recursively
 void build_codes(Node *root, Code table[static ALPHABET]) {
     Code c = code_init();
     building_codes(root, table, &c);
 }
 
+// Writes L and symbol for parents and I for non-parents
+// Uses array called ch for simplicity
 void dump_tree(int outfile, Node *root) {
     if (root == NULL) {
         return;
@@ -118,10 +128,13 @@ void dump_tree(int outfile, Node *root) {
     }
 }
 
+// Rebuilds tree
+// If L seen, create node of succeeding node and push onto stack
+// If I seen, pop left and right, make parent, and push onto stack
+// Pops root, deletes stack, and returns root
 Node *rebuild_tree(uint16_t nbytes, uint8_t tree[static nbytes]) {
     Stack *stack = stack_create(32);
     for (int i = 0; i < nbytes; i++) {
-
         if (tree[i] == 'L') {
             Node *n = node_create(tree[i + 1], 0);
             stack_push(stack, n);
@@ -143,6 +156,7 @@ Node *rebuild_tree(uint16_t nbytes, uint8_t tree[static nbytes]) {
     return root;
 }
 
+// Deletes each node of the tree and sets root to null
 void delete_tree(Node **root) {
     if (*root == NULL) {
         return;
