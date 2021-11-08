@@ -17,9 +17,17 @@
 
 #define OPTIONS "hi:o:v"
 
+// Prototype of decode function
 bool decode(Node *root, int infile, int outfile);
 
+// Main function
 int main(int argc, char **argv) {
+
+    // Initializes necessary structs/variables
+    // fileStat is for reading/writing
+    // hdr is for header data
+    struct stat fileStat;
+    Header hdr;
     int opt = 0;
     int fi = 0;
     int fout = 1;
@@ -28,10 +36,11 @@ int main(int argc, char **argv) {
     float temp;
     bool v_flag = false;
 
-    struct stat fileStat;
-
+    // Parses through command line options
     while ((opt = getopt(argc, argv, OPTIONS)) != -1) {
         switch (opt) {
+
+        // Prints help message
         case 'h':
             printf("SYNOPSIS\n  A Huffman encoder.\n  Compresses a file using the Huffman coding "
                    "algorithm.\n\n");
@@ -42,7 +51,11 @@ int main(int argc, char **argv) {
             printf("  -i infile      Input file to compress.\n");
             printf("  -o outfile     Output of compressed data.\n");
             break;
+
+        // Prints compression statistics
         case 'v': v_flag = true; break;
+
+        // Opens infile
         case 'i':
             fi = open(optarg, O_RDONLY);
             if (fi == -1) {
@@ -50,6 +63,8 @@ int main(int argc, char **argv) {
                 return -1;
             }
             break;
+
+        // Opens outfile
         case 'o':
             fout = open(optarg, O_RDWR | O_CREAT);
             if (fout == -1) {
@@ -57,20 +72,24 @@ int main(int argc, char **argv) {
                 return -1;
             }
             fstat(fi, &fileStat);
+            in_size = fileStat.st_size;
             fchmod(fout, fileStat.st_mode);
             break;
         }
     }
 
-    Header hdr;
+    // Reads bytes from infile given header
     read_bytes(fi, (uint8_t *) &hdr, sizeof(Header));
-    printf("magic %04x permissions %02x tree size %d file size %lu\n", hdr.magic, hdr.permissions,
-        hdr.tree_size, hdr.file_size);
 
+    // Creates buffer and reads bytes again given size of tree
     char *buffer = malloc(hdr.tree_size);
     read_bytes(fi, (uint8_t *) buffer, hdr.tree_size);
 
+    // Creates stack for pushing/popping nodes
     Stack *stack = stack_create(32);
+
+    // Traversing tree
+    //
     for (int i = 0; i < hdr.tree_size; i++) {
         if (buffer[i] == 'L') {
             Node *n = node_create(buffer[i + 1], 0);
@@ -84,8 +103,6 @@ int main(int argc, char **argv) {
                 stack_pop(stack, &left);
                 Node *parent = node_join(left, right);
                 stack_push(stack, parent);
-            } else {
-                printf("error invalid entry in tree\n");
             }
         }
     }
@@ -100,21 +117,19 @@ int main(int argc, char **argv) {
 
     if (v_flag) {
         temp = 100.0 * (1.0 - ((float) out_size / (float) in_size));
-        printf("input size %lu output size %lu space saving %f\n", in_size, out_size, temp);
+        printf("Compressed file size: %lu\nDecompressed file size: %lu\nSpace saving: %f\n",
+            in_size, out_size, temp);
     }
 
-    int call_count = 0;
     while (1) {
         if (decode(huffroot, fi, fout) == false) {
             break;
         }
-        call_count++;
     }
     return 0;
 }
 
 bool decode(Node *root, int infile, int outfile) {
-
     if (root == NULL) {
         return false;
     }
