@@ -147,14 +147,14 @@ int main(int argc, char **argv) {
         }
     }
 
+    // Flushes remaining codes to outfile
+    flush_codes(fout);
+
     // Sets permission of outfile
     fstat(fout, &fileStat);
 
     // Stores size of compressed file (outfile)
     out_size = fileStat.st_size;
-
-    // Flushes remaining codes to outfile
-    flush_codes(fout);
 
     // Checks -v case
     if (v_flag) {
@@ -167,7 +167,6 @@ int main(int argc, char **argv) {
     free(buffer);
     pq_delete(&pq);
     delete_tree(&hroot);
-    // delete nodes
 
     // Closes files
     close(fout);
