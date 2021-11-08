@@ -7,6 +7,8 @@
 #include <stdint.h>
 #include <unistd.h>
 
+// Calls read() and adds to the number of bytes read
+// Increments the total number of bytes read by current read bytes
 int read_bytes(int infile, uint8_t *buf, int nbytes) {
     int current_bytes_read = 0;
     int bytes_read = 0;
@@ -20,6 +22,8 @@ int read_bytes(int infile, uint8_t *buf, int nbytes) {
     return bytes_read;
 }
 
+// Calls write() and adds to the number of bytes written
+// Increments the total number of bytes written by the current written bytes
 int write_bytes(int outfile, uint8_t *buf, int nbytes) {
     int current_bytes_written = 0;
     int bytes_written = 0;
@@ -33,6 +37,9 @@ int write_bytes(int outfile, uint8_t *buf, int nbytes) {
     return bytes_written;
 }
 
+// Reads bits by calling read_bytes for bits
+// Tracks the byte number and bit number and uses logic and masking
+// Sets bit to values from buffer
 bool read_bit(int infile, uint8_t *bit) {
     static uint8_t buffer_array[BLOCK] = { 0 };
     static uint32_t index = 0;
@@ -65,19 +72,22 @@ bool read_bit(int infile, uint8_t *bit) {
     return true;
 }
 
+// Global buffer and index for write_code and flush_codes
 static uint8_t buffer[BLOCK] = { 0 };
 static uint32_t index = 0;
 
+// Writes codes to outfile
+// Tracks the byte number and bit number and uses logic and masking
 void write_code(int outfile, Code *c) {
     for (uint32_t i = 0; i < code_size(c); i++) {
         uint32_t bit = code_get_bit(c, i);
         int byte_index = index / 8;
         int bit_index = index % 8;
         uint8_t mask = 1 << bit_index;
-        buffer[byte_index] = buffer[byte_index] & (~mask);
+        buffer[byte_index] &= (~mask);
 
         if (bit == 1) {
-            buffer[byte_index] = buffer[byte_index] | mask;
+            buffer[byte_index] |= mask;
         }
         index++;
         if (index == BLOCK * 8) {
@@ -87,6 +97,7 @@ void write_code(int outfile, Code *c) {
     }
 }
 
+// Writes remaining bytes to outfile
 void flush_codes(int outfile) {
     if (index > 0) {
         write_bytes(outfile, buffer, (index + 7) / 8);
