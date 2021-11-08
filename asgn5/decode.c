@@ -82,50 +82,32 @@ int main(int argc, char **argv) {
     read_bytes(fi, (uint8_t *) &hdr, sizeof(Header));
 
     // Creates buffer and reads bytes again given size of tree
-    char *buffer = malloc(hdr.tree_size);
+    uint8_t *buffer = malloc(hdr.tree_size);
     read_bytes(fi, (uint8_t *) buffer, hdr.tree_size);
 
-    // Creates stack for pushing/popping nodes
-    Stack *stack = stack_create(32);
-
-    // Traversing tree
-    //
-    for (int i = 0; i < hdr.tree_size; i++) {
-        if (buffer[i] == 'L') {
-            Node *n = node_create(buffer[i + 1], 0);
-            stack_push(stack, n);
-            i++;
-        } else {
-            if (buffer[i] == 'I') {
-                Node *left;
-                Node *right;
-                stack_pop(stack, &right);
-                stack_pop(stack, &left);
-                Node *parent = node_join(left, right);
-                stack_push(stack, parent);
-            }
-        }
-    }
-
     Node *huffroot;
-    stack_pop(stack, &huffroot);
+
+    huffroot = rebuild_tree(hdr.tree_size, buffer);
+
     free(buffer);
-    stack_delete(&stack);
-
-    fstat(fout, &fileStat);
-    out_size = fileStat.st_size;
-
-    if (v_flag) {
-        temp = 100.0 * (1.0 - ((float) out_size / (float) in_size));
-        printf("Compressed file size: %lu\nDecompressed file size: %lu\nSpace saving: %f\n",
-            in_size, out_size, temp);
-    }
 
     while (1) {
         if (decode(huffroot, fi, fout) == false) {
             break;
         }
     }
+    fstat(fout, &fileStat);
+    out_size = fileStat.st_size;
+
+    if (v_flag) {
+        temp = 100.0 * (1.0 - ((float) in_size / (float) out_size));
+        printf("Compressed file size: %lu\nDecompressed file size: %lu\nSpace saving: %f\n",
+            in_size, out_size, temp);
+    }
+
+    delete_tree(&huffroot);
+    node_delete(&huffroot);
+
     return 0;
 }
 
