@@ -1,4 +1,5 @@
 #include "defines.h"
+#include "stack.h"
 #include "pq.h"
 #include "node.h"
 #include "code.h"
@@ -115,11 +116,37 @@ void dump_tree(int outfile, Node *root) {
     }
 }
 
-#if 0
 Node *rebuild_tree(uint16_t nbytes, uint8_t tree[static nbytes]) {
+    Stack *stack = stack_create(32);
+    for (int i = 0; i < nbytes; i++) {
+
+        if (tree[i] == 'L') {
+            Node *n = node_create(tree[i + 1], 0);
+            stack_push(stack, n);
+            i++;
+        } else {
+            if (tree[i] == 'I') {
+                Node *left;
+                Node *right;
+                stack_pop(stack, &right);
+                stack_pop(stack, &left);
+                Node *parent = node_join(left, right);
+                stack_push(stack, parent);
+            }
+        }
+    }
+    Node *root;
+    stack_pop(stack, &root);
+    stack_delete(&stack);
+    return root;
 }
-#endif
+
 void delete_tree(Node **root) {
-    //free nodes
+    if (*root == NULL) {
+        return;
+    }
+    delete_tree(&(*root)->left);
+    delete_tree(&(*root)->right);
+    node_delete(root);
     *root = NULL;
 }
