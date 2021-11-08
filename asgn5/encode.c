@@ -78,6 +78,8 @@ int main(int argc, char **argv) {
             break;
 
         // Opens outfile
+        // Sets permission of infile and outfile
+        // in_size stores size of uncompressed file (infile)
         case 'o':
             fout = open(optarg, O_RDWR | O_CREAT);
             if (fout == -1) {
@@ -131,9 +133,10 @@ int main(int argc, char **argv) {
     // Write bytes of header to outfile
     write_bytes(fout, (uint8_t *) &hdr, sizeof(Header));
 
-    //
+    // Dumps the tree
     dump_tree(fout, hroot);
 
+    // Writes codes to outfile until the end of infile
     while (1) {
         uint32_t return_len = read(fi, buffer, BLOCK);
         if (return_len < 1) {
@@ -143,19 +146,33 @@ int main(int argc, char **argv) {
             write_code(fout, &g_table[buffer[i]]);
         }
     }
+
+    // Sets permission of outfile
     fstat(fout, &fileStat);
+
+    // Stores size of compressed file (outfile)
     out_size = fileStat.st_size;
 
+    // Flushes remaining codes to outfile
     flush_codes(fout);
+
+    // Checks -v case
+    if (v_flag) {
+        temp = 100.0 * (1.0 - ((float) out_size / (float) in_size));
+        printf("Uncompressed file size: %lu\nCompressed file size: %lu\nSpace saving: %f\n",
+            in_size, out_size, temp);
+    }
+
+    // Frees memory
     free(buffer);
+    pq_delete(&pq);
+    delete_tree(&hroot);
+    // delete nodes
+
+    // Closes files
     close(fout);
     close(fi);
 
-    if (v_flag) {
-        temp = 100.0 * (1.0 - ((float) out_size / (float) in_size));
-	printf("Uncompressed file size: %lu\nCompressed file size: %lu\nSpace saving: %f\n",
-			in_size, out_size, temp);
-    }
     return 0;
 }
 
