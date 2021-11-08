@@ -35,13 +35,13 @@ int main(int argc, char **argv) {
 
     // Creates necessary structs/variables
     // fileStat is for reading/writing
-    // pq is for enqueuing and dequeuing
     // hdr is for header data
     struct stat fileStat;
-    //PriorityQueue *pq = pq_create(ALPHABET);
     Header hdr;
 
-    // Parses through command line options
+    // Initializes necessary structs/variables
+    // fi and fout = infile and outfile
+    // in_size = infile size and out_size = outfile size
     int opt = 0;
     int fi = 0;
     int fout = 1;
@@ -50,6 +50,7 @@ int main(int argc, char **argv) {
     float temp;
     bool v_flag = false;
 
+    // Parses through command line options
     while ((opt = getopt(argc, argv, OPTIONS)) != -1) {
         switch (opt) {
 
@@ -65,7 +66,7 @@ int main(int argc, char **argv) {
             printf("  -o outfile     Output of compressed data.\n");
             break;
 
-            // Prints compression statistics
+        // Prints compression statistics
         case 'v': v_flag = true; break;
 
         // Opens infile
@@ -102,18 +103,6 @@ int main(int argc, char **argv) {
     // Creates histogram and sets all values to zero
     create_hist(fi);
 
-#if 0
-    // Creates nodes based on histogram
-    // Enqueues each node to priority queue
-
-    for (int i = 0; i < 256; i++) {
-        if (g_hist[i] == 0) {
-            continue;
-        }
-        Node *node = node_create(i, g_hist[i]);
-        enqueue(pq, node);
-    }
-#endif
     // Creates root node of Huffman tree based on histogram
     Node *hroot = build_tree(g_hist);
     if (hroot == NULL) {
@@ -124,13 +113,8 @@ int main(int argc, char **argv) {
     // Creates codes for each node
     build_codes(hroot, g_table);
 
+    // Opens infile to read again
     lseek(fi, 0, SEEK_SET);
-
-    uint8_t *buffer = malloc(BLOCK);
-    if (buffer == NULL) {
-        printf("error allocating\n");
-        return -1;
-    }
 
     // Assignment for header members
     hdr.magic = MAGIC;
@@ -138,11 +122,18 @@ int main(int argc, char **argv) {
     hdr.tree_size = (3 * get_unique_count()) - 1;
     hdr.file_size = fileStat.st_size;
 
-    // Write bytes of header to outfile
+    // Writes bytes of header to outfile
     write_bytes(fout, (uint8_t *) &hdr, sizeof(Header));
 
     // Dumps the tree
     dump_tree(fout, hroot);
+
+    // Creates buffer for writing codes to outfile
+    uint8_t *buffer = malloc(BLOCK);
+    if (buffer == NULL) {
+        printf("error allocating\n");
+        return -1;
+    }
 
     // Writes codes to outfile until the end of infile
     while (1) {
@@ -173,7 +164,6 @@ int main(int argc, char **argv) {
 
     // Frees memory
     free(buffer);
-    // pq_delete(&pq);
     delete_tree(&hroot);
 
     // Closes files
@@ -195,11 +185,17 @@ int create_hist(int fd) {
         printf("error allocating\n");
         return -1;
     }
+
+    // Initializes all values to zero
     for (uint32_t i = 0; i < ALPHABET; i++) {
         g_hist[i] = 0;
     }
+
+    // Sets first and last values to 1
     g_hist[0] = 1;
     g_hist[ALPHABET - 1] = 1;
+
+    // Increments histogram by frequency
     while (1) {
         uint32_t return_len = read(fd, buffer, BLOCK);
         if (return_len < 1) {
@@ -210,6 +206,8 @@ int create_hist(int fd) {
             g_hist[index]++;
         }
     }
+
+    // Frees memory
     free(buffer);
     return 0;
 }

@@ -26,6 +26,8 @@ int main(int argc, char **argv) {
     // Initializes necessary structs/variables
     // fileStat is for reading/writing
     // hdr is for header data
+    // fi and fout = infile and outfile
+    // in_size = infile size and out_size = outfile size
     struct stat fileStat;
     Header hdr;
     int opt = 0;
@@ -60,6 +62,9 @@ int main(int argc, char **argv) {
             fi = open(optarg, O_RDONLY);
             if (fi == -1) {
                 printf("file open failed for %s\n", optarg);
+                if (fout != 1) {
+                    close(fout);
+                }
                 return -1;
             }
             break;
@@ -69,6 +74,9 @@ int main(int argc, char **argv) {
             fout = open(optarg, O_RDWR | O_CREAT);
             if (fout == -1) {
                 printf("file open for write failed for %s\n", optarg);
+                if (fi != 0) {
+                    close(fi);
+                }
                 return -1;
             }
             fstat(fi, &fileStat);
@@ -85,39 +93,48 @@ int main(int argc, char **argv) {
     uint8_t *buffer = malloc(hdr.tree_size);
     read_bytes(fi, (uint8_t *) buffer, hdr.tree_size);
 
+    // Creates root of Huffman tree
     Node *huffroot;
 
+    // Stores rebuild_tree boolen in root
     huffroot = rebuild_tree(hdr.tree_size, buffer);
 
-    free(buffer);
-#if 1
     for (uint64_t i = 0; i < hdr.file_size; i++) {
         if (decode(huffroot, fi, fout) == false) {
             break;
         }
     }
-#else
-    while (1) {
-        if (decode(huffroot, fi, fout) == false) {
-            break;
-        }
-    }
-#endif
+
+    // Sets permission of outfile
     fstat(fout, &fileStat);
     out_size = fileStat.st_size;
 
+    // Checks -v flag
     if (v_flag) {
         temp = 100.0 * (1.0 - ((float) in_size / (float) out_size));
         printf("Compressed file size: %lu\nDecompressed file size: %lu\nSpace saving: %f\n",
             in_size, out_size, temp);
     }
 
+    // Frees memory
     delete_tree(&huffroot);
     node_delete(&huffroot);
+    free(buffer);
+
+    // Closes infile and outfile
+    if (fi != 0) {
+        close(fi);
+    }
+    if (fout != 1) {
+        close(fout);
+    }
 
     return 0;
 }
 
+// decode function
+// Recursively calls itself until both children of root
+// node is null (meaning we have reached the end of the tree)
 bool decode(Node *root, int infile, int outfile) {
     if (root == NULL) {
         return false;
