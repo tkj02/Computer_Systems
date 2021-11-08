@@ -58,10 +58,12 @@ Node *build_tree(uint64_t hist[static ALPHABET]) {
             pq_delete(&pq);
             return NULL;
         }
+        pq_delete(&pq);
         return root;
     } else {
         printf("error q count isn't 1 for root\n");
     }
+    pq_delete(&pq);
     return NULL;
 }
 int recur_count1 = 0;

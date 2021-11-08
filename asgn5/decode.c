@@ -91,8 +91,8 @@ int main(int argc, char **argv) {
 
     free(buffer);
 #if 1
-    for(uint64_t i = 0; i<hdr.file_size; i++){
-    	if (decode(huffroot, fi, fout) == false) {
+    for (uint64_t i = 0; i < hdr.file_size; i++) {
+        if (decode(huffroot, fi, fout) == false) {
             break;
         }
     }
@@ -102,7 +102,7 @@ int main(int argc, char **argv) {
             break;
         }
     }
- #endif
+#endif
     fstat(fout, &fileStat);
     out_size = fileStat.st_size;
 

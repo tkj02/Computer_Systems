@@ -18,8 +18,10 @@ Node *node_create(uint8_t symbol, uint64_t frequency) {
 }
 
 void node_delete(Node **n) {
-    free(*n);
-    *n = NULL;
+    if (*n) {
+        free(*n);
+        *n = NULL;
+    }
 }
 
 Node *node_join(Node *left, Node *right) {

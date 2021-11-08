@@ -38,7 +38,7 @@ int main(int argc, char **argv) {
     // pq is for enqueuing and dequeuing
     // hdr is for header data
     struct stat fileStat;
-    PriorityQueue *pq = pq_create(ALPHABET);
+    //PriorityQueue *pq = pq_create(ALPHABET);
     Header hdr;
 
     // Parses through command line options
@@ -96,8 +96,10 @@ int main(int argc, char **argv) {
     // Creates histogram and sets all values to zero
     create_hist(fi);
 
+#if 0
     // Creates nodes based on histogram
     // Enqueues each node to priority queue
+
     for (int i = 0; i < 256; i++) {
         if (g_hist[i] == 0) {
             continue;
@@ -105,7 +107,7 @@ int main(int argc, char **argv) {
         Node *node = node_create(i, g_hist[i]);
         enqueue(pq, node);
     }
-
+#endif
     // Creates root node of Huffman tree based on histogram
     Node *hroot = build_tree(g_hist);
     if (hroot == NULL) {
@@ -165,7 +167,7 @@ int main(int argc, char **argv) {
 
     // Frees memory
     free(buffer);
-    pq_delete(&pq);
+    // pq_delete(&pq);
     delete_tree(&hroot);
 
     // Closes files
