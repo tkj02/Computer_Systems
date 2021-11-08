@@ -6,12 +6,15 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+// Creates Stack stuct
 struct Stack {
     uint32_t top;
     uint32_t capacity;
     Node **items;
 };
 
+// Creates stack with top set to zero, capacity, and
+// enough memory allocated for node items
 Stack *stack_create(uint32_t capacity) {
     Stack *s = (Stack *) malloc(sizeof(Stack));
     if (s) {
@@ -22,6 +25,7 @@ Stack *stack_create(uint32_t capacity) {
     return s;
 }
 
+// Frees memory of node items and stack pointer
 void stack_delete(Stack **s) {
     if (*s && (*s)->items) {
         free((*s)->items);
@@ -30,6 +34,7 @@ void stack_delete(Stack **s) {
     }
 }
 
+// If the top is zero, the stack is empty
 bool stack_empty(Stack *s) {
     if (s->top == 0) {
         return true;
@@ -37,6 +42,7 @@ bool stack_empty(Stack *s) {
     return false;
 }
 
+// If the top is the capacity, the stack is full
 bool stack_full(Stack *s) {
     if (s->top == s->capacity) {
         return true;
@@ -44,10 +50,13 @@ bool stack_full(Stack *s) {
     return false;
 }
 
+// The stack size is the top of the stack
 uint32_t stack_size(Stack *s) {
     return s->top;
 }
 
+// Pushes value at pointer n to the top of the stack
+// if the stack is not full
 bool stack_push(Stack *s, Node *n) {
     if (stack_full(s)) {
         return false;
@@ -57,6 +66,8 @@ bool stack_push(Stack *s, Node *n) {
     return true;
 }
 
+// Pops top of the stack and passes it to pointer n
+// if the stack is not empty
 bool stack_pop(Stack *s, Node **n) {
     if (stack_empty(s)) {
         return false;
@@ -66,6 +77,7 @@ bool stack_pop(Stack *s, Node **n) {
     return true;
 }
 
+// Prints all nodes of the stack
 void stack_print(Stack *s) {
     for (uint32_t i = 0; i < s->top; i += 1) {
         printf("%u\n", (uint32_t) s->items[i]);
