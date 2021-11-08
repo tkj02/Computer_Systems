@@ -153,7 +153,8 @@ int main(int argc, char **argv) {
 
     if (v_flag) {
         temp = 100.0 * (1.0 - ((float) out_size / (float) in_size));
-        printf("input size %lu output size %lu space saving %f\n", in_size, out_size, temp);
+	printf("Uncompressed file size: %lu\nCompressed file size: %lu\nSpace saving: %f\n",
+			in_size, out_size, temp);
     }
     return 0;
 }
