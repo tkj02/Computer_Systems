@@ -6,6 +6,9 @@
 // Using Node struct from node.h
 // Has Node *left, Node *right, uint8_t symbol, and uint64_t frequency
 
+// Creates node
+// Children are set to null
+// Symbol and freq are initialized
 Node *node_create(uint8_t symbol, uint64_t frequency) {
     Node *n = (Node *) malloc(sizeof(Node));
     if (n) {
@@ -17,6 +20,7 @@ Node *node_create(uint8_t symbol, uint64_t frequency) {
     return n;
 }
 
+// Frees memory and sets pointer to null
 void node_delete(Node **n) {
     if (*n) {
         free(*n);
@@ -24,6 +28,8 @@ void node_delete(Node **n) {
     }
 }
 
+// Creates a parent node
+// Symbol is $ and freq is its childrens' freq
 Node *node_join(Node *left, Node *right) {
     Node *new_node = node_create('$', left->frequency + right->frequency);
     new_node->left = left;
@@ -31,6 +37,8 @@ Node *node_join(Node *left, Node *right) {
     return new_node;
 }
 
+// Prints node symbol and freq
+// If children exist, prints their data too
 void node_print(Node *n) {
     printf("node symbol: %d", n->symbol);
     printf("node freq: %lu", n->frequency);
