@@ -73,6 +73,9 @@ int main(int argc, char **argv) {
             fi = open(optarg, O_RDONLY);
             if (fi == -1) {
                 printf("file open for reading failed\n");
+                if (fout != 1) {
+                    close(fout);
+                }
                 return -1;
             }
             break;
@@ -84,6 +87,9 @@ int main(int argc, char **argv) {
             fout = open(optarg, O_RDWR | O_CREAT);
             if (fout == -1) {
                 printf("file open for write failed for\n");
+                if (fi != 0) {
+                    close(fi);
+                }
                 return -1;
             }
             fstat(fi, &fileStat);
@@ -171,8 +177,12 @@ int main(int argc, char **argv) {
     delete_tree(&hroot);
 
     // Closes files
-    close(fout);
-    close(fi);
+    if (fout != 1) {
+        close(fout);
+    }
+    if (fi != 0) {
+        close(fi);
+    }
 
     return 0;
 }
