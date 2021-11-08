@@ -118,7 +118,8 @@ void dump_tree(int outfile, Node *root) {
 #if 0
 Node *rebuild_tree(uint16_t nbytes, uint8_t tree[static nbytes]) {
 }
-
-void delete_tree(Node **root) {
-}
 #endif
+void delete_tree(Node **root) {
+    //free nodes
+    *root = NULL;
+}
