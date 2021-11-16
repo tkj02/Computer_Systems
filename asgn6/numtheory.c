@@ -36,8 +36,7 @@ void mod_inverse(mpz_t i, mpz_t a, mpz_t n) {
 
     // Loops while r inverse is not zero
     while (mpz_cmp_d(r_inv, 0) != 0) {
-
-        // Sets q to the floor of r/r inverse
+        // Sets q to floor of r/r inverse
         mpz_t q;
         mpz_fdiv_q(q, r, r_inv);
 
@@ -47,7 +46,6 @@ void mod_inverse(mpz_t i, mpz_t a, mpz_t n) {
         // Sets r inverse to r - q * r inverse
         mpz_t qr_inv;
         mpz_t diff_r;
-
         mpz_mul(qr_inv, q, r_inv);
         mpz_sub(diff_r, r, qr_inv);
         mpz_set(r_inv, diff_r);
@@ -58,19 +56,19 @@ void mod_inverse(mpz_t i, mpz_t a, mpz_t n) {
         // Sets i inverse to i - q * i inverse
         mpz_t qi_inv;
         mpz_t diff_i;
-
         mpz_mul(qi_inv, q, i_inv);
         mpz_sub(diff_i, i, qi_inv);
         mpz_set(i_inv, diff_i);
     }
+
     // Checks if r is greater than one
     if (mpz_cmp_d(r, 1) > 0) {
         // Sets i to zero
         mpz_init(i);
     }
+
     // Checks if i is less than zero
     if (mpz_sgn(i) == -1) {
-
         // Sets i to i + n
         mpz_t sum;
         mpz_add(sum, i, n);
@@ -78,10 +76,38 @@ void mod_inverse(mpz_t i, mpz_t a, mpz_t n) {
     }
 }
 
-#if 0
-void pow_mod(mpz_t out, mpz_t base, mpz_t exponent, mpz_t modulus){
+void pow_mod(mpz_t out, mpz_t base, mpz_t exponent, mpz_t modulus) {
+    // Variable for finding mod (used later)
+    mpz_t mod_modulus;
+
+    // Sets v to one and p to base
+    mpz_set_si(out, 1);
+    mpz_t p;
+    mpz_set(p, base);
+
+    // Loops while exponent is greater than zero
+    while (mpz_sgn(exponent)) {
+        // Checks if exponent is odd
+        mpz_t mod_value;
+        if (mpz_mod_ui(mod_value, exponent, 2)) {
+            // Sets out to out * p mod modulus
+            mpz_t outp;
+            mpz_mul(outp, out, p);
+            mpz_mod(mod_modulus, outp, modulus);
+            mpz_set(p, mod_modulus);
+        }
+        // Sets p to p * p mod modulus
+        mpz_t pp;
+        mpz_mul(pp, p, p);
+        mpz_mod(mod_modulus, pp, modulus);
+        mpz_set(p, mod_modulus);
+
+        // Sets exponent to floor of exponent/two
+        mpz_fdiv_q_ui(exponent, exponent, 2);
+    }
 }
 
+#if 0
 bool is_prime(mpz_t n, uint64_t iters) {
 }
 
