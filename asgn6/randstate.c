@@ -1,4 +1,4 @@
-#include "ranstate.h"
+#include "randstate.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -8,11 +8,11 @@
 
 // Initializes state using seed
 void randstate_init(uint64_t seed) {
-	gmp_randinit_mt(state);
-	gmp_randseed_ui(state, seed);
+    gmp_randinit_mt(state);
+    gmp_randseed_ui(state, seed);
 }
 
 // Clears and frees memory used by state
 void randstate_clear(void) {
-	 gmp_randclear(state);
+    gmp_randclear(state);
 }
