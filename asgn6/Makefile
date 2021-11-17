@@ -14,13 +14,13 @@ decrypt: decrypt.o numtheory.o randstate.o rsa.o
 	$(CC) -o decrypt decrypt.o numtheory.o randstate.o rsa.o $(LFLAGS)
 
 numtheory.o: numtheory.c numtheory.h
-	$(CC) $(CFLAGS) -o numtheory.o -c numtheory.c
+	$(CC) $(CFLAGS) -c numtheory.c
 
 randstate.o: randstate.c randstate.h
-	$(CC) $(CFLAGS) -o randstate.o -c randstate.c
+	$(CC) $(CFLAGS) -c randstate.c
 
 rsa.o: rsa.c rsa.h
-	$(CC) $(CFLAGS) -o rsa.o -c rsa.c
+	$(CC) $(CFLAGS) -c rsa.c
 
 clean:
 	rm -f keygen encrypt decrypt keygen.o encrypt.o decrypt.o numtheory.o randstate.o rsa.o
