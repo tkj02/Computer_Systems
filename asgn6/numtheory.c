@@ -108,6 +108,8 @@ void pow_mod(mpz_t out, mpz_t base, mpz_t exponent, mpz_t modulus) {
     }
 }
 
+gmp_randstate_t state;
+
 bool is_prime(mpz_t n, uint64_t iters) {
     // Creates variables for future use
     mpz_t modulus;
@@ -183,7 +185,15 @@ bool is_prime(mpz_t n, uint64_t iters) {
     return true;
 }
 
-#if 0
 void make_prime(mpz_t p, uint64_t bits, uint64_t iters) {
+    // Loops until p is prime
+    while (1) {
+        // Generates random int of length bits
+        mpz_urandomb(p, state, bits);
+
+        // Checks if p is prime and breaks if so
+        if (is_prime(p, iters)) {
+            break;
+        }
+    }
 }
-#endif
