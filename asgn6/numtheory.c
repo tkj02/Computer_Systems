@@ -114,10 +114,7 @@ bool is_prime(mpz_t n, uint64_t iters) {
     // Creates variables for future use
     mpz_t modulus;
     mpz_t product;
-    //mpz_t i;
-    mpz_t y;
-    mpz_t a;
-    mpz_t j;
+    mpz_t y, a, j;
     mpz_t exponent;
 
     // Checks if n is even (and therefore not prime)
@@ -127,8 +124,7 @@ bool is_prime(mpz_t n, uint64_t iters) {
     }
     // Writes n-one = two^s * r
     // s starts at zero and r at n-one
-    mpz_t s;
-    mpz_t r;
+    mpz_t s, r;
     mpz_init(s);
     mpz_set(r, n - 1);
 
