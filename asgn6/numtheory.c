@@ -1,4 +1,5 @@
 #include "numtheory.h"
+#include "randstate.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -107,10 +108,82 @@ void pow_mod(mpz_t out, mpz_t base, mpz_t exponent, mpz_t modulus) {
     }
 }
 
-#if 0
 bool is_prime(mpz_t n, uint64_t iters) {
+    // Creates variables for future use
+    mpz_t modulus;
+    mpz_t product;
+    //mpz_t i;
+    mpz_t y;
+    mpz_t a;
+    mpz_t j;
+    mpz_t exponent;
+
+    // Checks if n is even (and therefore not prime)
+    // Returns false if so
+    if (mpz_mod_ui(modulus, n, 2) == 0) {
+        return false;
+    }
+    // Writes n-one = two^s * r
+    // s starts at zero and r at n-one
+    mpz_t s;
+    mpz_t r;
+    mpz_init(s);
+    mpz_set(r, n - 1);
+
+    // Loops while r is even
+    // Determines s and r values
+    while (mpz_mod_ui(modulus, r, 2) == 0) {
+        // Sets product to two^s * r
+        mpz_mul_2exp(product, r, (mp_bitcnt_t) s);
+
+        // Loops again with new s and r values if product and n-one match
+        if (product == n - 1) {
+            mpz_set(s, s + 1);
+            mpz_divexact_ui(r, r, 2);
+        } else {
+            break;
+        }
+    }
+    // Conducts Miller-Rabin test
+    for (uint64_t i = 0; i < iters; i++) {
+        //for (mpz_init(i); mpz_cmp(i, iters) < 0; mpz_set(i, i+1)){
+        // Sets a to a random value between two and n-two
+        mpz_urandomm(a, state, n - 3);
+        mpz_set(a, a + 2);
+
+        // Calls pow_mod and stores value in y
+        pow_mod(y, a, r, n);
+
+        // Checks if y does not = one and does not = n-one
+        if (mpz_cmp_d(y, 1) != 0 && mpz_cmp(y, n - 1) != 0) {
+
+            // Sets j to one
+            mpz_set_d(j, 1);
+
+            // Loops while j is less than or equal to s-one
+            // and y does not equal to n-one
+            while (mpz_cmp(j, s - 1) <= 0 && mpz_cmp(y, n - 1) != 0) {
+                // Calls pow_mod and stores value in y
+                mpz_set_d(exponent, 2);
+                pow_mod(y, y, exponent, n);
+
+                // Returns false if y is one
+                if (mpz_cmp_d(y, 1) == 0) {
+                    return false;
+                }
+                // Increments j by one
+                mpz_set(j, j + 1);
+            }
+            // Returns false if y does not equal n-one
+            if (mpz_cmp(y, n - 1) != 0) {
+                return false;
+            }
+        }
+    }
+    return true;
 }
 
+#if 0
 void make_prime(mpz_t p, uint64_t bits, uint64_t iters) {
 }
 #endif
