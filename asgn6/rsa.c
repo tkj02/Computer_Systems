@@ -72,41 +72,74 @@ void rsa_make_priv(mpz_t d, mpz_t e, mpz_t p, mpz_t q) {
     // Creates variables for future use
     mpz_t n;
     mpz_t totient;
-    mpz_t inverse;
 
     // Sets n to p * q
     mpz_mul(n, p, q);
 
-    // Sets totient (of n) to p-one * q-one
+    // Sets totient of n to p-one * q-one
     mpz_mul(totient, p - 1, q - 1);
 
-    // Computes inverse e mod totient of n
-
-    // Stores in d
+    // Calls mod_inverse and stores inverse e mod totient in d
+    mod_inverse(d, e, totient);
 }
 
-#if 0
 void rsa_write_priv(mpz_t n, mpz_t d, FILE *pvfile) {
+    // Writes n and d as hexstrings to pvfile
+    gmp_fprintf(pvfile, "%Zx\n", n);
+    gmp_fprintf(pvfile, "%Zx\n", d);
 }
 
 void rsa_read_priv(mpz_t n, mpz_t d, FILE *pvfile) {
+    // Reads n and d as hexstrings from pvfile
+    gmp_fscanf(pvfile, "%Zx\n", n);
+    gmp_fscanf(pvfile, "%Zx\n", d);
 }
 
 void rsa_encrypt(mpz_t c, mpz_t m, mpz_t e, mpz_t n) {
+    // Calls pow_mod to compute ciphertext and store in c
+    // m is the message (base)
+    // e is the public exponent (exponent)
+    // n is the public modulus
+    pow_mod(c, m, e, n);
 }
 
+#if 0
 void rsa_encrypt_file(FILE *infile, FILE *outfile, mpz_t n, mpz_t e) {
+
 }
+#endif
 
 void rsa_decrypt(mpz_t m, mpz_t c, mpz_t d, mpz_t n) {
+    // Calls pow_mod to compute message and store in m
+    // c is the ciphertext (base)
+    // d is the private key (exponent)
+    // n is the public modulus
+    pow_mod(m, c, d, n);
 }
 
+#if 0
 void rsa_decrypt_file(FILE *infile, FILE *outfile, mpz_t n, mpz_t d) {
 }
+#endif
 
 void rsa_sign(mpz_t s, mpz_t m, mpz_t d, mpz_t n) {
+    // Calls pow_mod to produce signature and store in s
+    // m is the message (base)
+    // d is the private key (exponent)
+    // n is the public modulus
+    pow_mod(s, m, d, n);
 }
 
 bool rsa_verify(mpz_t m, mpz_t s, mpz_t e, mpz_t n) {
+    // Creates variable for storing verification
+    mpz_t t;
+
+    // Computes verification of signature
+    pow_mod(t, s, e, n);
+
+    // Returns true if signature is verified and false otherwise
+    if (mpz_cmp(t, m) == 0) {
+        return true;
+    }
+    return false;
 }
-#endif
