@@ -56,6 +56,8 @@ void mod_inverse(mpz_t i, mpz_t a, mpz_t n) {
         mpz_t qi_inv;
         mpz_mul(qi_inv, q, i_inv);
         mpz_sub(i_inv, i, qi_inv);
+
+	mpz_clears(q, qr_inv, qi_inv);
     }
 
     // Checks if r is greater than one
@@ -69,6 +71,7 @@ void mod_inverse(mpz_t i, mpz_t a, mpz_t n) {
         // Sets i to i + n
         mpz_add(i, i, n);
     }
+    mpz_clears(r, r_inv, i_inv);
 }
 
 void pow_mod(mpz_t out, mpz_t base, mpz_t exponent, mpz_t modulus) {
