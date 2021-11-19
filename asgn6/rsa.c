@@ -105,6 +105,23 @@ void rsa_encrypt(mpz_t c, mpz_t m, mpz_t e, mpz_t n) {
 
 #if 0
 void rsa_encrypt_file(FILE *infile, FILE *outfile, mpz_t n, mpz_t e) {
+	// Calculates block size k
+	size_t k = (mpz_sizeinbase(n, 2)-1)/8;
+
+	// Allocates block array that can hold k bytes
+	uint8_t *block = malloc(sizeof(k));
+
+	// Prepends workaround byte
+	block[0] = 0xFF;
+
+	// Loops while there are unprocessed bytes in infile
+	uint8_t processed = 0;
+	uint8_t j = 0;
+	while (j < processed){
+		j = fread(&block[1], 8, k-1, infile);
+
+	}
+
 
 }
 #endif
@@ -119,6 +136,11 @@ void rsa_decrypt(mpz_t m, mpz_t c, mpz_t d, mpz_t n) {
 
 #if 0
 void rsa_decrypt_file(FILE *infile, FILE *outfile, mpz_t n, mpz_t d) {
+	// Calculates block size k
+        size_t k = (mpz_sizeinbase(n, 2)-1)/8;
+
+        // Allocates block array that can hold k bytes
+        uint8_t *block = malloc(sizeof(k));
 }
 #endif
 
