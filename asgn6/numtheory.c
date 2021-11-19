@@ -105,7 +105,6 @@ gmp_randstate_t state;
 
 bool is_prime(mpz_t n, uint64_t iters) {
     // Creates variables for future use
-    mpz_t modulus;
     mpz_t product;
     mpz_t y, a, j;
     mpz_t exponent;
@@ -162,6 +161,7 @@ bool is_prime(mpz_t n, uint64_t iters) {
 
                 // Returns false if y is one
                 if (mpz_cmp_d(y, 1) == 0) {
+                    randstate_clear();
                     return false;
                 }
                 // Increments j by one
@@ -169,10 +169,12 @@ bool is_prime(mpz_t n, uint64_t iters) {
             }
             // Returns false if y does not equal n-one
             if (mpz_cmp(y, n - 1) != 0) {
+                randstate_clear();
                 return false;
             }
         }
     }
+    randstate_clear();
     return true;
 }
 
@@ -187,4 +189,5 @@ void make_prime(mpz_t p, uint64_t bits, uint64_t iters) {
             break;
         }
     }
+    randstate_clear();
 }
