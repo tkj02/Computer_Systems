@@ -9,7 +9,7 @@
 // Computes greatest common divisor of a and b
 // Stores value in d
 void gcd(mpz_t d, mpz_t a, mpz_t b) {
-    while (b != 0) {
+    while (mpz_cmp_d(b, 0) != 0) {
         // Sets d = b
         mpz_set(d, b);
 
