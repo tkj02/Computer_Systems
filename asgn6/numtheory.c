@@ -35,17 +35,20 @@ void mod_inverse(mpz_t i, mpz_t a, mpz_t n) {
     mpz_t i_inv;
     mpz_set_si(i_inv, 1);
 
+    // Initializes other variables
+    mpz_t q;
+    mpz_t qr_inv;
+    mpz_t qi_inv;
+
     // Loops while r inverse is not zero
     while (mpz_cmp_d(r_inv, 0) != 0) {
         // Sets q to floor of r/r inverse
-        mpz_t q;
         mpz_fdiv_q(q, r, r_inv);
 
         // Sets r to r inverse
         mpz_set(r, r_inv);
 
         // Sets r inverse to r - q * r inverse
-        mpz_t qr_inv;
         mpz_mul(qr_inv, q, r_inv);
         mpz_sub(r_inv, r, qr_inv);
 
@@ -53,11 +56,8 @@ void mod_inverse(mpz_t i, mpz_t a, mpz_t n) {
         mpz_set(i, i_inv);
 
         // Sets i inverse to i - q * i inverse
-        mpz_t qi_inv;
         mpz_mul(qi_inv, q, i_inv);
         mpz_sub(i_inv, i, qi_inv);
-
-	mpz_clears(q, qr_inv, qi_inv);
     }
 
     // Checks if r is greater than one
@@ -71,7 +71,7 @@ void mod_inverse(mpz_t i, mpz_t a, mpz_t n) {
         // Sets i to i + n
         mpz_add(i, i, n);
     }
-    mpz_clears(r, r_inv, i_inv);
+    mpz_clears(r, r_inv, i_inv, q, qr_inv, qi_inv);
 }
 
 void pow_mod(mpz_t out, mpz_t base, mpz_t exponent, mpz_t modulus) {
@@ -80,32 +80,27 @@ void pow_mod(mpz_t out, mpz_t base, mpz_t exponent, mpz_t modulus) {
     mpz_t p;
     mpz_set(p, base);
 
+    // Initializes other variables
+    mpz_t outp;
+    mpz_t pp;
+
     // Loops while exponent is greater than zero
     while (mpz_cmp_d(exponent, 0) > 0) {
         // Checks if exponent is odd
-
-        //mpz_t mod_value;
-        //mpz_mod_ui(mod_value, exponent, 2);
-        //if (mod_value == 1) {
-
         if (mpz_odd_p(exponent) != 0) {
             // Sets out to out * p mod modulus
-            mpz_t outp;
             mpz_mul(outp, out, p);
             mpz_mod(out, outp, modulus);
-	    mpz_clear(outp);
         }
         // Sets p to p * p mod modulus
-        mpz_t pp;
         mpz_mul(pp, p, p);
         mpz_mod(p, pp, modulus);
 
         // Sets exponent to floor of exponent/two
         mpz_fdiv_q_ui(exponent, exponent, 2);
 
-	mpz_clear(pp);
     }
-    mpz_clear(p);
+    mpz_clears(p, outp, pp);
 }
 
 gmp_randstate_t state;
