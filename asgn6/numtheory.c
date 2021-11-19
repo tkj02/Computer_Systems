@@ -80,12 +80,12 @@ void pow_mod(mpz_t out, mpz_t base, mpz_t exponent, mpz_t modulus) {
     // Loops while exponent is greater than zero
     while (mpz_cmp_d(exponent, 0) > 0) {
         // Checks if exponent is odd
-        
-	//mpz_t mod_value;
-	//mpz_mod_ui(mod_value, exponent, 2);
+
+        //mpz_t mod_value;
+        //mpz_mod_ui(mod_value, exponent, 2);
         //if (mod_value == 1) {
-	
-	if (mpz_odd_p(exponent) != 0){
+
+        if (mpz_odd_p(exponent) != 0) {
             // Sets out to out * p mod modulus
             mpz_t outp;
             mpz_mul(outp, out, p);
@@ -112,7 +112,7 @@ bool is_prime(mpz_t n, uint64_t iters) {
 
     // Checks if n is even (and therefore not prime)
     // Returns false if so
-    if (mpz_mod_ui(modulus, n, 2) == 0) {
+    if (mpz_even_p(n) != 0) {
         return false;
     }
     // Writes n-one = two^s * r
@@ -123,21 +123,23 @@ bool is_prime(mpz_t n, uint64_t iters) {
 
     // Loops while r is even
     // Determines s and r values
-    while (mpz_mod_ui(modulus, r, 2) == 0) {
+    while (mpz_even_p(r) != 0) {
         // Sets product to two^s * r
         mpz_mul_2exp(product, r, (mp_bitcnt_t) s);
 
-        // Loops again with new s and r values if product and n-one match
-        if (product == n - 1) {
+        // Checks if product and n-one match
+        // If so, adds one to s and divides r by two
+        if (mpz_cmp(product, n - 1) == 0) {
             mpz_set(s, s + 1);
             mpz_divexact_ui(r, r, 2);
-        } else {
+        }
+        // If r is odd, a valid break out of loop
+        if (mpz_odd_p(r) != 0) {
             break;
         }
     }
     // Conducts Miller-Rabin test
     for (uint64_t i = 0; i < iters; i++) {
-        //for (mpz_init(i); mpz_cmp(i, iters) < 0; mpz_set(i, i+1)){
         // Sets a to a random value between two and n-two
         mpz_urandomm(a, state, n - 3);
         mpz_set(a, a + 2);
