@@ -108,7 +108,7 @@ gmp_randstate_t state;
 bool is_prime(mpz_t n, uint64_t iters) {
     // Creates variables for future use
     mpz_t product;
-    mpz_t y, a, j;
+    mpz_t y, a, j, s, r;
     mpz_t exponent;
 
     // Checks if n is even (and therefore not prime)
@@ -118,26 +118,21 @@ bool is_prime(mpz_t n, uint64_t iters) {
     }
     // Writes n-one = two^s * r
     // s starts at zero and r at n-one
-    mpz_t s, r;
     mpz_init(s);
     mpz_set(r, n - 1);
 
     // Loops while r is even
     // Determines s and r values
     while (mpz_even_p(r) != 0) {
-        // Sets product to two^s * r
-        mpz_mul_2exp(product, r, (mp_bitcnt_t) s);
-
-        // Checks if product and n-one match
-        // If so, adds one to s and divides r by two
-        if (mpz_cmp(product, n - 1) == 0) {
-            mpz_set(s, s + 1);
-            mpz_divexact_ui(r, r, 2);
-        }
-        // If r is odd, a valid break out of loop
-        if (mpz_odd_p(r) != 0) {
+	// If r is odd, a valid r was found
+	// Breaks out of loop
+	if (mpz_odd_p(r) != 0) {
             break;
         }
+	// Alter variables for next loop
+	// Adds one to s and divides r by two
+	mpz_set(s, s + 1);
+        mpz_divexact_ui(r, r, 2);    
     }
     // Conducts Miller-Rabin test
     for (uint64_t i = 0; i < iters; i++) {
