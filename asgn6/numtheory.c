@@ -98,7 +98,6 @@ void pow_mod(mpz_t out, mpz_t base, mpz_t exponent, mpz_t modulus) {
 
         // Sets exponent to floor of exponent/two
         mpz_fdiv_q_ui(exponent, exponent, 2);
-
     }
     mpz_clears(p, outp, pp);
 }
@@ -134,9 +133,9 @@ bool is_prime(mpz_t n, uint64_t iters) {
             mpz_divexact_ui(r, r, 2);
         }
 
-	// If r is odd, a valid r was found
-	// Breaks out of loop
-	if (mpz_odd_p(r) != 0) {
+        // If r is odd, a valid r was found
+        // Breaks out of loop
+        if (mpz_odd_p(r) != 0) {
             break;
         }
     }
