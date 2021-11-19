@@ -111,7 +111,7 @@ bool is_prime(mpz_t n, uint64_t iters) {
 
     // Checks if n is even (and therefore not prime)
     // Returns false if so
-    if (mpz_even_p(n) != 0) {
+    if (mpz_even_p(n) != 0 && mpz_cmp_d(n, 2) != 0) {
         return false;
     }
     // Writes n-one = two^s * r
