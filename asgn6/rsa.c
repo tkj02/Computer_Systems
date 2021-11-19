@@ -103,28 +103,34 @@ void rsa_encrypt(mpz_t c, mpz_t m, mpz_t e, mpz_t n) {
     pow_mod(c, m, e, n);
 }
 
-#if 0
 void rsa_encrypt_file(FILE *infile, FILE *outfile, mpz_t n, mpz_t e) {
-	// Calculates block size k
-	size_t k = (mpz_sizeinbase(n, 2)-1)/8;
+    // Initializes variables
+    mpz_t m;
+    mpz_t c;
 
-	// Allocates block array that can hold k bytes
-	uint8_t *block = malloc(sizeof(k));
+    // Calculates block size k
+    size_t k = (mpz_sizeinbase(n, 2) - 1) / 8;
 
-	// Prepends workaround byte
-	block[0] = 0xFF;
+    // Allocates block array that can hold k bytes
+    uint8_t *block = malloc(sizeof(k));
 
-	// Loops while there are unprocessed bytes in infile
-	uint8_t processed = 0;
-	uint8_t j = 0;
-	while (j < processed){
-		j = fread(&block[1], 8, k-1, infile);
+    // Prepends workaround byte
+    block[0] = 0xFF;
 
-	}
-
-
+    // Loops while there are unprocessed bytes in infile
+    uint8_t j = 0;
+    while (1) {
+        j = fread(&block[1], 1, k - 1, infile);
+        if (j <= 0) {
+            break;
+        }
+        mpz_import(m, j, 1, 1, 1, 0, block);
+        rsa_encrypt(c, m, e, n);
+        gmp_fprintf(outfile, "%Zx\n", c);
+    }
+    mpz_clears(m, c);
+    free(block);
 }
-#endif
 
 void rsa_decrypt(mpz_t m, mpz_t c, mpz_t d, mpz_t n) {
     // Calls pow_mod to compute message and store in m
@@ -134,13 +140,31 @@ void rsa_decrypt(mpz_t m, mpz_t c, mpz_t d, mpz_t n) {
     pow_mod(m, c, d, n);
 }
 
-#if 0
+#if 1
 void rsa_decrypt_file(FILE *infile, FILE *outfile, mpz_t n, mpz_t d) {
-	// Calculates block size k
-        size_t k = (mpz_sizeinbase(n, 2)-1)/8;
+    // Initializes variables
+    mpz_t m;
+    mpz_t c;
 
-        // Allocates block array that can hold k bytes
-        uint8_t *block = malloc(sizeof(k));
+    // Calculates block size k
+    size_t k = (mpz_sizeinbase(n, 2) - 1) / 8;
+
+    // Allocates block array that can hold k bytes
+    uint8_t *block = malloc(sizeof(k));
+
+    // Loops while there are unprocessed bytes in infile
+    uint8_t j = 0;
+    size_t countp;
+    while (1) {
+        if (gmp_fscanf(infile, "%Zx\n", c) == EOF) {
+            break;
+        }
+        rsa_decrypt(m, c, d, n);
+        mpz_export(block, &countp, 1, 1, 1, 0, c);
+        j += fwrite(&block[1], 1, k - 1, outfile);
+    }
+    mpz_clear(c);
+    free(block);
 }
 #endif
 
