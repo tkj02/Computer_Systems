@@ -93,6 +93,7 @@ void pow_mod(mpz_t out, mpz_t base, mpz_t exponent, mpz_t modulus) {
             mpz_t outp;
             mpz_mul(outp, out, p);
             mpz_mod(out, outp, modulus);
+	    mpz_clear(outp);
         }
         // Sets p to p * p mod modulus
         mpz_t pp;
@@ -101,7 +102,10 @@ void pow_mod(mpz_t out, mpz_t base, mpz_t exponent, mpz_t modulus) {
 
         // Sets exponent to floor of exponent/two
         mpz_fdiv_q_ui(exponent, exponent, 2);
+
+	mpz_clear(pp);
     }
+    mpz_clear(p);
 }
 
 gmp_randstate_t state;
@@ -177,6 +181,7 @@ bool is_prime(mpz_t n, uint64_t iters) {
             }
         }
     }
+    mpz_clears(product, y, a, j, exponent, s, r);
     randstate_clear();
     return true;
 }
