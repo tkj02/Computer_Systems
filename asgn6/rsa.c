@@ -160,7 +160,7 @@ void rsa_decrypt_file(FILE *infile, FILE *outfile, mpz_t n, mpz_t d) {
             break;
         }
         rsa_decrypt(m, c, d, n);
-        mpz_export(block, &countp, 1, 1, 1, 0, c);
+        mpz_export(block, &countp, 1, 1, 1, 0, m);
         j += fwrite(&block[1], 1, k - 1, outfile);
     }
     mpz_clear(c);
