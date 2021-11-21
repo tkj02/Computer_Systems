@@ -63,7 +63,7 @@ void mod_inverse(mpz_t i, mpz_t a, mpz_t n) {
     // Checks if r is greater than one
     if (mpz_cmp_d(r, 1) > 0) {
         // Sets i to zero
-        mpz_set_d(i, 0);
+        mpz_set_si(i, 0);
     }
 
     // Checks if i is less than zero
@@ -71,6 +71,7 @@ void mod_inverse(mpz_t i, mpz_t a, mpz_t n) {
         // Sets i to i + n
         mpz_add(i, i, n);
     }
+    // Freeing variables
     mpz_clears(r, r_inv, NULL);
     mpz_clear(i_inv);
     mpz_clears(q, qr_inv, qi_inv, NULL);
