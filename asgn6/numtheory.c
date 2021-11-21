@@ -106,7 +106,6 @@ gmp_randstate_t state;
 
 bool is_prime(mpz_t n, uint64_t iters) {
     // Creates variables for future use
-    mpz_t product;
     mpz_t y, a, j, s, r;
     mpz_t exponent;
 
@@ -123,30 +122,21 @@ bool is_prime(mpz_t n, uint64_t iters) {
     // Loops while r is even
     // Determines s and r values
     while (mpz_even_p(r) != 0) {
-        // Sets product to two^s * r
-        mpz_mul_2exp(product, r, (mp_bitcnt_t) s);
-
         // Checks if product and n-one match
         // If so, adds one to s and divides r by two
-        if (mpz_cmp(product, n - 1) == 0) {
-            mpz_set(s, s + 1);
-            mpz_divexact_ui(r, r, 2);
-        }
-
-        // If r is odd, a valid r was found
-        // Breaks out of loop
-        if (mpz_odd_p(r) != 0) {
-            break;
-        }
+        mpz_add_ui(s, s, 1);
+        mpz_divexact_ui(r, r, 2);
     }
     // Conducts Miller-Rabin test
     for (uint64_t i = 0; i < iters; i++) {
         // Sets a to a random value between two and n-two
         mpz_urandomm(a, state, n - 3);
-        mpz_set(a, a + 2);
+        mpz_add_ui(a, a, 2);
 
         // Calls pow_mod and stores value in y
         pow_mod(y, a, r, n);
+	randstate_clear();
+	//mpz_powm
 
         // Checks if y does not = one and does not = n-one
         if (mpz_cmp_d(y, 1) != 0 && mpz_cmp(y, n - 1) != 0) {
@@ -163,7 +153,7 @@ bool is_prime(mpz_t n, uint64_t iters) {
 
                 // Returns false if y is one
                 if (mpz_cmp_d(y, 1) == 0) {
-                    randstate_clear();
+		    mpz_clears(y, a, j, exponent, s, r, NULL);
                     return false;
                 }
                 // Increments j by one
@@ -171,13 +161,12 @@ bool is_prime(mpz_t n, uint64_t iters) {
             }
             // Returns false if y does not equal n-one
             if (mpz_cmp(y, n - 1) != 0) {
-                randstate_clear();
+		mpz_clears(y, a, j, exponent, s, r, NULL);
                 return false;
             }
         }
     }
-    mpz_clears(product, y, a, j, exponent, s, r, NULL);
-    randstate_clear();
+    mpz_clears(y, a, j, exponent, s, r, NULL);
     return true;
 }
 
