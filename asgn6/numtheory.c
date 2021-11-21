@@ -63,7 +63,7 @@ void mod_inverse(mpz_t i, mpz_t a, mpz_t n) {
     // Checks if r is greater than one
     if (mpz_cmp_d(r, 1) > 0) {
         // Sets i to zero
-        mpz_init(i);
+        mpz_set_d(i, 0);
     }
 
     // Checks if i is less than zero
