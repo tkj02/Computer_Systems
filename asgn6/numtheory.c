@@ -32,38 +32,48 @@ void mod_inverse(mpz_t i, mpz_t a, mpz_t n) {
 
     // Sets i = zero and i inverse = one
     mpz_init(i);
+    mpz_set_ui(i, 0);
+
     mpz_t i_inv;
     mpz_init(i_inv);
-    mpz_set_si(i_inv, 1);
+    mpz_set_ui(i_inv, 1);
 
     // Initializes other variables
     mpz_t q, qr_inv, qi_inv;
     mpz_inits(q, qr_inv, qi_inv, NULL);
+    mpz_t temp_r, temp_i;
+    mpz_inits(temp_r, temp_i, NULL);
 
     // Loops while r inverse is not zero
     while (mpz_cmp_d(r_inv, 0) != 0) {
         // Sets q to floor of r/r inverse
         mpz_fdiv_q(q, r, r_inv);
 
+        // Creates temp value that stores current r
+        mpz_set(temp_r, r);
+
         // Sets r to r inverse
         mpz_set(r, r_inv);
 
         // Sets r inverse to r - q * r inverse
         mpz_mul(qr_inv, q, r_inv);
-        mpz_sub(r_inv, r, qr_inv);
+        mpz_sub(r_inv, temp_r, qr_inv);
+
+        // Creates temp value that stores current i
+        mpz_set(temp_i, i);
 
         // Sets i to i inverse
         mpz_set(i, i_inv);
 
         // Sets i inverse to i - q * i inverse
         mpz_mul(qi_inv, q, i_inv);
-        mpz_sub(i_inv, i, qi_inv);
+        mpz_sub(i_inv, temp_i, qi_inv);
     }
 
     // Checks if r is greater than one
     if (mpz_cmp_d(r, 1) > 0) {
         // Sets i to zero
-        mpz_set_si(i, 0);
+        mpz_set_ui(i, 0);
     }
 
     // Checks if i is less than zero
@@ -75,6 +85,7 @@ void mod_inverse(mpz_t i, mpz_t a, mpz_t n) {
     mpz_clears(r, r_inv, NULL);
     mpz_clear(i_inv);
     mpz_clears(q, qr_inv, qi_inv, NULL);
+    mpz_clears(temp_r, temp_i, NULL);
 }
 
 void pow_mod(mpz_t out, mpz_t base, mpz_t exponent, mpz_t modulus) {
