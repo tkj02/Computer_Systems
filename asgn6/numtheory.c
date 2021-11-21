@@ -23,8 +23,8 @@ void gcd(mpz_t d, mpz_t a, mpz_t b) {
 
 void mod_inverse(mpz_t i, mpz_t a, mpz_t n) {
     // Initializes r and r inverse
-    mpz_t r;
-    mpz_t r_inv;
+    mpz_t r, r_inv;
+    mpz_inits(r, r_inv, NULL);
 
     // Sets r = n and r inverse = a
     mpz_set(r, n);
@@ -33,12 +33,12 @@ void mod_inverse(mpz_t i, mpz_t a, mpz_t n) {
     // Sets i = zero and i inverse = one
     mpz_init(i);
     mpz_t i_inv;
+    mpz_init(i_inv);
     mpz_set_si(i_inv, 1);
 
     // Initializes other variables
-    mpz_t q;
-    mpz_t qr_inv;
-    mpz_t qi_inv;
+    mpz_t q, qr_inv, qi_inv;
+    mpz_inits(q, qr_inv, qi_inv, NULL);
 
     // Loops while r inverse is not zero
     while (mpz_cmp_d(r_inv, 0) != 0) {
@@ -71,7 +71,9 @@ void mod_inverse(mpz_t i, mpz_t a, mpz_t n) {
         // Sets i to i + n
         mpz_add(i, i, n);
     }
-    mpz_clears(r, r_inv, i_inv, q, qr_inv, qi_inv, NULL);
+    mpz_clears(r, r_inv, NULL);
+    mpz_clear(i_inv);
+    mpz_clears(q, qr_inv, qi_inv, NULL);
 }
 
 void pow_mod(mpz_t out, mpz_t base, mpz_t exponent, mpz_t modulus) {
@@ -124,14 +126,16 @@ bool is_prime(mpz_t n, uint64_t iters) {
     mpz_sub_ui(sub, n, 1);
     mpz_set(r, sub);
 
+    // Sets subs = s - one
     mpz_sub_ui(subs, s, 1);
+
+    // Sets subn = n - three
     mpz_sub_ui(subn, n, 3);
 
     // Loops while r is even
     // Determines s and r values
     while (mpz_even_p(r) != 0) {
-        // Checks if product and n-one match
-        // If so, adds one to s and divides r by two
+        // Increments s by one and divides r by two until valid r
         mpz_add_ui(s, s, 1);
         mpz_divexact_ui(r, r, 2);
     }
