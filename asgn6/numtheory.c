@@ -106,7 +106,11 @@ gmp_randstate_t state;
 
 bool is_prime(mpz_t n, uint64_t iters) {
     // Creates variables for future use
+    // sub = n - one
+    // subs = s - one
+    // subn = s - three
     mpz_t y, a, j, s, r;
+    mpz_t sub, subs, subn;
     mpz_t exponent;
 
     // Checks if n is even (and therefore not prime)
@@ -117,7 +121,11 @@ bool is_prime(mpz_t n, uint64_t iters) {
     // Writes n-one = two^s * r
     // s starts at zero and r at n-one
     mpz_init(s);
-    mpz_set(r, n - 1);
+    mpz_sub_ui(sub, n, 1);
+    mpz_set(r, sub);
+
+    mpz_sub_ui(subs, s, 1);
+    mpz_sub_ui(subn, n, 3);
 
     // Loops while r is even
     // Determines s and r values
@@ -135,38 +143,38 @@ bool is_prime(mpz_t n, uint64_t iters) {
 
         // Calls pow_mod and stores value in y
         pow_mod(y, a, r, n);
-	randstate_clear();
-	//mpz_powm
+        randstate_clear();
+        //mpz_powm
 
         // Checks if y does not = one and does not = n-one
-        if (mpz_cmp_d(y, 1) != 0 && mpz_cmp(y, n - 1) != 0) {
+        if (mpz_cmp_d(y, 1) != 0 && mpz_cmp(y, sub) != 0) {
 
             // Sets j to one
             mpz_set_d(j, 1);
 
             // Loops while j is less than or equal to s-one
             // and y does not equal to n-one
-            while (mpz_cmp(j, s - 1) <= 0 && mpz_cmp(y, n - 1) != 0) {
+            while (mpz_cmp(j, subs) <= 0 && mpz_cmp(y, sub) != 0) {
                 // Calls pow_mod and stores value in y
                 mpz_set_d(exponent, 2);
                 pow_mod(y, y, exponent, n);
 
                 // Returns false if y is one
                 if (mpz_cmp_d(y, 1) == 0) {
-		    mpz_clears(y, a, j, exponent, s, r, NULL);
+                    mpz_clears(y, a, j, exponent, s, r, sub, subs, NULL);
                     return false;
                 }
                 // Increments j by one
                 mpz_set(j, j + 1);
             }
             // Returns false if y does not equal n-one
-            if (mpz_cmp(y, n - 1) != 0) {
-		mpz_clears(y, a, j, exponent, s, r, NULL);
+            if (mpz_cmp(y, sub) != 0) {
+                mpz_clears(y, a, j, exponent, s, r, sub, subs, NULL);
                 return false;
             }
         }
     }
-    mpz_clears(y, a, j, exponent, s, r, NULL);
+    mpz_clears(y, a, j, exponent, s, r, sub, subs, NULL);
     return true;
 }
 
