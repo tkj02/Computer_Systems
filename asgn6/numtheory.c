@@ -138,7 +138,7 @@ bool is_prime(mpz_t n, uint64_t iters) {
     // Conducts Miller-Rabin test
     for (uint64_t i = 0; i < iters; i++) {
         // Sets a to a random value between two and n-two
-        mpz_urandomm(a, state, n - 3);
+        mpz_urandomm(a, state, subn);
         mpz_add_ui(a, a, 2);
 
         // Calls pow_mod and stores value in y
@@ -165,7 +165,7 @@ bool is_prime(mpz_t n, uint64_t iters) {
                     return false;
                 }
                 // Increments j by one
-                mpz_set(j, j + 1);
+                mpz_add_ui(j, j, 1);
             }
             // Returns false if y does not equal n-one
             if (mpz_cmp(y, sub) != 0) {
