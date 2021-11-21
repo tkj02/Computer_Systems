@@ -83,8 +83,7 @@ void pow_mod(mpz_t out, mpz_t base, mpz_t exponent, mpz_t modulus) {
     mpz_set(p, base);
 
     // Initializes other variables
-    mpz_t outp;
-    mpz_t pp;
+    mpz_t outp, pp;
 
     // Loops while exponent is greater than zero
     while (mpz_cmp_d(exponent, 0) > 0) {
@@ -101,7 +100,8 @@ void pow_mod(mpz_t out, mpz_t base, mpz_t exponent, mpz_t modulus) {
         // Sets exponent to floor of exponent/two
         mpz_fdiv_q_ui(exponent, exponent, 2);
     }
-    mpz_clears(p, outp, pp, NULL);
+    mpz_clear(p);
+    mpz_clears(outp, pp, NULL);
 }
 
 gmp_randstate_t state;
@@ -165,7 +165,9 @@ bool is_prime(mpz_t n, uint64_t iters) {
 
                 // Returns false if y is one
                 if (mpz_cmp_d(y, 1) == 0) {
-                    mpz_clears(y, a, j, exponent, s, r, sub, subs, NULL);
+                    mpz_clears(y, a, j, s, r, NULL);
+                    mpz_clears(sub, subs, subn, NULL);
+                    mpz_clear(exponent);
                     return false;
                 }
                 // Increments j by one
@@ -173,12 +175,16 @@ bool is_prime(mpz_t n, uint64_t iters) {
             }
             // Returns false if y does not equal n-one
             if (mpz_cmp(y, sub) != 0) {
-                mpz_clears(y, a, j, exponent, s, r, sub, subs, NULL);
+                mpz_clears(y, a, j, s, r, NULL);
+                mpz_clears(sub, subs, subn, NULL);
+                mpz_clear(exponent);
                 return false;
             }
         }
     }
-    mpz_clears(y, a, j, exponent, s, r, sub, subs, NULL);
+    mpz_clears(y, a, j, s, r, NULL);
+    mpz_clears(sub, subs, subn, NULL);
+    mpz_clear(exponent);
     return true;
 }
 
