@@ -10,8 +10,8 @@ void rsa_make_pub(mpz_t p, mpz_t q, mpz_t n, mpz_t e, uint64_t nbits, uint64_t i
     // Creates variables for future use
     uint64_t p_bits;
     uint64_t q_bits;
-    mpz_t totient;
-    mpz_t etotient_gcd;
+    mpz_t totient, etotient_gcd;
+    mpz_inits(totient, etotient_gcd, NULL);
 
     // Creates lower and upper bounds for number of bits for p (p_bits)
     uint64_t lower_bound = nbits / 4;
@@ -31,7 +31,11 @@ void rsa_make_pub(mpz_t p, mpz_t q, mpz_t n, mpz_t e, uint64_t nbits, uint64_t i
     mpz_mul(n, p, q);
 
     // Sets totient (of n) to p-one * q-one
-    mpz_mul(totient, p - 1, q - 1);
+    mpz_t p_sub_one, q_sub_one;
+    mpz_inits(p_sub_one, q_sub_one, NULL);
+    mpz_sub_ui(p_sub_one, p, 1);
+    mpz_sub_ui(q_sub_one, q, 1);
+    mpz_mul(totient, p_sub_one, q_sub_one);
 
     // Finding public exponent e
     while (1) {
@@ -46,6 +50,8 @@ void rsa_make_pub(mpz_t p, mpz_t q, mpz_t n, mpz_t e, uint64_t nbits, uint64_t i
             break;
         }
     }
+    mpz_clears(totient, etotient_gcd, NULL);
+    mpz_clears(p_sub_one, q_sub_one, NULL);
 }
 
 void rsa_write_pub(mpz_t n, mpz_t e, mpz_t s, char username[], FILE *pbfile) {
@@ -70,8 +76,7 @@ void rsa_read_pub(mpz_t n, mpz_t e, mpz_t s, char username[], FILE *pbfile) {
 
 void rsa_make_priv(mpz_t d, mpz_t e, mpz_t p, mpz_t q) {
     // Creates variables for future use
-    mpz_t n;
-    mpz_t totient;
+    mpz_t n, totient;
 
     // Sets n to p * q
     mpz_mul(n, p, q);
@@ -81,6 +86,8 @@ void rsa_make_priv(mpz_t d, mpz_t e, mpz_t p, mpz_t q) {
 
     // Calls mod_inverse and stores inverse e mod totient in d
     mod_inverse(d, e, totient);
+
+    mpz_clears(n, totient, NULL);
 }
 
 void rsa_write_priv(mpz_t n, mpz_t d, FILE *pvfile) {
@@ -140,7 +147,6 @@ void rsa_decrypt(mpz_t m, mpz_t c, mpz_t d, mpz_t n) {
     pow_mod(m, c, d, n);
 }
 
-#if 1
 void rsa_decrypt_file(FILE *infile, FILE *outfile, mpz_t n, mpz_t d) {
     // Initializes variables
     mpz_t m;
@@ -166,7 +172,6 @@ void rsa_decrypt_file(FILE *infile, FILE *outfile, mpz_t n, mpz_t d) {
     mpz_clear(c);
     free(block);
 }
-#endif
 
 void rsa_sign(mpz_t s, mpz_t m, mpz_t d, mpz_t n) {
     // Calls pow_mod to produce signature and store in s
