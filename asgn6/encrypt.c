@@ -45,8 +45,7 @@ int main(int argc, char **argv) {
     mpz_t n, e, s;
     mpz_inits(n, e, s, NULL);
     char username[256];
-    FILE *fp;
-    const char *fpub = "rsa.pub";
+    FILE *fp = NULL;
 
     // Parses through command line options
     while ((opt = getopt(argc, argv, OPTIONS)) != -1) {
@@ -66,12 +65,11 @@ int main(int argc, char **argv) {
             }
             break;
         case 'n':
-            fp = fopen(optarg, "r"); //fpub
-            if (fpub == NULL) {
+            fp = fopen(optarg, "r");
+            if (fp == NULL) {
                 printf("error opening public key file");
                 goto exit;
             }
-            //	    fpub = optarg;
             break;
         case 'v': v_flag = true; break;
         case 'h':
@@ -89,11 +87,11 @@ int main(int argc, char **argv) {
     }
 
     // Opens public key file
-    // Prints error message if opening fails
-    fp = fopen(fpub, "r");
-    if (fpub == NULL) {
-        printf("error opening public key file");
-        goto exit;
+    if (fp == NULL){
+    	fp = fopen("rsa.pub", "r");
+	if (fp == NULL){
+		goto exit;
+	}
     }
 
     // Reads public key file
@@ -102,16 +100,15 @@ int main(int argc, char **argv) {
     // If verbose is enabled, prints values
     if (v_flag) {
         printf("user = %s\n", username);
-        printf("s (%zu bits) = %lu\n", mpz_sizeinbase(s, 2), mpz_get_ui(s));
-        printf("n (%zu bits) = %lu\n", mpz_sizeinbase(n, 2), mpz_get_ui(n));
-        printf("e (%zu bits) = %lu\n", mpz_sizeinbase(e, 2), mpz_get_ui(e));
+	gmp_printf("s (%d bits) = %Zd\n", mpz_sizeinbase(s, 2), s);
+	gmp_printf("n (%d bits) = %Zd\n", mpz_sizeinbase(n, 2), n);
+        gmp_printf("e (%d bits) = %Zd\n", mpz_sizeinbase(e, 2), e);
     }
 
     // Converts username to mpz_t
     mpz_t user;
     mpz_init(user);
-    mpz_set_str(user, username, 5);
-    // check third parameter        ^
+    mpz_init_set_str(user, username, 62);
 
     // Verifies signature
     bool stat = rsa_verify(user, s, e, n);
