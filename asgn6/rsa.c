@@ -25,10 +25,14 @@ void rsa_make_pub(mpz_t p, mpz_t q, mpz_t n, mpz_t e, uint64_t nbits, uint64_t i
     make_prime(p, p_bits, iters);
     make_prime(q, q_bits, iters);
 
+    uint64_t bitcount = mpz_sizeinbase(n, 2);
+
     // Sets n to p * q
     mpz_mul(n, p, q);
 
-    //    size_t bitcount = mpz_sizeinbase(n, 2);
+    if (bitcount < nbits) {
+        rsa_make_pub(p, q, n, e, nbits, iters);
+    }
 
     // Sets totient (of n) to p-one * q-one
     mpz_t p_sub_one, q_sub_one;
