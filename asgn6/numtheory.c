@@ -33,7 +33,6 @@ void mod_inverse(mpz_t i, mpz_t a, mpz_t n) {
     // Sets i = zero and i inverse = one
     mpz_init(i);
     mpz_set_ui(i, 0);
-
     mpz_t i_inv;
     mpz_init(i_inv);
     mpz_set_ui(i_inv, 1);
@@ -81,7 +80,7 @@ void mod_inverse(mpz_t i, mpz_t a, mpz_t n) {
         // Sets i to i + n
         mpz_add(i, i, n);
     }
-    // Freeing variables
+    // Frees variables
     mpz_clears(r, r_inv, NULL);
     mpz_clear(i_inv);
     mpz_clears(q, qr_inv, qi_inv, NULL);
@@ -105,7 +104,6 @@ void pow_mod(mpz_t out, mpz_t base, mpz_t exponent, mpz_t modulus) {
 
     // Loops while exponent is greater than zero
     while (1) {
-        //while (mpz_cmp_d(exp, 0) > 0) {
         // Checks if exponent is odd
         if (mpz_odd_p(exp) != 0) {
             // Sets out to out * p mod modulus
@@ -120,8 +118,10 @@ void pow_mod(mpz_t out, mpz_t base, mpz_t exponent, mpz_t modulus) {
         if (mpz_cmp_d(exp, 1) == 0) {
             break;
         }
+        // Sets d to floor of d/two
         mpz_fdiv_q_ui(exp, exp, 2);
     }
+    // Frees memory
     mpz_add_ui(out, v, 0);
     mpz_clear(p);
     mpz_clears(outp, pp, exp, NULL);
@@ -134,6 +134,7 @@ bool is_prime(mpz_t n, uint64_t iters) {
     // sub = n - one
     // subs = s - one
     // subn = s - three
+    bool prime_flag = true;
     mpz_t y, a, j, s, r;
     mpz_t sub, subs, subn;
     mpz_t exponent;
@@ -143,17 +144,20 @@ bool is_prime(mpz_t n, uint64_t iters) {
     if (mpz_even_p(n) != 0 && mpz_cmp_d(n, 2) != 0) {
         return false;
     }
+
     // Writes n-one = two^s * r
     // s starts at zero and r at n-one
     mpz_init(s);
     mpz_init(sub);
     mpz_init(r);
+
+    // Sets sub = n - one
     mpz_sub_ui(sub, n, 1);
     mpz_set(r, sub);
 
     // Sets subs = s - one
     mpz_inits(subs, subn, a, y, j, exponent, NULL);
-    //mpz_sub_ui(subs, s, 1);
+    mpz_sub_ui(subs, s, 1);
 
     // Sets subn = n - three
     mpz_sub_ui(subn, n, 3);
@@ -165,81 +169,70 @@ bool is_prime(mpz_t n, uint64_t iters) {
         mpz_add_ui(s, s, 1);
         mpz_divexact_ui(r, r, 2);
     }
-    mpz_sub_ui(subs, s, 1);
-    //uint64_t seed = 50;
-    //randstate_init(seed);
-    bool prime_flag = true;
+
     // Conducts Miller-Rabin test
     for (uint64_t i = 0; i < iters; i++) {
+
         // Sets a to a random value between two and n-two
         mpz_urandomm(a, state, subn);
         mpz_add_ui(a, a, 2);
 
-        //printf("loop count = %lu\n", i);
         // Calls pow_mod and stores value in y
         pow_mod(y, a, r, n);
-        //randstate_clear();
-        //mpz_powm
-        // Checks if y does not = one and does not = n-one
 
-        //  gmp_printf("i = %d iter = %d s = %Zd y = %Zd a = %Zd r = %Zd n = %Zd\n", i, iters, s, y, a, r, n);
+        // For debugging:
+        //     gmp_printf("i = %d iter = %d s = %Zd y = %Zd a = %Zd r = %Zd n = %Zd\n", i, iters, s, y, a, r, n);
+
+        // Checks if y does not = one and does not = n-one
         if (mpz_cmp_d(y, 1) != 0 && mpz_cmp(y, sub) != 0) {
 
             // Sets j to one
             mpz_set_d(j, 1);
-            //    gmp_printf("before loop j = %Zd subs = %Zd sub = %Zd\n", j, subs, sub);
 
-            // Loops while j is less than or equal to s-one
-            // and y does not equal to n-one
-#if 1
+            // For debugging:
+            //     gmp_printf("before loop j = %Zd subs = %Zd sub = %Zd\n", j, subs, sub);
+
+            // Sets flag to false to break later if needed
             prime_flag = false;
+
+            // Loops while j is less than or equal to s
             while (mpz_cmp(j, s) <= 0) {
+
+                // Calls pow_mod to set y
                 mpz_set_d(exponent, 2);
                 pow_mod(y, y, exponent, n);
+
+                // If y = one, breaks out of while loop
                 if (mpz_cmp_d(y, 1) == 0) {
                     break;
                 }
+
+                // If y = sub, prime found
+                // Breaks out of while loop
                 if (mpz_cmp(y, sub) == 0) {
                     prime_flag = true;
                     break;
                 }
+
+                // Increments j for next loop
                 mpz_add_ui(j, j, 1);
             }
+
+            // Checks again for primality
+            // Breaks if not a prime
             if (!prime_flag) {
                 break;
             }
-#else
-
-            while (mpz_cmp(j, subs) <= 0 && mpz_cmp(y, sub) != 0) {
-                // Calls pow_mod and stores value in y
-                gmp_printf("j = %Zd subs = %Zd", j, subs);
-                mpz_set_d(exponent, 2);
-                pow_mod(y, y, exponent, n);
-
-                // Returns false if y is one
-                if (mpz_cmp_d(y, 1) == 0) {
-                    mpz_clears(y, a, j, s, r, NULL);
-                    mpz_clears(sub, subs, subn, NULL);
-                    mpz_clear(exponent);
-                    return false;
-                }
-                // Increments j by one
-                mpz_add_ui(j, j, 1);
-            } //end while
-            // Returns false if y does not equal n-one
-            if (mpz_cmp(y, sub) != 0) {
-                mpz_clears(y, a, j, s, r, NULL);
-                mpz_clears(sub, subs, subn, NULL);
-                mpz_clear(exponent);
-                return false;
-            }
-#endif
         }
     }
-    //randstate_clear();
+
+    // Frees memory
     mpz_clears(y, a, j, s, r, NULL);
     mpz_clears(sub, subs, subn, NULL);
     mpz_clear(exponent);
+
+    // Returns status of primality
+    // Returns true if prime and false if not
     return prime_flag;
 }
 
@@ -254,5 +247,4 @@ void make_prime(mpz_t p, uint64_t bits, uint64_t iters) {
             break;
         }
     }
-    //randstate_clear();
 }
