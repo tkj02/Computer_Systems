@@ -30,8 +30,10 @@ void rsa_make_pub(mpz_t p, mpz_t q, mpz_t n, mpz_t e, uint64_t nbits, uint64_t i
         // Sets n to p * q
         mpz_mul(n, p, q);
 
+        // Computes log base two of n
         bitcount = mpz_sizeinbase(n, 2);
 
+        // Checks if n is the correct number of bits
         if (bitcount >= nbits) {
             break;
         }
@@ -49,6 +51,12 @@ void rsa_make_pub(mpz_t p, mpz_t q, mpz_t n, mpz_t e, uint64_t nbits, uint64_t i
 
         // Generates random number
         mpz_urandomb(e, state, (mp_bitcnt_t) nbits);
+
+        // Checks if e value is valid
+        // If not, loops until valid e is found
+        if (mpz_cmp_d(e, 2) <= 0) {
+            continue;
+        }
 
         // Calculates gcd of e and totient
         mpz_gcd(etotient_gcd, e, totient);
