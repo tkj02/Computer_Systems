@@ -15,18 +15,26 @@ void rsa_make_pub(mpz_t p, mpz_t q, mpz_t n, mpz_t e, uint64_t nbits, uint64_t i
     uint64_t lower_bound = nbits / 4;
     uint64_t upper_bound = (nbits * 3) / 4;
 
-    // Sets p_bits value is generated
-    uint64_t p_bits = (rand() % (upper_bound - lower_bound) + lower_bound);
+    while (1) {
+        // Sets p_bits value is generated
+        uint64_t p_bits = (rand() % (upper_bound - lower_bound) + lower_bound);
 
-    // Sets q_bits value
-    uint64_t q_bits = nbits - p_bits;
+        // Sets q_bits value
+        uint64_t q_bits = nbits - p_bits;
 
-    // Creates primes p and q by calling make_prime
-    make_prime(p, p_bits, iters);
-    make_prime(q, q_bits, iters);
+        // Creates primes p and q by calling make_prime
+        make_prime(p, p_bits, iters);
+        make_prime(q, q_bits, iters);
 
-    // Sets n to p * q
-    mpz_mul(n, p, q);
+        // Sets n to p * q
+        mpz_mul(n, p, q);
+
+        size_t bitcount = mpz_sizeinbase(n, 2);
+
+        if ((uint64_t) bitcount >= nbits) {
+            break;
+        }
+    }
 
     // Sets totient (of n) to p-one * q-one
     mpz_t p_sub_one, q_sub_one;
@@ -37,7 +45,7 @@ void rsa_make_pub(mpz_t p, mpz_t q, mpz_t n, mpz_t e, uint64_t nbits, uint64_t i
     gmp_printf("totient = %Zd psub1 = %Zd qsub1 = %Zd\n", totient, p_sub_one, q_sub_one);
 
     // Finding public exponent e
-    printf("entering lloop\n");
+    printf("entering loop\n");
     while (1) {
         printf("in loop\n");
         // Generates random number
