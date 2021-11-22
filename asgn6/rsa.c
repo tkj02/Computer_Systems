@@ -54,7 +54,7 @@ void rsa_make_pub(mpz_t p, mpz_t q, mpz_t n, mpz_t e, uint64_t nbits, uint64_t i
 
         // Checks if e value is valid
         // If not, loops until valid e is found
-        if (mpz_cmp_d(e, 2) <= 0) {
+        if (mpz_cmp_d(e, 2) <= 0 || mpz_cmp(e, n) >= 0) {
             continue;
         }
 
