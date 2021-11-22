@@ -90,7 +90,8 @@ void mod_inverse(mpz_t i, mpz_t a, mpz_t n) {
 
 void pow_mod(mpz_t out, mpz_t base, mpz_t exponent, mpz_t modulus) {
     // Sets out to one and p to base
-    mpz_set_si(out, 1);
+    mpz_t v;
+    mpz_init_set_str(v, "1", 10);
     mpz_t p;
     mpz_init(p);
     mpz_set(p, base);
@@ -108,8 +109,8 @@ void pow_mod(mpz_t out, mpz_t base, mpz_t exponent, mpz_t modulus) {
         // Checks if exponent is odd
         if (mpz_odd_p(exp) != 0) {
             // Sets out to out * p mod modulus
-            mpz_mul(outp, out, p);
-            mpz_mod(out, outp, modulus);
+            mpz_mul(outp, v, p);
+            mpz_mod(v, outp, modulus);
         }
         // Sets p to p * p mod modulus
         mpz_mul(pp, p, p);
@@ -121,6 +122,7 @@ void pow_mod(mpz_t out, mpz_t base, mpz_t exponent, mpz_t modulus) {
         }
         mpz_fdiv_q_ui(exp, exp, 2);
     }
+    mpz_add_ui(out, v, 0);
     mpz_clear(p);
     mpz_clears(outp, pp, exp, NULL);
 }
@@ -181,13 +183,12 @@ bool is_prime(mpz_t n, uint64_t iters) {
         //mpz_powm
         // Checks if y does not = one and does not = n-one
 
-        gmp_printf(
-            "i = %d iter = %d s = %Zd y = %Zd a = %Zd r = %Zd n = %Zd\n", i, iters, s, y, a, r, n);
+        //  gmp_printf("i = %d iter = %d s = %Zd y = %Zd a = %Zd r = %Zd n = %Zd\n", i, iters, s, y, a, r, n);
         if (mpz_cmp_d(y, 1) != 0 && mpz_cmp(y, sub) != 0) {
 
             // Sets j to one
             mpz_set_d(j, 1);
-            gmp_printf("before loop j = %Zd subs = %Zd sub = %Zd\n", j, subs, sub);
+            //    gmp_printf("before loop j = %Zd subs = %Zd sub = %Zd\n", j, subs, sub);
 
             // Loops while j is less than or equal to s-one
             // and y does not equal to n-one
