@@ -8,6 +8,7 @@
 
 void rsa_make_pub(mpz_t p, mpz_t q, mpz_t n, mpz_t e, uint64_t nbits, uint64_t iters) {
     // Creates variables for future use
+    uint64_t bitcount = 0;
     mpz_t totient, etotient_gcd;
     mpz_inits(totient, etotient_gcd, NULL);
 
@@ -15,23 +16,25 @@ void rsa_make_pub(mpz_t p, mpz_t q, mpz_t n, mpz_t e, uint64_t nbits, uint64_t i
     uint64_t lower_bound = nbits / 4;
     uint64_t upper_bound = (nbits * 3) / 4;
 
-    // Sets p_bits value is generated
-    uint64_t p_bits = (rand() % (upper_bound - lower_bound) + lower_bound);
+    while (1) {
+        // Sets p_bits value is generated
+        uint64_t p_bits = (rand() % (upper_bound - lower_bound) + lower_bound);
 
-    // Sets q_bits value
-    uint64_t q_bits = nbits - p_bits;
+        // Sets q_bits value
+        uint64_t q_bits = nbits - p_bits;
 
-    // Creates primes p and q by calling make_prime
-    make_prime(p, p_bits, iters);
-    make_prime(q, q_bits, iters);
+        // Creates primes p and q by calling make_prime
+        make_prime(p, p_bits, iters);
+        make_prime(q, q_bits, iters);
 
-    uint64_t bitcount = mpz_sizeinbase(n, 2);
+        // Sets n to p * q
+        mpz_mul(n, p, q);
 
-    // Sets n to p * q
-    mpz_mul(n, p, q);
+        bitcount = mpz_sizeinbase(n, 2);
 
-    if (bitcount < nbits) {
-        rsa_make_pub(p, q, n, e, nbits, iters);
+        if (bitcount >= nbits) {
+            break;
+        }
     }
 
     // Sets totient (of n) to p-one * q-one
@@ -41,11 +44,8 @@ void rsa_make_pub(mpz_t p, mpz_t q, mpz_t n, mpz_t e, uint64_t nbits, uint64_t i
     mpz_sub_ui(q_sub_one, q, 1);
     mpz_mul(totient, p_sub_one, q_sub_one);
 
-    //printf("entering loop\n");
-
     // Finding public exponent e
     while (1) {
-        //        printf("in loop\n");
 
         // Generates random number
         mpz_urandomb(e, state, (mp_bitcnt_t) nbits);
@@ -61,7 +61,6 @@ void rsa_make_pub(mpz_t p, mpz_t q, mpz_t n, mpz_t e, uint64_t nbits, uint64_t i
             break;
         }
     }
-    //    printf("after loop\n");
 
     // Frees memory
     mpz_clears(totient, etotient_gcd, NULL);
