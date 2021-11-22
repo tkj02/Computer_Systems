@@ -8,8 +8,6 @@
 
 void rsa_make_pub(mpz_t p, mpz_t q, mpz_t n, mpz_t e, uint64_t nbits, uint64_t iters) {
     // Creates variables for future use
-    uint64_t p_bits;
-    uint64_t q_bits;
     mpz_t totient, etotient_gcd;
     mpz_inits(totient, etotient_gcd, NULL);
 
@@ -18,10 +16,10 @@ void rsa_make_pub(mpz_t p, mpz_t q, mpz_t n, mpz_t e, uint64_t nbits, uint64_t i
     uint64_t upper_bound = (nbits * 3) / 4;
 
     // Sets p_bits value is generated
-    p_bits = (rand() % (upper_bound - lower_bound) + lower_bound);
+    uint64_t p_bits = (rand() % (upper_bound - lower_bound) + lower_bound);
 
     // Sets q_bits value
-    q_bits = nbits - p_bits;
+    uint64_t q_bits = nbits - p_bits;
 
     // Creates primes p and q by calling make_prime
     make_prime(p, p_bits, iters);
@@ -50,6 +48,7 @@ void rsa_make_pub(mpz_t p, mpz_t q, mpz_t n, mpz_t e, uint64_t nbits, uint64_t i
             break;
         }
     }
+    // Frees memory
     mpz_clears(totient, etotient_gcd, NULL);
     mpz_clears(p_sub_one, q_sub_one, NULL);
 }
@@ -77,6 +76,7 @@ void rsa_read_pub(mpz_t n, mpz_t e, mpz_t s, char username[], FILE *pbfile) {
 void rsa_make_priv(mpz_t d, mpz_t e, mpz_t p, mpz_t q) {
     // Creates variables for future use
     mpz_t n, totient;
+    mpz_inits(n, totient, NULL);
 
     // Sets n to p * q
     mpz_mul(n, p, q);
@@ -91,6 +91,7 @@ void rsa_make_priv(mpz_t d, mpz_t e, mpz_t p, mpz_t q) {
     // Calls mod_inverse and stores inverse e mod totient in d
     mod_inverse(d, e, totient);
 
+    // Frees memory
     mpz_clears(n, totient, NULL);
     mpz_clears(p_sub_one, q_sub_one, NULL);
 }
@@ -140,6 +141,7 @@ void rsa_encrypt_file(FILE *infile, FILE *outfile, mpz_t n, mpz_t e) {
         rsa_encrypt(c, m, e, n);
         gmp_fprintf(outfile, "%Zx\n", c);
     }
+    // Frees memory
     mpz_clears(m, c);
     free(block);
 }
@@ -174,6 +176,7 @@ void rsa_decrypt_file(FILE *infile, FILE *outfile, mpz_t n, mpz_t d) {
         mpz_export(block, &countp, 1, 1, 1, 0, m);
         j += fwrite(&block[1], 1, k - 1, outfile);
     }
+    // Frees memory
     mpz_clear(c);
     free(block);
 }
@@ -195,7 +198,9 @@ bool rsa_verify(mpz_t m, mpz_t s, mpz_t e, mpz_t n) {
 
     // Returns true if signature is verified and false otherwise
     if (mpz_cmp(t, m) == 0) {
+        mpz_clear(t);
         return true;
     }
+    mpz_clear(t);
     return false;
 }
