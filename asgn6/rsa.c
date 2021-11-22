@@ -82,12 +82,17 @@ void rsa_make_priv(mpz_t d, mpz_t e, mpz_t p, mpz_t q) {
     mpz_mul(n, p, q);
 
     // Sets totient of n to p-one * q-one
-    mpz_mul(totient, p - 1, q - 1);
+    mpz_t p_sub_one, q_sub_one;
+    mpz_inits(p_sub_one, q_sub_one, NULL);
+    mpz_sub_ui(p_sub_one, p, 1);
+    mpz_sub_ui(q_sub_one, q, 1);
+    mpz_mul(totient, p_sub_one, q_sub_one);
 
     // Calls mod_inverse and stores inverse e mod totient in d
     mod_inverse(d, e, totient);
 
     mpz_clears(n, totient, NULL);
+    mpz_clears(p_sub_one, q_sub_one, NULL);
 }
 
 void rsa_write_priv(mpz_t n, mpz_t d, FILE *pvfile) {
