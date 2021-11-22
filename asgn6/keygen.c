@@ -20,6 +20,7 @@
 int main(int argc, char **argv) {
 
     int opt = 0;
+    //    struct stat fileStat;
     uint64_t iters = 50;
     bool v_flag = false;
     uint64_t bits = 256;
@@ -30,24 +31,12 @@ int main(int argc, char **argv) {
     // Parses through command line options
     while ((opt = getopt(argc, argv, OPTIONS)) != -1) {
         switch (opt) {
-        case 'b':
-		bits = atoi(optarg);
-		break;
-        case 'c':
-		iters = atoi(optarg);
-		break;
-        case 'n':
-		pubfile = fopen(optarg, "w");
-		break;
-        case 'd':
-		privfile = fopen(optarg, "w");
-		break;
-        case 's':
-		seed = time(NULL);
-		break;
-        case 'v':
-		v_flag = true;
-		break;
+        case 'b': bits = atoi(optarg); break;
+        case 'c': iters = atoi(optarg); break;
+        case 'n': pubfile = fopen(optarg, "w"); break;
+        case 'd': privfile = fopen(optarg, "w"); break;
+        case 's': seed = time(NULL); break;
+        case 'v': v_flag = true; break;
         case 'h':
             printf("SYNOPSIS\n   Generates an RSA public/private key pair.\n\n");
             printf("USAGE\n   ./keygen [-hv] [-b bits] -n pbfile -d pvfile\n\n");
@@ -64,13 +53,18 @@ int main(int argc, char **argv) {
         }
     }
     // Opens public key file
-    if (pubfile == NULL){
-    	pubfile = fopen("rsa.pub", "w");
+    if (pubfile == NULL) {
+        pubfile = fopen("rsa.pub", "w");
     }
 
     // Opens private key file
-    if (privfile == NULL){
-	    privfile = fopen("rsa.priv", "w");
+    if (privfile == NULL) {
+        privfile = fopen("rsa.priv", "w");
+
+        // Sets file permissions
+        int fd = fileno(privfile);
+        // fstat(fd, &fileStat);
+        fchmod(fd, 600);
     }
 
     // Initializes randstate with specified seed
@@ -100,14 +94,14 @@ int main(int argc, char **argv) {
     rsa_write_priv(n, d, privfile);
 
     // Checks verbose flag
-    if (v_flag){
-	    printf("user = %s\n", user);
-	    gmp_printf("s (%d bits) = %Zd\n", mpz_sizeinbase(s, 2), s);
-	    gmp_printf("p (%d bits) = %Zd\n", mpz_sizeinbase(p, 2), p);
-	    gmp_printf("q (%d bits) = %Zd\n", mpz_sizeinbase(q, 2), q);
-	    gmp_printf("n (%d bits) = %Zd\n", mpz_sizeinbase(n, 2), n);
-	    gmp_printf("e (%d bits) = %Zd\n", mpz_sizeinbase(e, 2), e);
-	    gmp_printf("d (%d bits) = %Zd\n", mpz_sizeinbase(d, 2), d);
+    if (v_flag) {
+        printf("user = %s\n", user);
+        gmp_printf("s (%d bits) = %Zd\n", mpz_sizeinbase(s, 2), s);
+        gmp_printf("p (%d bits) = %Zd\n", mpz_sizeinbase(p, 2), p);
+        gmp_printf("q (%d bits) = %Zd\n", mpz_sizeinbase(q, 2), q);
+        gmp_printf("n (%d bits) = %Zd\n", mpz_sizeinbase(n, 2), n);
+        gmp_printf("e (%d bits) = %Zd\n", mpz_sizeinbase(e, 2), e);
+        gmp_printf("d (%d bits) = %Zd\n", mpz_sizeinbase(d, 2), d);
     }
 
     // Closes files
