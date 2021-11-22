@@ -204,6 +204,7 @@ void rsa_sign(mpz_t s, mpz_t m, mpz_t d, mpz_t n) {
 bool rsa_verify(mpz_t m, mpz_t s, mpz_t e, mpz_t n) {
     // Creates variable for storing verification
     mpz_t t;
+    mpz_init(t);
 
     // Computes verification of signature
     pow_mod(t, s, e, n);

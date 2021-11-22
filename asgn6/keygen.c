@@ -64,7 +64,7 @@ int main(int argc, char **argv) {
         // Sets file permissions
         int fd = fileno(privfile);
         // fstat(fd, &fileStat);
-        fchmod(fd, 600);
+        fchmod(fd, S_IRUSR | S_IWUSR);
     }
 
     // Initializes randstate with specified seed

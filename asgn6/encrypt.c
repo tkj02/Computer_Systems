@@ -87,11 +87,12 @@ int main(int argc, char **argv) {
     }
 
     // Opens public key file
-    if (fp == NULL){
-    	fp = fopen("rsa.pub", "r");
-	if (fp == NULL){
-		goto exit;
-	}
+    if (fp == NULL) {
+        fp = fopen("rsa.pub", "r");
+        if (fp == NULL) {
+            printf("file rsa.pub not found\n");
+            goto exit;
+        }
     }
 
     // Reads public key file
@@ -100,8 +101,8 @@ int main(int argc, char **argv) {
     // If verbose is enabled, prints values
     if (v_flag) {
         printf("user = %s\n", username);
-	gmp_printf("s (%d bits) = %Zd\n", mpz_sizeinbase(s, 2), s);
-	gmp_printf("n (%d bits) = %Zd\n", mpz_sizeinbase(n, 2), n);
+        gmp_printf("s (%d bits) = %Zd\n", mpz_sizeinbase(s, 2), s);
+        gmp_printf("n (%d bits) = %Zd\n", mpz_sizeinbase(n, 2), n);
         gmp_printf("e (%d bits) = %Zd\n", mpz_sizeinbase(e, 2), e);
     }
 
