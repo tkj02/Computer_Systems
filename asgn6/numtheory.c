@@ -6,9 +6,8 @@
 // Contains the implementations
 // of the number theory functions
 
-// Computes greatest common divisor of a and b
-// Stores value in d
 void gcd(mpz_t d, mpz_t a, mpz_t b) {
+    // Loops while b is not zero
     while (mpz_cmp_d(b, 0) != 0) {
         // Sets d = b
         mpz_set(d, b);
@@ -207,7 +206,7 @@ bool is_prime(mpz_t n, uint64_t iters) {
                     break;
                 }
 
-                // If y = sub, prime found
+                // If y = n-one, prime found
                 // Breaks out of while loop
                 if (mpz_cmp(y, sub) == 0) {
                     prime_flag = true;
