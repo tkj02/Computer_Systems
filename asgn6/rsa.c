@@ -34,20 +34,26 @@ void rsa_make_pub(mpz_t p, mpz_t q, mpz_t n, mpz_t e, uint64_t nbits, uint64_t i
     mpz_sub_ui(p_sub_one, p, 1);
     mpz_sub_ui(q_sub_one, q, 1);
     mpz_mul(totient, p_sub_one, q_sub_one);
+    gmp_printf("totient = %Zd psub1 = %Zd qsub1 = %Zd\n", totient, p_sub_one, q_sub_one);
 
     // Finding public exponent e
+    printf("entering lloop\n");
     while (1) {
+        printf("in loop\n");
         // Generates random number
         mpz_urandomb(e, state, (mp_bitcnt_t) nbits);
 
         // Calculates gcd of e and totient
+
         gcd(etotient_gcd, e, totient);
+        //gmp_printf("gcd = %Zd e = %Zd totient = %Zd\n", etotient_gcd, e, totient);
 
         // Breaks loop if gcd = one (valid e found)
         if (mpz_cmp_d(etotient_gcd, 1) == 0) {
             break;
         }
     }
+    printf("after loop\n");
     // Frees memory
     mpz_clears(totient, etotient_gcd, NULL);
     mpz_clears(p_sub_one, q_sub_one, NULL);

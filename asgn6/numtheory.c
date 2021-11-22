@@ -137,7 +137,6 @@ bool is_prime(mpz_t n, uint64_t iters) {
     mpz_t y, a, j, s, r;
     mpz_t sub, subs, subn;
     mpz_t exponent;
-    gmp_printf("n = %Zd\n", n);
 
     // Checks if n is even (and therefore not prime)
     // Returns false if so
@@ -167,8 +166,8 @@ bool is_prime(mpz_t n, uint64_t iters) {
         mpz_divexact_ui(r, r, 2);
     }
     mpz_sub_ui(subs, s, 1);
-    uint64_t seed = 50;
-    randstate_init(seed);
+    //uint64_t seed = 50;
+    //randstate_init(seed);
     bool prime_flag = true;
     // Conducts Miller-Rabin test
     for (uint64_t i = 0; i < iters; i++) {
@@ -237,7 +236,7 @@ bool is_prime(mpz_t n, uint64_t iters) {
 #endif
         }
     }
-    randstate_clear();
+    //randstate_clear();
     mpz_clears(y, a, j, s, r, NULL);
     mpz_clears(sub, subs, subn, NULL);
     mpz_clear(exponent);
@@ -255,5 +254,5 @@ void make_prime(mpz_t p, uint64_t bits, uint64_t iters) {
             break;
         }
     }
-    randstate_clear();
+    //randstate_clear();
 }
