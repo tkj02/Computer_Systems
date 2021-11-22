@@ -36,7 +36,6 @@ void rsa_make_pub(mpz_t p, mpz_t q, mpz_t n, mpz_t e, uint64_t nbits, uint64_t i
     mpz_sub_ui(p_sub_one, p, 1);
     mpz_sub_ui(q_sub_one, q, 1);
     mpz_mul(totient, p_sub_one, q_sub_one);
-    gmp_printf("totient = %Zd psub1 = %Zd qsub1 = %Zd\n", totient, p_sub_one, q_sub_one);
 
     //printf("entering loop\n");
 
