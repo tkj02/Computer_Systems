@@ -15,26 +15,20 @@ void rsa_make_pub(mpz_t p, mpz_t q, mpz_t n, mpz_t e, uint64_t nbits, uint64_t i
     uint64_t lower_bound = nbits / 4;
     uint64_t upper_bound = (nbits * 3) / 4;
 
-    while (1) {
-        // Sets p_bits value is generated
-        uint64_t p_bits = (rand() % (upper_bound - lower_bound) + lower_bound);
+    // Sets p_bits value is generated
+    uint64_t p_bits = (rand() % (upper_bound - lower_bound) + lower_bound);
 
-        // Sets q_bits value
-        uint64_t q_bits = nbits - p_bits;
+    // Sets q_bits value
+    uint64_t q_bits = nbits - p_bits;
 
-        // Creates primes p and q by calling make_prime
-        make_prime(p, p_bits, iters);
-        make_prime(q, q_bits, iters);
+    // Creates primes p and q by calling make_prime
+    make_prime(p, p_bits, iters);
+    make_prime(q, q_bits, iters);
 
-        // Sets n to p * q
-        mpz_mul(n, p, q);
+    // Sets n to p * q
+    mpz_mul(n, p, q);
 
-        size_t bitcount = mpz_sizeinbase(n, 2);
-
-        if ((uint64_t) bitcount >= nbits) {
-            break;
-        }
-    }
+    //    size_t bitcount = mpz_sizeinbase(n, 2);
 
     // Sets totient (of n) to p-one * q-one
     mpz_t p_sub_one, q_sub_one;
@@ -44,24 +38,28 @@ void rsa_make_pub(mpz_t p, mpz_t q, mpz_t n, mpz_t e, uint64_t nbits, uint64_t i
     mpz_mul(totient, p_sub_one, q_sub_one);
     gmp_printf("totient = %Zd psub1 = %Zd qsub1 = %Zd\n", totient, p_sub_one, q_sub_one);
 
+    //printf("entering loop\n");
+
     // Finding public exponent e
-    printf("entering loop\n");
     while (1) {
-        printf("in loop\n");
+        //        printf("in loop\n");
+
         // Generates random number
         mpz_urandomb(e, state, (mp_bitcnt_t) nbits);
 
         // Calculates gcd of e and totient
+        mpz_gcd(etotient_gcd, e, totient);
 
-        gcd(etotient_gcd, e, totient);
-        //gmp_printf("gcd = %Zd e = %Zd totient = %Zd\n", etotient_gcd, e, totient);
+        // For debugging:
+        //     gmp_printf("gcd = %Zd e = %Zd totient = %Zd\n", etotient_gcd, e, totient);
 
         // Breaks loop if gcd = one (valid e found)
         if (mpz_cmp_d(etotient_gcd, 1) == 0) {
             break;
         }
     }
-    printf("after loop\n");
+    //    printf("after loop\n");
+
     // Frees memory
     mpz_clears(totient, etotient_gcd, NULL);
     mpz_clears(p_sub_one, q_sub_one, NULL);
@@ -215,6 +213,7 @@ bool rsa_verify(mpz_t m, mpz_t s, mpz_t e, mpz_t n) {
         mpz_clear(t);
         return true;
     }
+    // Frees memory
     mpz_clear(t);
     return false;
 }
