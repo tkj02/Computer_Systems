@@ -140,14 +140,19 @@ void rsa_encrypt(mpz_t c, mpz_t m, mpz_t e, mpz_t n) {
 
 void rsa_encrypt_file(FILE *infile, FILE *outfile, mpz_t n, mpz_t e) {
     // Initializes variables
-    mpz_t m;
-    mpz_t c;
+    mpz_t m, c;
+    mpz_inits(m, c, NULL);
 
     // Calculates block size k
     size_t k = (mpz_sizeinbase(n, 2) - 1) / 8;
 
     // Allocates block array that can hold k bytes
-    uint8_t *block = malloc(sizeof(k));
+    uint8_t *block = malloc(k);
+
+    if (block == NULL) {
+        printf("malloc failed encrypt\n");
+        return;
+    }
 
     // Prepends workaround byte
     block[0] = 0xFF;
@@ -159,12 +164,13 @@ void rsa_encrypt_file(FILE *infile, FILE *outfile, mpz_t n, mpz_t e) {
         if (j <= 0) {
             break;
         }
-        mpz_import(m, j, 1, 1, 1, 0, block);
+        mpz_import(m, j + 1, 1, 1, 1, 0, block);
+        //mpz_import(m, j, 1, 1, 1, 0, block);
         rsa_encrypt(c, m, e, n);
         gmp_fprintf(outfile, "%Zx\n", c);
     }
     // Frees memory
-    mpz_clears(m, c);
+    mpz_clears(m, c, NULL);
     free(block);
 }
 
@@ -178,14 +184,14 @@ void rsa_decrypt(mpz_t m, mpz_t c, mpz_t d, mpz_t n) {
 
 void rsa_decrypt_file(FILE *infile, FILE *outfile, mpz_t n, mpz_t d) {
     // Initializes variables
-    mpz_t m;
-    mpz_t c;
+    mpz_t m, c;
+    mpz_inits(m, c, NULL);
 
     // Calculates block size k
     size_t k = (mpz_sizeinbase(n, 2) - 1) / 8;
 
     // Allocates block array that can hold k bytes
-    uint8_t *block = malloc(sizeof(k));
+    uint8_t *block = malloc(k);
 
     // Loops while there are unprocessed bytes in infile
     uint8_t j = 0;
@@ -196,10 +202,11 @@ void rsa_decrypt_file(FILE *infile, FILE *outfile, mpz_t n, mpz_t d) {
         }
         rsa_decrypt(m, c, d, n);
         mpz_export(block, &countp, 1, 1, 1, 0, m);
-        j += fwrite(&block[1], 1, k - 1, outfile);
+        j += fwrite(&block[1], 1, countp - 1, outfile);
+        //j += fwrite(&block[1], 1, k - 1, outfile);
     }
     // Frees memory
-    mpz_clear(c);
+    mpz_clears(m, c, NULL);
     free(block);
 }
 
