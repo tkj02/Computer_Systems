@@ -137,7 +137,7 @@ bool is_prime(mpz_t n, uint64_t iters) {
     mpz_t sub, subs, subn;
     mpz_t exponent;
 
-    //
+    // Immediately returns true if n = two or three
     if (mpz_cmp_d(n, 2) == 0 || mpz_cmp_d(n, 3) == 0) {
         return true;
     }
@@ -165,7 +165,6 @@ bool is_prime(mpz_t n, uint64_t iters) {
     // Sets subn = n - three
     mpz_sub_ui(subn, n, 3);
 
-#if 1
     // Loops while r is even
     // Determines s and r values
     while (mpz_even_p(r) != 0) {
@@ -173,19 +172,6 @@ bool is_prime(mpz_t n, uint64_t iters) {
         mpz_add_ui(s, s, 1);
         mpz_divexact_ui(r, r, 2);
     }
-#else
-
-    mpz_set(s, n);
-    int is_odd = mpz_odd_p(s);
-    if (is_odd) {
-        mpz_sub_ui(s, s, 1);
-    }
-    uint64_t rr;
-    rr = mpz_scan1(n, *(mp_bitcnt_t[]) { 0 });
-    mpz_fdiv_q_2exp(s, s, rr);
-    mpz_set_ui(r, rr);
-
-#endif
 
     // Conducts Miller-Rabin test
     for (uint64_t i = 0; i < iters; i++) {
@@ -197,17 +183,11 @@ bool is_prime(mpz_t n, uint64_t iters) {
         // Calls pow_mod and stores value in y
         pow_mod(y, a, r, n);
 
-        // For debugging:
-        //     gmp_printf("i = %d iter = %d s = %Zd y = %Zd a = %Zd r = %Zd n = %Zd\n", i, iters, s, y, a, r, n);
-
         // Checks if y does not = one and does not = n-one
         if (mpz_cmp_d(y, 1) != 0 && mpz_cmp(y, sub) != 0) {
 
             // Sets j to one
             mpz_set_d(j, 1);
-
-            // For debugging:
-            //     gmp_printf("before loop j = %Zd subs = %Zd sub = %Zd\n", j, subs, sub);
 
             // Sets flag to false to break later if needed
             prime_flag = false;
