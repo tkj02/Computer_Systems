@@ -146,24 +146,28 @@ void rsa_encrypt_file(FILE *infile, FILE *outfile, mpz_t n, mpz_t e) {
     // Allocates block array that can hold k bytes
     uint8_t *block = malloc(k);
 
-    if (block == NULL) {
-        printf("malloc failed encrypt\n");
-        return;
-    }
-
     // Prepends workaround byte
     block[0] = 0xFF;
 
     // Loops while there are unprocessed bytes in infile
     uint8_t j = 0;
     while (1) {
+
+        // Reads from infile to block starting from index #one
         j = fread(&block[1], 1, k - 1, infile);
+
+        // Breaks if EOF reached
         if (j <= 0) {
             break;
         }
+
+        // Converts read bytes
         mpz_import(m, j + 1, 1, 1, 1, 0, block);
-        //mpz_import(m, j, 1, 1, 1, 0, block);
+
+        // Encrypts message
         rsa_encrypt(c, m, e, n);
+
+        // Writes encrypted number to outfile
         gmp_fprintf(outfile, "%Zx\n", c);
     }
     // Frees memory
@@ -183,6 +187,7 @@ void rsa_decrypt_file(FILE *infile, FILE *outfile, mpz_t n, mpz_t d) {
     // Initializes variables
     mpz_t m, c;
     mpz_inits(m, c, NULL);
+    size_t countp;
 
     // Calculates block size k
     size_t k = (mpz_sizeinbase(n, 2) - 1) / 8;
@@ -192,15 +197,21 @@ void rsa_decrypt_file(FILE *infile, FILE *outfile, mpz_t n, mpz_t d) {
 
     // Loops while there are unprocessed bytes in infile
     uint8_t j = 0;
-    size_t countp;
     while (1) {
+
+        // Breaks if EOF reached
         if (gmp_fscanf(infile, "%Zx\n", c) == EOF) {
             break;
         }
+
+        // Decrypts message
         rsa_decrypt(m, c, d, n);
+
+        // Converts message to bytes
         mpz_export(block, &countp, 1, 1, 1, 0, m);
+
+        // Writes bytes to outfile starting from index #one
         j += fwrite(&block[1], 1, countp - 1, outfile);
-        //j += fwrite(&block[1], 1, k - 1, outfile);
     }
     // Frees memory
     mpz_clears(m, c, NULL);
