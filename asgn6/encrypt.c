@@ -116,15 +116,12 @@ int main(int argc, char **argv) {
     if (stat == false) {
         printf("error verifying signature");
         goto exit;
-    } else {
-        printf("signature ok\n");
     }
 
     // Encrypts file
     rsa_encrypt_file(fi, fout, n, e);
 
 exit:
-    printf("error exit\n");
     fclose(fp);
     if (fi != stdin) {
         fclose(fi);
