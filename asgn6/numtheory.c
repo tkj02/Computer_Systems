@@ -129,6 +129,74 @@ void pow_mod(mpz_t out, mpz_t base, mpz_t exponent, mpz_t modulus) {
 gmp_randstate_t state;
 
 bool is_prime(mpz_t n, uint64_t iters) {
+    if (mpz_cmp_d(n, 2) == 0 || mpz_cmp_d(n, 3) == 0) {
+        return true;
+    }
+
+    // Checks if n is even (and therefore not prime)
+    // Returns false if so
+    if (mpz_even_p(n) != 0) {
+        return false;
+    }
+    mpz_t r, a, y, exponent, sub, subn;
+    mpz_inits(r, a, y, exponent, sub, subn, NULL);
+
+    // Sets sub = n - one
+    mpz_sub_ui(sub, n, 1);
+
+    // Sets subn = n - three
+    mpz_sub_ui(subn, n, 3);
+
+    uint64_t s;
+    bool prime_flag = true;
+
+    mpz_set(r, n);
+    int is_odd = mpz_odd_p(r);
+    if (is_odd) {
+        mpz_sub_ui(r, r, 1);
+    }
+
+    s = mpz_scan1(r, *(mp_bitcnt_t[]) { 0 });
+    mpz_fdiv_q_2exp(r, r, s);
+
+    //printf("%lu\n", s);
+    //gmp_printf("r = %Zd    n = %Zd\n", r, n);
+
+    for (uint64_t i = 0; i < iters; i++) {
+        //	    printf("in iter %lu\n", i);
+        mpz_urandomm(a, state, subn);
+        mpz_add_ui(a, a, 2);
+        pow_mod(y, a, r, n);
+
+        //gmp_printf("y = %Zd    a = %Zd\n", y, a);
+        if (mpz_cmp_ui(y, 1) == 0 || mpz_cmp(y, sub) == 0) {
+            continue;
+        }
+        prime_flag = false;
+
+        for (uint64_t j = 0; j < s - 1; j++) {
+            mpz_set_d(exponent, 2);
+            pow_mod(y, y, exponent, n);
+            if (mpz_cmp_ui(y, 1) == 0) {
+                break;
+            }
+
+            // If y = n-one, prime found
+            // Breaks out of while loop
+            if (mpz_cmp(y, sub) == 0) {
+                prime_flag = true;
+                break;
+            }
+        }
+        if (!prime_flag) {
+            break;
+        }
+    }
+    mpz_clears(r, a, y, exponent, sub, subn, NULL);
+    return prime_flag;
+}
+
+bool is_prime1(mpz_t n, uint64_t iters) {
     // Creates variables for future use
     // sub = n - one
     // subs = s - one
@@ -138,9 +206,14 @@ bool is_prime(mpz_t n, uint64_t iters) {
     mpz_t sub, subs, subn;
     mpz_t exponent;
 
+    //
+    if (mpz_cmp_d(n, 2) == 0 || mpz_cmp_d(n, 3) == 0) {
+        return true;
+    }
+
     // Checks if n is even (and therefore not prime)
     // Returns false if so
-    if (mpz_even_p(n) != 0 && mpz_cmp_d(n, 2) != 0) {
+    if (mpz_even_p(n) != 0) {
         return false;
     }
 
@@ -161,6 +234,7 @@ bool is_prime(mpz_t n, uint64_t iters) {
     // Sets subn = n - three
     mpz_sub_ui(subn, n, 3);
 
+#if 1
     // Loops while r is even
     // Determines s and r values
     while (mpz_even_p(r) != 0) {
@@ -168,6 +242,19 @@ bool is_prime(mpz_t n, uint64_t iters) {
         mpz_add_ui(s, s, 1);
         mpz_divexact_ui(r, r, 2);
     }
+#else
+
+    mpz_set(s, n);
+    int is_odd = mpz_odd_p(s);
+    if (is_odd) {
+        mpz_sub_ui(s, s, 1);
+    }
+    uint64_t rr;
+    rr = mpz_scan1(n, *(mp_bitcnt_t[]) { 0 });
+    mpz_fdiv_q_2exp(s, s, rr);
+    mpz_set_ui(r, rr);
+
+#endif
 
     // Conducts Miller-Rabin test
     for (uint64_t i = 0; i < iters; i++) {
