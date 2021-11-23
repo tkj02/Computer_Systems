@@ -64,4 +64,4 @@ Citations:
     - gcd (page 11)
     - mod_inverse (page 12)
 
-There are no known errors according to scan-build, but it does raise warnings on "Result of 'malloc' is converted to a pointer of type 'uint8_t,' which is incompatible with sizeof operand type 'size_t". This results from me allocating a uint8_t pointer block of sizeof(k), where k is size_t, but my code still allocates memory and this block is still valid.
+There are no known bugs/errors according to scan-build.
