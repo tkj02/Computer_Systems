@@ -18,8 +18,8 @@
 
 int main(int argc, char **argv) {
 
+    // Initializes variables for future use
     int opt = 0;
-
     FILE *fi = stdin;
     FILE *fout = stdout;
     bool v_flag = false;
@@ -87,6 +87,7 @@ int main(int argc, char **argv) {
     // Decrypts file
     rsa_decrypt_file(fi, fout, n, d);
 
+// Closes files and frees memory
 exit:
     fclose(fp);
     if (fi != stdin) {

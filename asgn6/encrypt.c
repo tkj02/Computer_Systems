@@ -18,27 +18,8 @@
 
 int main(int argc, char **argv) {
 
-#if 0
-    mpz_t nn;
-    mpz_init(nn);
-    for (int i = 10; i < 100; i++) {
-
-        int num = i;
-        mpz_set_ui(nn, num);
-        //	gmp_printf("%Zd\n", nn);
-        uint64_t iter = 30;
-
-        bool flag = false;
-        flag = is_prime(nn, iter);
-
-        printf("%d %s\n", num, flag ? "true" : "false");
-    }
-    return 0;
-#endif
-
     // Initializes variables
     int opt = 0;
-
     FILE *fi = stdin;
     FILE *fout = stdout;
     bool v_flag = false;
@@ -121,6 +102,7 @@ int main(int argc, char **argv) {
     // Encrypts file
     rsa_encrypt_file(fi, fout, n, e);
 
+// Closes files and frees memory
 exit:
     fclose(fp);
     if (fi != stdin) {

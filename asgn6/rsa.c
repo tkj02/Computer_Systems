@@ -61,9 +61,6 @@ void rsa_make_pub(mpz_t p, mpz_t q, mpz_t n, mpz_t e, uint64_t nbits, uint64_t i
         // Calculates gcd of e and totient
         mpz_gcd(etotient_gcd, e, totient);
 
-        // For debugging:
-        //     gmp_printf("gcd = %Zd e = %Zd totient = %Zd\n", etotient_gcd, e, totient);
-
         // Breaks loop if gcd = one (valid e found)
         if (mpz_cmp_d(etotient_gcd, 1) == 0) {
             break;
