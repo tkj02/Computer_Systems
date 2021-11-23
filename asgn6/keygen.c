@@ -18,7 +18,17 @@
 #define OPTIONS "b:c:n:d:s:vh"
 
 int main(int argc, char **argv) {
-
+#if 0
+	unsigned long seed1 = time(NULL);
+    randstate_init(seed1);
+    mpz_t nn;
+    mpz_init(nn);
+    mpz_set_ui(nn, 28);
+    uint64_t iter = 8;
+    bool stat = is_prime(nn, iter);
+    printf("%d\n", stat);
+    return 0;
+#endif
     int opt = 0;
     //    struct stat fileStat;
     uint64_t iters = 50;
