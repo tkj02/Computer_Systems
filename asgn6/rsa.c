@@ -170,8 +170,8 @@ void rsa_encrypt_file(FILE *infile, FILE *outfile, mpz_t n, mpz_t e) {
         gmp_fprintf(outfile, "%Zx\n", c);
     }
     // Frees memory
-    mpz_clears(m, c, NULL);
     free(block);
+    mpz_clears(m, c, NULL);
 }
 
 void rsa_decrypt(mpz_t m, mpz_t c, mpz_t d, mpz_t n) {
