@@ -1,5 +1,9 @@
-#include <stdio.h>
+#include "node.h"
+#include "bv.h"
 #include "bst.h"
+#include "bf.h"
+#include "ht.h"
+#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 
