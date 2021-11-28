@@ -13,7 +13,10 @@ Node *node_create(char *oldspeak, char *newspeak) {
         n->left = NULL;
         n->right = NULL;
         n->oldspeak = strdup(oldspeak);
-        n->newspeak = strdup(newspeak);
+
+        if (newspeak != NULL) {
+            n->newspeak = strdup(newspeak);
+        }
     }
     return n;
 }
