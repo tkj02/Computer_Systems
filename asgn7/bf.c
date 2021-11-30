@@ -1,5 +1,6 @@
 #include "salts.h"
 #include "bf.h"
+#include "speck.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -26,19 +27,26 @@ BloomFilter *bf_create(uint32_t size) {
 }
 
 void bf_delete(BloomFilter **bf) {
+    bv_delete(&(*bf)->filter);
     free(bf);
     bf = NULL;
 }
 
+uint32_t bf_size(BloomFilter *bf) {
+    return bv_length(bf->filter);
+}
+
+void bf_insert(BloomFilter *bf, char *oldspeak) {
+    uint32_t p_bit = hash(bf->primary, oldspeak);
+    uint32_t s_bit = hash(bf->secondary, oldspeak);
+    uint32_t t_bit = hash(bf->tertiary, oldspeak);
+
+    bv_set_bit(bf->filter, p_bit);
+    bv_set_bit(bf->filter, s_bit);
+    bv_set_bit(bf->filter, t_bit);
+}
+
 #if 0
-uint32_t bf_size(BloomFilter *bf){
-
-}
-
-void bf_insert(BloomFilter *bf, char *oldspeak){
-
-}
-
 bool bf_probe(BloomFilter *bf, char *oldspeak){
 
 }
