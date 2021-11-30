@@ -50,9 +50,9 @@ uint32_t bf_size(BloomFilter *bf) {
 
 void bf_insert(BloomFilter *bf, char *oldspeak) {
     // Gets primary, secondary, and tertiary bits from hashing
-    uint32_t p_bit = hash(bf->primary, oldspeak);
-    uint32_t s_bit = hash(bf->secondary, oldspeak);
-    uint32_t t_bit = hash(bf->tertiary, oldspeak);
+    uint32_t p_bit = hash(bf->primary, oldspeak) % bf_size(bf);
+    uint32_t s_bit = hash(bf->secondary, oldspeak) % bf_size(bf);
+    uint32_t t_bit = hash(bf->tertiary, oldspeak) % bf_size(bf);
 
     // Sets corresponding bits of filter to one
     bv_set_bit(bf->filter, p_bit);
@@ -62,18 +62,13 @@ void bf_insert(BloomFilter *bf, char *oldspeak) {
 
 bool bf_probe(BloomFilter *bf, char *oldspeak) {
     // Gets primary, secondary, and tertiary bits from hashing
-    uint32_t p_bit = hash(bf->primary, oldspeak);
-    uint32_t s_bit = hash(bf->secondary, oldspeak);
-    uint32_t t_bit = hash(bf->tertiary, oldspeak);
+    uint32_t p_bit = hash(bf->primary, oldspeak) % bf_size(bf);
+    uint32_t s_bit = hash(bf->secondary, oldspeak) % bf_size(bf);
+    uint32_t t_bit = hash(bf->tertiary, oldspeak) % bf_size(bf);
 
     // Returns false if any of the corresponding bits in filter are zero
-    if (bv_get_bit(bf->filter, p_bit) == false) {
-        return false;
-    }
-    if (bv_get_bit(bf->filter, s_bit) == false) {
-        return false;
-    }
-    if (bv_get_bit(bf->filter, t_bit) == false) {
+    if (bv_get_bit(bf->filter, p_bit) == false || bv_get_bit(bf->filter, s_bit) == false
+        || bv_get_bit(bf->filter, t_bit) == false) {
         return false;
     }
 
