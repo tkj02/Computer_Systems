@@ -18,13 +18,17 @@ Node *node_create(char *oldspeak, char *newspeak) {
             n->newspeak = strdup(newspeak);
         }
     }
+
+    // Returns node pointer
     return n;
 }
 
 void node_delete(Node **n) {
-    // Frees memory
+    // Frees memory of old/new speak
     free((*n)->oldspeak);
     free((*n)->newspeak);
+
+    // Frees memory of node
     free(*n);
     *n = NULL;
 }
