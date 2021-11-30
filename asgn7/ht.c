@@ -1,5 +1,6 @@
 #include "ht.h"
 #include "salts.h"
+#include "speck.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -14,7 +15,7 @@ HashTable *ht_create(uint32_t size) {
     // Allocates memory for hash table
     HashTable *ht = (HashTable *) malloc(sizeof(HashTable));
     if (ht == NULL) {
-        return NULL;
+        return ht;
     }
 
     // Sets salt values according to salts.h
@@ -39,25 +40,50 @@ void ht_delete(HashTable **ht) {
     *ht = NULL;
 }
 
-#if 0
 uint32_t ht_size(HashTable *ht) {
+    return ht->size;
 }
 
 Node *ht_lookup(HashTable *ht, char *oldspeak) {
+    // Gets bit from hashing
+    uint32_t ht_bit = hash(ht->salt, oldspeak) % ht_size(ht);
+
+    // Finds node in tree at specified bit
+    return bst_find(ht->trees[ht_bit], oldspeak);
 }
 
 void ht_insert(HashTable *ht, char *oldspeak, char *newspeak) {
+    // Gets bit from hashing
+    uint32_t ht_bit = hash(ht->salt, oldspeak) % ht_size(ht);
+
+    // Inserts oldspeak in tree at specified bit
+    bst_insert(ht->trees[ht_bit], oldspeak, newspeak);
 }
 
 uint32_t ht_count(HashTable *ht) {
+    // Keeps track of number of non-NULL trees
+    uint32_t counter = 0;
+
+    // Iterates through all indices of tree
+    for (uint32_t i = 0; i < ht_size(ht); i++) {
+        // Increments counter if tree at index is non-NULL
+        if (bst_size(ht->trees[i]) > 0) {
+            counter++;
+        }
+    }
+    return counter;
 }
 
+#if 0
 double ht_avg_bst_size(HashTable *ht) {
+
 }
 
 double ht_avg_bst_height(HashTable *ht) {
+
 }
 
 void ht_print(HashTable *ht) {
+
 }
 #endif
