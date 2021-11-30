@@ -40,7 +40,7 @@ void bf_delete(BloomFilter **bf) {
 
     // Frees bloom filter memory
     free(bf);
-    bf = NULL;
+    *bf = NULL;
 }
 
 uint32_t bf_size(BloomFilter *bf) {
