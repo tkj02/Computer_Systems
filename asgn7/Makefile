@@ -29,7 +29,7 @@ speck.o: speck.c speck.h
 	$(CC) $(CFLAGS) -o speck.o -c speck.c
 
 clean:
-	rm -f banhammer banhammer.o ht.o bst.o node.o bf.o bv.o
+	rm -f banhammer banhammer.o ht.o bst.o node.o bf.o bv.o speck.o
 
 format:
 	clang-format -i -style=file *.[ch]
