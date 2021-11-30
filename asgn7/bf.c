@@ -14,7 +14,7 @@ struct BloomFilter {
 
 BloomFilter *bf_create(uint32_t size) {
     // Allocates memory for bloom filter
-    BloomFilter *bf = malloc(size);
+    BloomFilter *bf = (BloomFilter *) malloc(sizeof(BloomFilter));
     if (bf == NULL) {
         return bf;
     }

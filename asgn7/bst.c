@@ -5,7 +5,7 @@
 #include <string.h>
 
 Node *bst_create(void) {
-    Node *n = malloc(sizeof(Node));
+    Node *n = (Node *) malloc(sizeof(Node));
     if (n == NULL) {
         return n;
     }
