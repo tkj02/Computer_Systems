@@ -4,8 +4,8 @@ LFLAGS = -lm
 
 all: banhammer
 
-banhammer: banhammer.o ht.o bst.o node.o bf.o bv.o
-	$(CC) -o banhammer banhammer.o ht.o bst.o node.o bf.o bv.o $(LFLAGS)
+banhammer: banhammer.o ht.o bst.o node.o bf.o bv.o speck.o
+	$(CC) -o banhammer banhammer.o ht.o bst.o node.o bf.o bv.o speck.o $(LFLAGS)
 
 banhammer.o: banhammer.c
 	$(CC) $(CFLAGS) -o banhammer.o -c banhammer.c
@@ -24,6 +24,9 @@ bf.o: bf.c bf.h
 
 bv.o: bv.c bv.h
 	$(CC) $(CFLAGS) -o bv.o -c bv.c
+
+speck.o: speck.c speck.h
+	$(CC) $(CFLAGS) -o speck.o -c speck.c
 
 clean:
 	rm -f banhammer banhammer.o ht.o bst.o node.o bf.o bv.o
