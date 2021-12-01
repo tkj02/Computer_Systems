@@ -20,7 +20,7 @@ BitVector *bv_create(uint32_t length) {
     bv->length = length;
 
     // Sets all values of bit vector to zero
-    for (uint32_t i = 0; i < length; i++) {
+    for (uint32_t i = 0; i < bv->length; i++) {
         bv->vector[i] = 0;
     }
 
