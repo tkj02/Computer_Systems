@@ -16,8 +16,10 @@ BitVector *bv_create(uint32_t length) {
         return NULL;
     }
 
-    // Sets bit vector length
+    // Sets length member
     bv->length = length;
+
+    // Sets length of bit vector
     bv->vector = malloc(length);
 
     // Sets all values of bit vector to zero
@@ -31,6 +33,7 @@ BitVector *bv_create(uint32_t length) {
 
 void bv_delete(BitVector **bv) {
     // Frees bit vector memory
+    free((*bv)->vector);
     free(*bv);
     *bv = NULL;
 }
