@@ -69,6 +69,8 @@ uint32_t ht_count(HashTable *ht) {
         // Increments counter if tree at index is non-NULL
         if (bst_size(ht->trees[i]) > 0) {
             counter++;
+        } else {
+            continue;
         }
     }
     return counter;
