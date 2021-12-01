@@ -1,4 +1,5 @@
 #include "salts.h"
+#include "bv.h"
 #include "bf.h"
 #include "speck.h"
 #include <stdio.h>
@@ -35,6 +36,7 @@ BloomFilter *bf_create(uint32_t size) {
 }
 
 void bf_delete(BloomFilter **bf) {
+
     // Frees bit vector memory
     bv_delete(&((*bf)->filter));
 
