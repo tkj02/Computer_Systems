@@ -11,16 +11,17 @@ struct BitVector {
 
 BitVector *bv_create(uint32_t length) {
     // Allocates memory for bit vector
-    BitVector *bv = (BitVector *) malloc(length * sizeof(BitVector));
+    BitVector *bv = (BitVector *) malloc(sizeof(BitVector));
     if (bv == NULL) {
         return NULL;
     }
 
     // Sets bit vector length
     bv->length = length;
+    bv->vector = malloc(length);
 
     // Sets all values of bit vector to zero
-    for (uint32_t i = 0; i < bv->length; i++) {
+    for (uint32_t i = 0; i < length; i++) {
         bv->vector[i] = 0;
     }
 
