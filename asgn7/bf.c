@@ -36,11 +36,11 @@ BloomFilter *bf_create(uint32_t size) {
 
 void bf_delete(BloomFilter **bf) {
     // Frees bit vector memory
-    bv_delete((&(*bf)->filter));
+    bv_delete(&((*bf)->filter));
 
     // Frees bloom filter memory
-    //free(bf);
-    //*bf = NULL;
+    free(bf);
+    *bf = NULL;
 }
 
 uint32_t bf_size(BloomFilter *bf) {
