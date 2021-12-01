@@ -66,39 +66,62 @@ uint32_t ht_count(HashTable *ht) {
 
     // Iterates through all indices of tree
     for (uint32_t i = 0; i < ht->size; i++) {
+        // Checks if size is is zero (meaning bst is NULL)
+        if (bst_size(ht->trees[i]) == 0) {
+            continue;
+        }
+        counter++;
+#if 0
         // Increments counter if tree at index is non-NULL
         if (bst_size(ht->trees[i]) > 0) {
             counter++;
         } else {
             continue;
         }
+#endif
     }
     return counter;
 }
 
-#if 1
 double ht_avg_bst_size(HashTable *ht) {
+    // Creates counter to keep track of bst size
     uint32_t bst_counter = 0;
+
+    // Number of non-NULL bsts in hash table
     uint32_t ht_counter = ht_count(ht);
+
+    // Iterates through all indices of tree
     for (uint32_t i = 0; i < ht->size; i++) {
+        // Increments bst size counter
         bst_counter += bst_size(ht->trees[i]);
     }
+
+    // Returns average bst size
     return bst_counter / ht_counter;
 }
 
 double ht_avg_bst_height(HashTable *ht) {
+    // Creates counter to keep track of bst height
     uint32_t bst_counter = 0;
+
+    // Number of non-NULL bsts in hash table
     uint32_t ht_counter = ht_count(ht);
+
+    // Iterates through all indices of tree
     for (uint32_t i = 0; i < ht->size; i++) {
+        // Increments bst height counter
         bst_counter += bst_height(ht->trees[i]);
     }
+
+    // Returns average bst height
     return bst_counter / ht_counter;
 }
 
 void ht_print(HashTable *ht) {
+    // Iterates through all indices of tree
     for (uint32_t i = 0; i < ht->size; i++) {
+        // Prints bst at index of hash table
         bst_print(ht->trees[i]);
         printf("\n");
     }
 }
-#endif
