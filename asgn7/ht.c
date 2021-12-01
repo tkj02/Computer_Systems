@@ -65,7 +65,7 @@ uint32_t ht_count(HashTable *ht) {
     uint32_t counter = 0;
 
     // Iterates through all indices of tree
-    for (uint32_t i = 0; i < ht_size(ht); i++) {
+    for (uint32_t i = 0; i < ht->size; i++) {
         // Increments counter if tree at index is non-NULL
         if (bst_size(ht->trees[i]) > 0) {
             counter++;
@@ -76,16 +76,29 @@ uint32_t ht_count(HashTable *ht) {
     return counter;
 }
 
-#if 0
+#if 1
 double ht_avg_bst_size(HashTable *ht) {
-
+    uint32_t bst_counter = 0;
+    uint32_t ht_counter = ht_count(ht);
+    for (uint32_t i = 0; i < ht->size; i++) {
+        bst_counter += bst_size(ht->trees[i]);
+    }
+    return bst_counter / ht_counter;
 }
 
 double ht_avg_bst_height(HashTable *ht) {
-
+    uint32_t bst_counter = 0;
+    uint32_t ht_counter = ht_count(ht);
+    for (uint32_t i = 0; i < ht->size; i++) {
+        bst_counter += bst_height(ht->trees[i]);
+    }
+    return bst_counter / ht_counter;
 }
 
 void ht_print(HashTable *ht) {
-
+    for (uint32_t i = 0; i < ht->size; i++) {
+        bst_print(ht->trees[i]);
+        printf("\n");
+    }
 }
 #endif
