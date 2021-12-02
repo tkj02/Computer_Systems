@@ -4,9 +4,25 @@
 #include <stdlib.h>
 #include <string.h>
 
+#if 0
 Node *bst_create(void) {
     // Returns empty tree
     return NULL;
+}
+#endif 
+Node *bst_create(void) {
+    // Allocates memory for node
+    Node *n = (Node *) malloc(sizeof(Node));
+
+    // Returns NULL (starting )
+    if (n == NULL) {
+        return n;
+    }
+    n->oldspeak = NULL;
+    n->newspeak = NULL;
+    n->left = NULL;
+    n->right = NULL;
+    return n;
 }
 
 // Helper function for bst_height
@@ -65,8 +81,10 @@ Node *bst_find(Node *root, char *oldspeak) {
             return NULL;
         }
 
-        // Root is NULL
-    } else {
+    }
+    
+    // Root is NULL
+    else {
         return root;
     }
 }
@@ -96,24 +114,20 @@ Node *bst_insert(Node *root, char *oldspeak, char *newspeak) {
 
     // Checks if oldspeak and newspeak are in bst
     // If so, does not insert and returns NULL
-    if (root) {
-        if (strcmp(root->oldspeak, oldspeak) == 0) {
-            return NULL;
-        }
+    if (strcmp(root->oldspeak, oldspeak) == 0) {
+        return NULL;
+    }
 
-        //  if (root) {
-        // Current node is greater than oldspeak
-        else if (strcmp(root->oldspeak, oldspeak) > 0) {
-            // Traverses to left of tree as new root
-            root->left = bst_insert(root->left, oldspeak, newspeak);
-        }
+    // Current node is greater than oldspeak
+    else if (strcmp(root->oldspeak, oldspeak) > 0) {
+        // Traverses to left of tree as new root
+        root->left = bst_insert(root->left, oldspeak, newspeak);
+    }
 
-        // Current node is lss than oldspeak
-        else if (strcmp(root->oldspeak, oldspeak) < 0) {
-            // Traverses to right of tree as new root
-            root->right = bst_insert(root->right, oldspeak, newspeak);
-        }
-        return root;
+    // Current node is lss than oldspeak
+    else if (strcmp(root->oldspeak, oldspeak) < 0) {
+        // Traverses to right of tree as new root
+        root->right = bst_insert(root->right, oldspeak, newspeak);
     }
     return root;
 }
