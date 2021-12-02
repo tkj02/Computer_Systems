@@ -96,13 +96,14 @@ Node *bst_insert(Node *root, char *oldspeak, char *newspeak) {
 
     // Checks if oldspeak and newspeak are in bst
     // If so, does not insert and returns NULL
-    if (strcmp(root->oldspeak, oldspeak) == 0) {
-        return NULL;
-    }
-
     if (root) {
+        if (strcmp(root->oldspeak, oldspeak) == 0) {
+            return NULL;
+        }
+
+        //  if (root) {
         // Current node is greater than oldspeak
-        if (strcmp(root->oldspeak, oldspeak) > 0) {
+        else if (strcmp(root->oldspeak, oldspeak) > 0) {
             // Traverses to left of tree as new root
             root->left = bst_insert(root->left, oldspeak, newspeak);
         }
