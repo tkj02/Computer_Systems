@@ -66,19 +66,12 @@ uint32_t ht_count(HashTable *ht) {
 
     // Iterates through all indices of tree
     for (uint32_t i = 0; i < ht->size; i++) {
-        // Checks if size is is zero (meaning bst is NULL)
-        if (bst_size(ht->trees[i]) == 0) {
+        // Checks if height is is zero (meaning bst is NULL)
+        if (bst_height(ht->trees[i]) == 0) {
             continue;
         }
-        counter++;
-#if 0
         // Increments counter if tree at index is non-NULL
-        if (bst_size(ht->trees[i]) > 0) {
-            counter++;
-        } else {
-            continue;
-        }
-#endif
+        counter++;
     }
     return counter;
 }
