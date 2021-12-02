@@ -51,9 +51,7 @@ Node *bst_find(Node *root, char *oldspeak) {
         // Current node is greater than oldspeak
         else if (strcmp(root->oldspeak, oldspeak) > 0) {
             // Traverses to left of tree as new root
-            Node *temp;
-            temp = bst_find(root->left, oldspeak);
-            return temp;
+            return bst_find(root->left, oldspeak);
         }
 
         // Current node is less than oldspeak
@@ -69,7 +67,7 @@ Node *bst_find(Node *root, char *oldspeak) {
 
         // Root is NULL
     } else {
-        return NULL;
+        return root;
     }
 }
 
