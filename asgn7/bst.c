@@ -100,18 +100,20 @@ Node *bst_insert(Node *root, char *oldspeak, char *newspeak) {
         return NULL;
     }
 
-    // Current node is greater than oldspeak
-    else if (strcmp(root->oldspeak, oldspeak) > 0) {
-        // Traverses to left of tree as new root
-        root->left = bst_insert(root->left, oldspeak, newspeak);
-    }
+    if (root) {
+        // Current node is greater than oldspeak
+        if (strcmp(root->oldspeak, oldspeak) > 0) {
+            // Traverses to left of tree as new root
+            root->left = bst_insert(root->left, oldspeak, newspeak);
+        }
 
-    // Current node is lss than oldspeak
-    else if (strcmp(root->oldspeak, oldspeak) < 0) {
-        // Traverses to right of tree as new root
-        root->right = bst_insert(root->right, oldspeak, newspeak);
+        // Current node is lss than oldspeak
+        else if (strcmp(root->oldspeak, oldspeak) < 0) {
+            // Traverses to right of tree as new root
+            root->right = bst_insert(root->right, oldspeak, newspeak);
+        }
+        return root;
     }
-
     return root;
 }
 
