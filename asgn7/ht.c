@@ -57,7 +57,7 @@ void ht_insert(HashTable *ht, char *oldspeak, char *newspeak) {
     uint32_t ht_bit = hash(ht->salt, oldspeak) % ht_size(ht);
 
     // Inserts oldspeak in tree at specified bit
-    bst_insert(ht->trees[ht_bit], oldspeak, newspeak);
+    ht->trees[ht_bit] = bst_insert(ht->trees[ht_bit], oldspeak, newspeak);
 }
 
 uint32_t ht_count(HashTable *ht) {
