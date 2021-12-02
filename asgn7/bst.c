@@ -93,29 +93,14 @@ Node *bst_insert(Node *root, char *oldspeak, char *newspeak) {
         return node_create(oldspeak, newspeak);
     }
 
-#if 0
-    // Duplicates oldspeak to root's oldspeak
-    if (root->oldspeak == NULL) {
-        root->oldspeak = strdup(oldspeak);
-
-        // If newspeak exists, duplicates it to root's newspeak
-        if (newspeak != NULL) {
-            root->newspeak = strdup(newspeak);
-        }
-
-        // Returns root of new bst
-        return root;
-    }
-#endif
-
     // If bst already exists:
-
+#if 0
     // Checks if oldspeak and newspeak are in bst
     // If so, does not insert and returns NULL
     if (strcmp(root->oldspeak, oldspeak) == 0) {
         return root;
     }
-
+#endif
     // Current node is greater than oldspeak
     if (strcmp(root->oldspeak, oldspeak) > 0) {
         // Traverses to left of tree as new root
@@ -123,10 +108,15 @@ Node *bst_insert(Node *root, char *oldspeak, char *newspeak) {
     }
 
     // Current node is lss than oldspeak
-    if (strcmp(root->oldspeak, oldspeak) < 0) {
+    else if (strcmp(root->oldspeak, oldspeak) < 0) {
         // Traverses to right of tree as new root
         root->right = bst_insert(root->right, oldspeak, newspeak);
     }
+
+    else if (strcmp(root->oldspeak, oldspeak) == 0) {
+        return root;
+    }
+
     return root;
 }
 
