@@ -78,7 +78,7 @@ Node *bst_insert(Node *root, char *oldspeak, char *newspeak) {
     if (root == NULL) {
         return node_create(oldspeak, newspeak);
     }
-
+#if 0
     // Duplicates oldspeak to root's oldspeak
     if (root->oldspeak == NULL) {
         root->oldspeak = strdup(oldspeak);
@@ -91,7 +91,7 @@ Node *bst_insert(Node *root, char *oldspeak, char *newspeak) {
         // Returns root of new bst
         return root;
     }
-
+#endif
     // If bst already exists:
 
     // Checks if oldspeak and newspeak are in bst
