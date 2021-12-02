@@ -4,12 +4,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-#if 0
 Node *bst_create(void) {
     // Returns empty tree
     return NULL;
 }
-#endif 
+
+#if 0
 Node *bst_create(void) {
     // Allocates memory for node
     Node *n = (Node *) malloc(sizeof(Node));
@@ -24,6 +24,7 @@ Node *bst_create(void) {
     n->right = NULL;
     return n;
 }
+#endif
 
 // Helper function for bst_height
 uint32_t max(uint32_t a, uint32_t b) {
@@ -58,45 +59,41 @@ uint32_t bst_size(Node *root) {
 }
 
 Node *bst_find(Node *root, char *oldspeak) {
-    if (root) {
-        // Current node matches oldspeak
-        if (strcmp(root->oldspeak, oldspeak) == 0) {
-            return root;
-        }
-
-        // Current node is greater than oldspeak
-        else if (strcmp(root->oldspeak, oldspeak) > 0) {
-            // Traverses to left of tree as new root
-            return bst_find(root->left, oldspeak);
-        }
-
-        // Current node is less than oldspeak
-        else if (strcmp(root->oldspeak, oldspeak) < 0) {
-            // Traverses to right of tree as new root
-            return bst_find(root->right, oldspeak);
-        }
-
-        // Oldspeak is not in tree
-        else {
-            return NULL;
-        }
-
-    }
-    
-    // Root is NULL
-    else {
+    if (root == NULL) {
         return root;
+    }
+
+    // Current node matches oldspeak
+    if (strcmp(root->oldspeak, oldspeak) == 0) {
+        return root;
+    }
+
+    // Current node is greater than oldspeak
+    else if (strcmp(root->oldspeak, oldspeak) > 0) {
+        // Traverses to left of tree as new root
+        return bst_find(root->left, oldspeak);
+    }
+
+    // Current node is less than oldspeak
+    else if (strcmp(root->oldspeak, oldspeak) < 0) {
+        // Traverses to right of tree as new root
+        return bst_find(root->right, oldspeak);
+    }
+
+    // Oldspeak is not in tree
+    else {
+        return NULL;
     }
 }
 
 Node *bst_insert(Node *root, char *oldspeak, char *newspeak) {
-    // If bst does not already exist:
-
-    // Creates root of new bst
+    // Creates root of new bst or
+    // creates new node in existing bst
     if (root == NULL) {
         return node_create(oldspeak, newspeak);
     }
 
+#if 0
     // Duplicates oldspeak to root's oldspeak
     if (root->oldspeak == NULL) {
         root->oldspeak = strdup(oldspeak);
@@ -109,23 +106,24 @@ Node *bst_insert(Node *root, char *oldspeak, char *newspeak) {
         // Returns root of new bst
         return root;
     }
+#endif
 
     // If bst already exists:
 
     // Checks if oldspeak and newspeak are in bst
     // If so, does not insert and returns NULL
     if (strcmp(root->oldspeak, oldspeak) == 0) {
-        return NULL;
+        return root;
     }
 
     // Current node is greater than oldspeak
-    else if (strcmp(root->oldspeak, oldspeak) > 0) {
+    if (strcmp(root->oldspeak, oldspeak) > 0) {
         // Traverses to left of tree as new root
         root->left = bst_insert(root->left, oldspeak, newspeak);
     }
 
     // Current node is lss than oldspeak
-    else if (strcmp(root->oldspeak, oldspeak) < 0) {
+    if (strcmp(root->oldspeak, oldspeak) < 0) {
         // Traverses to right of tree as new root
         root->right = bst_insert(root->right, oldspeak, newspeak);
     }
