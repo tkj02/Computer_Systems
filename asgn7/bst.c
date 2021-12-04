@@ -9,23 +9,6 @@ Node *bst_create(void) {
     return NULL;
 }
 
-#if 0
-Node *bst_create(void) {
-    // Allocates memory for node
-    Node *n = (Node *) malloc(sizeof(Node));
-
-    // Returns NULL (starting )
-    if (n == NULL) {
-        return n;
-    }
-    n->oldspeak = NULL;
-    n->newspeak = NULL;
-    n->left = NULL;
-    n->right = NULL;
-    return n;
-}
-#endif
-
 // Helper function for bst_height
 uint32_t max(uint32_t a, uint32_t b) {
     // Returns greatest value between a and b
@@ -94,15 +77,15 @@ Node *bst_insert(Node *root, char *oldspeak, char *newspeak) {
     }
 
     // If bst already exists:
-#if 0
+
     // Checks if oldspeak and newspeak are in bst
     // If so, does not insert and returns NULL
     if (strcmp(root->oldspeak, oldspeak) == 0) {
         return root;
     }
-#endif
+
     // Current node is greater than oldspeak
-    if (strcmp(root->oldspeak, oldspeak) > 0) {
+    else if (strcmp(root->oldspeak, oldspeak) > 0) {
         // Traverses to left of tree as new root
         root->left = bst_insert(root->left, oldspeak, newspeak);
     }
@@ -111,10 +94,6 @@ Node *bst_insert(Node *root, char *oldspeak, char *newspeak) {
     else if (strcmp(root->oldspeak, oldspeak) < 0) {
         // Traverses to right of tree as new root
         root->right = bst_insert(root->right, oldspeak, newspeak);
-    }
-
-    else if (strcmp(root->oldspeak, oldspeak) == 0) {
-        return root;
     }
 
     return root;
