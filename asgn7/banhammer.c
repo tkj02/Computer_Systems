@@ -3,11 +3,24 @@
 #include "bst.h"
 #include "bf.h"
 #include "ht.h"
+#include <regex.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 
-#define OPTIONS "hst:f:"
+#define OPTIONS       "hst:f:"
+#define MAXLEN        1024
+#define BADSPEAK_FILE "badspeak.txt"
+#define NEWSPEAK_FILE "newspeak.txt"
+
+void test_bf(BloomFilter *bf, char *old) {
+    bool flag = bf_probe(bf, old);
+    if (flag == true) {
+        printf("%s is in bf\n", old);
+    } else {
+        printf("%s is not in bf\n", old);
+    }
+}
 
 int main(int argc, char **argv) {
 
@@ -40,6 +53,8 @@ int main(int argc, char **argv) {
     uint32_t ht_size = 1 << 16;
     uint32_t bf_size = 1 << 20;
     bool stat_flag = false;
+    FILE *b_file;
+    //FILE *n_file;
 
     // Parses through command line arguments
     while ((opt = getopt(argc, argv, OPTIONS)) != -1) {
@@ -65,6 +80,49 @@ int main(int argc, char **argv) {
 
     // Initializes hash table
     HashTable *ht = ht_create(ht_size);
+
+    // Reads badspeak
+    char word[MAXLEN];
+    b_file = fopen(BADSPEAK_FILE, "r");
+    if (b_file == NULL) {
+        printf("error file opening %s\n", BADSPEAK_FILE);
+        return -1;
+    }
+    int wordcount = 0;
+    printf("bf count %d\n", bf_count(bf));
+    while (1) {
+        wordcount++;
+        int count = fscanf(b_file, "%s\n", word); // scan badspeak
+        if (count <= 0) {
+            break;
+        }
+        //printf("%d %s\n", wordcount, word);
+        bf_insert(bf, word);
+        ht_insert(ht, word, NULL);
+    }
+    //printf("bf count after %d\n", bf_count(bf));
+    //test_bf(bf, "teresa");
+    //test_bf(bf, "joseph");
+    //test_bf(bf, "misleader");
+
+    //bf_print(bf);
+    //ht_print(ht);
+
+    ht_insert(ht, "tj", "kkkk");
+    Node *node = ht_lookup(ht, "tj");
+    if (node == NULL) {
+        printf("lookup failed\n");
+    } else {
+        printf("lookup success %s\n", node->oldspeak);
+        printf("lookup success %s\n", node->newspeak);
+    }
+
+    fclose(b_file);
+
+    // Read oldspeak and newspeak
+    //char new[MAXLEN];
+    //char old[MAXLEN];
+    // fscanf(newspeak.txt, "%s %s\n", new, old);
 
     // Checks if -s was enabled
     if (stat_flag) {
