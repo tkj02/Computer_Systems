@@ -115,6 +115,5 @@ void ht_print(HashTable *ht) {
     for (uint32_t i = 0; i < ht->size; i++) {
         // Prints bst at index of hash table
         bst_print(ht->trees[i]);
-        printf("\n");
     }
 }
