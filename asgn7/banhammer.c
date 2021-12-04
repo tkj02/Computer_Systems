@@ -3,6 +3,8 @@
 #include "bst.h"
 #include "bf.h"
 #include "ht.h"
+#include "messages.h"
+#include "parser.h"
 #include <regex.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -12,13 +14,103 @@
 #define MAXLEN        1024
 #define BADSPEAK_FILE "badspeak.txt"
 #define NEWSPEAK_FILE "newspeak.txt"
+//#define WORD "([a-zA-Z0-9]+-)+[a-z]+"
+#define WORD "[a-zA-Z0-9\'_-]+"
 
+// For testing bf_probe
 void test_bf(BloomFilter *bf, char *old) {
     bool flag = bf_probe(bf, old);
     if (flag == true) {
         printf("%s is in bf\n", old);
     } else {
         printf("%s is not in bf\n", old);
+    }
+}
+
+void print_file(char *filename) {
+    FILE *fp = fopen(filename, "r");
+    if (fp == NULL) {
+        printf("error opening %s\n", filename);
+        return;
+    }
+    while (1) {
+        // Breaks if EOF reached
+        char rd_buffer[256];
+        if (fgets(rd_buffer, 256, fp) == NULL) {
+            break;
+        }
+
+        printf("%s", rd_buffer);
+    }
+}
+
+void create_report(BloomFilter *bf, HashTable *ht) {
+    FILE *badfile;
+    FILE *rightfile;
+
+    regex_t re;
+
+    if (regcomp(&re, WORD, REG_EXTENDED)) {
+        printf("failed to compile\n");
+    }
+
+    char *word = NULL;
+
+    badfile = fopen("badfile.txt", "w");
+    if (badfile == NULL) {
+        printf("error openining file badfile.txt\n");
+        return;
+    }
+
+    rightfile = fopen("rightfile.txt", "w");
+    if (rightfile == NULL) {
+        printf("error openining file rightfile.txt\n");
+        return;
+    }
+
+    int bad_count = 0;
+    int right_count = 0;
+    while ((word = next_word(stdin, &re)) != NULL) {
+        printf("word return %s\n", word);
+        if (bf_probe(bf, word) == false) {
+            continue;
+        }
+        Node *ht_node = ht_lookup(ht, word);
+        if (ht_node == NULL) {
+            continue;
+        }
+        printf("found guilty\n");
+        node_print(ht_node);
+
+        if (ht_node->newspeak == NULL) {
+            bad_count++;
+            fprintf(badfile, "%s\n", ht_node->oldspeak);
+        } else {
+            right_count++;
+            fprintf(rightfile, "%s -> %s\n", ht_node->oldspeak, ht_node->newspeak);
+        }
+    }
+
+    printf("closing file\n");
+    fclose(badfile);
+    fclose(rightfile);
+
+    //printf("bad %d   right %d\n", bad_count, right_count);
+
+    if (bad_count != 0 && right_count != 0) {
+        printf("%s", mixspeak_message);
+        print_file("badfile.txt");
+        print_file("rightfile.txt");
+    }
+
+    else if (bad_count != 0 && right_count == 0) {
+        printf("%s", badspeak_message);
+        print_file("badfile.txt");
+    }
+
+    else if (bad_count == 0 && right_count != 0) {
+        printf("%s", goodspeak_message);
+        print_file("rightfile.txt");
     }
 }
 
@@ -166,9 +258,44 @@ int main(int argc, char **argv) {
     // Closes newspeak.txt
     fclose(file);
 
+    create_report(bf, ht);
+
+#if 0
+
+    regex_t re;
+
+    if (regcomp(&re, WORD, REG_EXTENDED)){
+    	printf("failed to compile\n");
+	return -1;
+    }
+
+    create_report(bf, ht);
+
+    char *word = NULL;
+
+    while((word = next_word(stdin, &re)) != NULL){
+	printf("word return %s\n", word);
+    	if (bf_probe(bf, word) == false){
+		continue;
+	}
+	Node *ht_node = ht_lookup(ht, word);
+	if (ht_node == NULL){
+		continue;
+	}
+	printf("found guilty\n");
+	node_print(ht_node);
+
+	if (ht_node->newspeak == NULL){
+		printf("no newspeak\n");
+	}
+    }
+#endif
+
     // Checks if -s was enabled
     if (stat_flag) {
         //calculate statistics and print
+        printf("Average binary search tree size: %f\n", ht_avg_bst_size(ht));
+        printf("Average binary search tree height: %f\n", ht_avg_bst_height(ht));
     }
 
     // Frees memory
