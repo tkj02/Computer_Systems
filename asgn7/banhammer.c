@@ -53,8 +53,9 @@ int main(int argc, char **argv) {
     uint32_t ht_size = 1 << 16;
     uint32_t bf_size = 1 << 20;
     bool stat_flag = false;
-    FILE *b_file;
-    //FILE *n_file;
+    FILE *file;
+    char old[MAXLEN];
+    char new[MAXLEN];
 
     // Parses through command line arguments
     while ((opt = getopt(argc, argv, OPTIONS)) != -1) {
@@ -81,25 +82,36 @@ int main(int argc, char **argv) {
     // Initializes hash table
     HashTable *ht = ht_create(ht_size);
 
-    // Reads badspeak
-    char word[MAXLEN];
-    b_file = fopen(BADSPEAK_FILE, "r");
-    if (b_file == NULL) {
+    // Opens badspeak.txt
+    file = fopen(BADSPEAK_FILE, "r");
+
+    // Exits if unable to open badspeak.txt
+    if (file == NULL) {
         printf("error file opening %s\n", BADSPEAK_FILE);
         return -1;
     }
-    int wordcount = 0;
-    printf("bf count %d\n", bf_count(bf));
+
+    //int wordcount = 0;
+    //printf("bf count %d\n", bf_count(bf));
+
+    // Scans until end of badspeak.txt
     while (1) {
-        wordcount++;
-        int count = fscanf(b_file, "%s\n", word); // scan badspeak
+        //wordcount++;
+
+        // Breaks if EOF reached
+        int count = fscanf(file, "%s\n", old);
         if (count <= 0) {
             break;
         }
+
         //printf("%d %s\n", wordcount, word);
-        bf_insert(bf, word);
-        ht_insert(ht, word, NULL);
+
+        // Inserts oldspeak into bloom filter and hash table
+        bf_insert(bf, old);
+        ht_insert(ht, old, NULL);
     }
+
+#if 0
     //printf("bf count after %d\n", bf_count(bf));
     //test_bf(bf, "teresa");
     //test_bf(bf, "joseph");
@@ -116,13 +128,43 @@ int main(int argc, char **argv) {
         printf("lookup success %s\n", node->oldspeak);
         printf("lookup success %s\n", node->newspeak);
     }
+#endif
 
-    fclose(b_file);
+    // Closes badspeak.txt
+    fclose(file);
 
-    // Read oldspeak and newspeak
-    //char new[MAXLEN];
-    //char old[MAXLEN];
-    // fscanf(newspeak.txt, "%s %s\n", new, old);
+    // Opens newspeak.txt
+    file = fopen(NEWSPEAK_FILE, "r");
+
+    // Exits if unable to open newspeak.txt
+    if (file == NULL) {
+        printf("error file opening %s\n", NEWSPEAK_FILE);
+        return -1;
+    }
+
+    //wordcount = 0;
+
+    // Scans until end of newspeak.txt
+    while (1) {
+        //wordcount++;
+
+        // Breaks if EOF reached
+        int count = fscanf(file, "%s %s\n", old, new); // scan badspeak
+        if (count <= 0) {
+            break;
+        }
+
+        //printf("%d %s %s\n", wordcount, old, new);
+
+        // Inserts oldspeak into bloom filter
+        bf_insert(bf, old);
+
+        // Inserts oldspeak and newspeak into hash table
+        ht_insert(ht, old, new);
+    }
+
+    // Closes newspeak.txt
+    fclose(file);
 
     // Checks if -s was enabled
     if (stat_flag) {
