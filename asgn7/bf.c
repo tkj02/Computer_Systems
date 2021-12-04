@@ -98,14 +98,18 @@ void bf_print(BloomFilter *bf) {
     // Iterates through all indices of filter
     for (uint32_t i = 0; i < bv_length(bf->filter); i++) {
 
+        if (i % 16 == 0) {
+            printf("\n%04x:  ", i);
+        }
+
         // If bit at index is one, prints one
         if (bv_get_bit(bf->filter, i)) {
-            printf("1\n");
+            printf("1 ");
         }
 
         // If bit at index is zero, prints zero
         else {
-            printf("0\n");
+            printf("0 ");
         }
     }
 }
