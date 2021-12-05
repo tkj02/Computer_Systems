@@ -32,7 +32,7 @@ parser.o: parser.c parser.h
 	$(CC) $(CFLAGS) -o parser.o -c parser.c
 
 clean:
-	rm -f banhammer banhammer.o ht.o bst.o node.o bf.o bv.o speck.o
+	rm -f banhammer banhammer.o ht.o bst.o node.o bf.o bv.o speck.o parser.o
 
 format:
 	clang-format -i -style=file *.[ch]
