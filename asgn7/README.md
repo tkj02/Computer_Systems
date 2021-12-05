@@ -31,10 +31,10 @@ Files:
 
 
 Command Line Arguments (for banhammer):
--h : displays program synopsis and usage
--s: enables statistics output (prints the average binary search tree size, average binary search tree height, average branch traversal, hash table load, and bloom filter load)
--t: specifies size of hash table (default: 2^16)
--f: specifies size of bloom filter (default: 2^20)
+- -h : displays program synopsis and usage
+- -s: enables statistics output (prints the average binary search tree size, average binary search tree height, average branch traversal, hash table load, and bloom filter load)
+- -t: specifies size of hash table (default: 2^16)
+- -f: specifies size of bloom filter (default: 2^20)
 
 Assistance:
 - Watched both of Eugene’s recorded sections on YuJa multiple times (learned about the assignment overall/what we are expected to do, how the parsing module works, what the bloom filter and hash table should do, got ideas on what the regex pattern should look like, what average branches traversed is, how to scan in the different character formats, how to approach the WRITEUP questions, and followed some of his pseudocode (described in more detail below))
@@ -55,7 +55,6 @@ Citations:
     - Node structure (page 8)
     - node_print() format (page 8)
     - Example parsing module (page 11)
-
 - Lecture Slides #18 - Trees and BST: I followed the example code provided on these slides for the following portions of my code:
     - Inorder traversal printing (pages 22-34)
     - Finding maximum node (page 53)
