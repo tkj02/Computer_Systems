@@ -9,7 +9,7 @@ Node *bst_create(void) {
     return NULL;
 }
 
-// Helper function for bst_height
+// Helper function for bst_height()
 uint32_t max(uint32_t a, uint32_t b) {
     // Returns greatest value between a and b
     if (a >= b) {
@@ -33,6 +33,7 @@ uint32_t bst_size(Node *root) {
     uint32_t counter = 0;
 
     // Increases count for every recursive call
+    // Calls all the way left, then right
     if (root) {
         counter += 1;
         counter += bst_size(root->left);
@@ -42,6 +43,7 @@ uint32_t bst_size(Node *root) {
 }
 
 Node *bst_find(Node *root, char *oldspeak) {
+    // Returns NULL if root is NULL
     if (root == NULL) {
         return root;
     }
@@ -113,8 +115,11 @@ void bst_delete(Node **root) {
     if (*root == NULL) {
         return;
     }
+    // Frees all the way left, then right
     bst_delete(&(*root)->left);
     bst_delete(&(*root)->right);
+
+    // Frees root node
     node_delete(root);
     *root = NULL;
 }

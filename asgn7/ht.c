@@ -27,6 +27,9 @@ HashTable *ht_create(uint32_t size) {
 
     // Allocates memory for trees
     ht->trees = (Node **) malloc(size * sizeof(Node *));
+    for (uint32_t i = 0; i < size; i++) {
+        ht->trees[i] = NULL;
+    }
 
     return ht;
 }
@@ -34,7 +37,8 @@ HashTable *ht_create(uint32_t size) {
 void ht_delete(HashTable **ht) {
     // Iterates through all indices of tree
     for (uint32_t i = 0; i < (*ht)->size; i++) {
-        if (&(*ht)->trees[i] == NULL) {
+        // Skips if bst at index is already NULL
+        if ((*ht)->trees[i] == NULL) {
             continue;
         }
         // Frees bst memory at each index

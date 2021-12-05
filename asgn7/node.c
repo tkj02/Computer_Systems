@@ -14,8 +14,13 @@ Node *node_create(char *oldspeak, char *newspeak) {
         n->right = NULL;
         n->oldspeak = strdup(oldspeak);
 
+        // If given newspeak is not NULL, copies it to node newspeak
         if (newspeak != NULL) {
             n->newspeak = strdup(newspeak);
+
+            // If given newspeak is NULL, sets node newspeak to NULL
+        } else {
+            n->newspeak = NULL;
         }
     }
 
@@ -25,9 +30,19 @@ Node *node_create(char *oldspeak, char *newspeak) {
 
 void node_delete(Node **n) {
     // Frees memory of old/new speak
-    free((*n)->oldspeak);
-    free((*n)->newspeak);
+    if ((*n) == NULL) {
+        return;
+    }
 
+    // Frees if oldspeak is not NULL yet
+    if ((*n)->oldspeak != NULL) {
+        free((*n)->oldspeak);
+    }
+
+    // Frees if newspeak is not NULL yet
+    if ((*n)->newspeak != NULL) {
+        free((*n)->newspeak);
+    }
     // Frees memory of node
     free(*n);
     *n = NULL;
