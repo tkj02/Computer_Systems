@@ -45,12 +45,14 @@ void print_file(char *filename) {
         // Prints line contained in buffer
         printf("%s", buffer);
     }
+
+    // Closes file
     fclose(fp);
 }
 
 // Generates message report
 // Uses parser module from assignment document
-void create_report(BloomFilter *bf, HashTable *ht) {
+void create_report(BloomFilter *bf, HashTable *ht, bool stat_flag) {
     // Files for storing badspeak and old/newspeak respectively
     FILE *badfile;
     FILE *rightfile;
@@ -138,6 +140,14 @@ void create_report(BloomFilter *bf, HashTable *ht) {
     // Closes files (not needed anymore)
     fclose(badfile);
     fclose(rightfile);
+
+    // Checks if -s was enabled
+    if (stat_flag) {
+        // Calculate statistics and prints them
+        printf("Average BST size: %f\n", ht_avg_bst_size(ht));
+        printf("Average BST height: %f\n", ht_avg_bst_height(ht));
+        return;
+    }
 
     // User used both badspeak and old/newspeak
     if (bad_count != 0 && right_count != 0) {
@@ -277,14 +287,7 @@ int main(int argc, char **argv) {
     fclose(file);
 
     // Calls function to create necessary message
-    create_report(bf, ht);
-
-    // Checks if -s was enabled
-    if (stat_flag) {
-        //calculate statistics and print
-        printf("Average binary search tree size: %f\n", ht_avg_bst_size(ht));
-        printf("Average binary search tree height: %f\n", ht_avg_bst_height(ht));
-    }
+    create_report(bf, ht, stat_flag);
 
     // Frees memory
     bf_delete(&bf);
