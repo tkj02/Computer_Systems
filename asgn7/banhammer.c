@@ -45,6 +45,7 @@ void print_file(char *filename) {
         // Prints line contained in buffer
         printf("%s", buffer);
     }
+    fclose(fp);
 }
 
 // Generates message report
@@ -130,6 +131,10 @@ void create_report(BloomFilter *bf, HashTable *ht) {
         }
     }
 
+    // Frees regex memory
+    clear_words();
+    regfree(&re);
+
     // Closes files (not needed anymore)
     fclose(badfile);
     fclose(rightfile);
@@ -182,7 +187,7 @@ int main(int argc, char **argv) {
     // File pointer for opening files
     FILE *file;
 
-    //
+    // Buffers to hold scanned old/newspeak
     char old[MAXLEN];
     char new[MAXLEN];
 

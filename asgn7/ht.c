@@ -32,6 +32,11 @@ HashTable *ht_create(uint32_t size) {
 }
 
 void ht_delete(HashTable **ht) {
+    // Iterates through all indices of tree
+    for (uint32_t i = 0; i < ((*ht)->size); i++) {
+        bst_delete(&(*ht)->trees[i]);
+    }
+
     // Frees tree memory
     free((*ht)->trees);
 
