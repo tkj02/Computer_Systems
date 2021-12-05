@@ -19,6 +19,10 @@
 #define NEWSPEAK_FILE "newspeak.txt"
 #define WORD          "[a-zA-Z0-9\'_-]+"
 
+// Identifies extern variables for printing statistics
+extern uint64_t lookups;
+extern uint64_t branches;
+
 // Prototypes of helper functions
 // Can be found below the main function
 void print_file(char *filename);
@@ -64,7 +68,8 @@ int main(int argc, char **argv) {
             printf("  -s           Print program statistics.\n");
             printf("  -t size      Specify hash table size (default: 10000).\n");
             printf("  -f size      Specify Bloom filter size (default: 2^20).\n");
-            break;
+            //break;
+            return 0;
 
         // Enables statistics printing option
         case 's': stat_flag = true; break;
@@ -170,7 +175,7 @@ void print_file(char *filename) {
     while (1) {
         // Stores read characters in buffer
         // Breaks at EOF
-        if (fgets(buffer, 256, fp) == NULL) {
+        if (fgets(buffer, MAXLEN, fp) == NULL) {
             break;
         }
 
@@ -279,11 +284,10 @@ void create_report(BloomFilter *bf, HashTable *ht, bool stat_flag) {
 
     // Checks if -s was enabled
     if (stat_flag) {
-        // Calculate statistics
-        double traversal = 0.385748;
-        double ht_load = 100.0 * ((float) ht_count(ht) / (float) ht_size(ht));
-        printf("%d    %d\n", ht_count(ht), ht_size(ht));
-        double bf_load = 100.0 * ((float) bf_count(bf) / (float) bf_size(bf));
+        // Calculates statistics
+        double traversal = (double) branches / (double) lookups;
+        double ht_load = 100.0 * ((double) ht_count(ht) / (double) ht_size(ht));
+        double bf_load = 100.0 * ((double) bf_count(bf) / (double) bf_size(bf));
 
         // Prints statistics
         printf("Average BST size: %f\n", ht_avg_bst_size(ht));
