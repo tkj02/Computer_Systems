@@ -34,10 +34,10 @@ HashTable *ht_create(uint32_t size) {
 void ht_delete(HashTable **ht) {
     // Iterates through all indices of tree
     for (uint32_t i = 0; i < (*ht)->size; i++) {
-	if ((*ht)->trees[i] == NULL){
-		continue;
-	}
-	// Frees bst memory at each index
+        if (&(*ht)->trees[i] == NULL) {
+            continue;
+        }
+        // Frees bst memory at each index
         bst_delete(&(*ht)->trees[i]);
     }
 
@@ -90,7 +90,7 @@ double ht_avg_bst_size(HashTable *ht) {
     uint32_t bst_counter = 0;
 
     // Number of non-NULL bsts in hash table
-    uint32_t ht_counter = ht_count(ht);
+    double ht_counter = ht_count(ht);
 
     // Iterates through all indices of tree
     for (uint32_t i = 0; i < ht->size; i++) {
@@ -107,7 +107,7 @@ double ht_avg_bst_height(HashTable *ht) {
     uint32_t bst_counter = 0;
 
     // Number of non-NULL bsts in hash table
-    uint32_t ht_counter = ht_count(ht);
+    double ht_counter = ht_count(ht);
 
     // Iterates through all indices of tree
     for (uint32_t i = 0; i < ht->size; i++) {
