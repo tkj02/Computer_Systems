@@ -27,6 +27,8 @@ HashTable *ht_create(uint32_t size) {
 
     // Allocates memory for trees
     ht->trees = (Node **) malloc(size * sizeof(Node *));
+
+    // Initializes all roots of trees to NULL
     for (uint32_t i = 0; i < size; i++) {
         ht->trees[i] = NULL;
     }
