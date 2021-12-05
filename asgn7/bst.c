@@ -4,13 +4,16 @@
 #include <stdlib.h>
 #include <string.h>
 
+// For printing statistics in banhammer.c
+uint64_t branches = 0;
+
 Node *bst_create(void) {
     // Returns empty tree
     return NULL;
 }
 
 // Helper function for bst_height()
-uint32_t max(uint32_t a, uint32_t b) {
+static uint32_t max(uint32_t a, uint32_t b) {
     // Returns greatest value between a and b
     if (a >= b) {
         return a;
@@ -53,14 +56,17 @@ Node *bst_find(Node *root, char *oldspeak) {
         return root;
     }
 
+    // Incrementing branches count per recursive call
+    branches++;
+
     // Current node is greater than oldspeak
-    else if (strcmp(root->oldspeak, oldspeak) > 0) {
+    if (strcmp(root->oldspeak, oldspeak) > 0) {
         // Traverses to left of tree as new root
         return bst_find(root->left, oldspeak);
     }
 
     // Current node is less than oldspeak
-    else if (strcmp(root->oldspeak, oldspeak) < 0) {
+    if (strcmp(root->oldspeak, oldspeak) < 0) {
         // Traverses to right of tree as new root
         return bst_find(root->right, oldspeak);
     }
@@ -86,8 +92,11 @@ Node *bst_insert(Node *root, char *oldspeak, char *newspeak) {
         return root;
     }
 
+    // Incrementing branches count per recursive call
+    branches++;
+
     // Current node is greater than oldspeak
-    else if (strcmp(root->oldspeak, oldspeak) > 0) {
+    if (strcmp(root->oldspeak, oldspeak) > 0) {
         // Traverses to left of tree as new root
         root->left = bst_insert(root->left, oldspeak, newspeak);
     }

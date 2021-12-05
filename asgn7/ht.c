@@ -4,6 +4,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+// For printing statistics in banhammer.c
+uint64_t lookups = 0;
+
 // Creates hash table structure
 struct HashTable {
     uint64_t salt[2];
@@ -63,6 +66,9 @@ Node *ht_lookup(HashTable *ht, char *oldspeak) {
     // Gets bit from hashing
     uint32_t ht_bit = hash(ht->salt, oldspeak) % ht_size(ht);
 
+    // Incrementing lookup count per recursive call
+    lookups++;
+
     // Finds node in tree at specified bit
     return bst_find(ht->trees[ht_bit], oldspeak);
 }
@@ -70,6 +76,9 @@ Node *ht_lookup(HashTable *ht, char *oldspeak) {
 void ht_insert(HashTable *ht, char *oldspeak, char *newspeak) {
     // Gets bit from hashing
     uint32_t ht_bit = hash(ht->salt, oldspeak) % ht_size(ht);
+
+    // Incrementing lookup count per recursive call
+    lookups++;
 
     // Inserts oldspeak in tree at specified bit
     ht->trees[ht_bit] = bst_insert(ht->trees[ht_bit], oldspeak, newspeak);
