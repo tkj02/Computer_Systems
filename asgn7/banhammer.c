@@ -19,9 +19,139 @@
 #define NEWSPEAK_FILE "newspeak.txt"
 #define WORD          "[a-zA-Z0-9\'_-]+"
 
+// Prototypes of helper functions
+// Can be found below the main function
+void print_file(char *filename);
+void create_report(BloomFilter *bf, HashTable *ht, bool stat_flag);
+
+///////////////////////////////////////////////////////////////////////////////
+// Main function
+// Reads in badspeak and old/newspeak
+// Makes call to create_report(), which calls print_file()
+///////////////////////////////////////////////////////////////////////////////
+
+int main(int argc, char **argv) {
+    // Variable for parsing options
+    int opt = 0;
+
+    // Default hash table size
+    uint32_t ht_size = 1 << 16;
+
+    // Default bloom filter size
+    uint32_t bf_size = 1 << 20;
+
+    // Flag for statistics option
+    bool stat_flag = false;
+
+    // File pointer for opening files
+    FILE *file;
+
+    // Buffers to hold scanned old/newspeak
+    char old[MAXLEN];
+    char new[MAXLEN];
+
+    // Parses through command line arguments
+    while ((opt = getopt(argc, argv, OPTIONS)) != -1) {
+        switch (opt) {
+
+        // Prints help message
+        case 'h':
+            printf("SYNOPSIS\n  A word filtering program for the GPRSC.\n");
+            printf("  Filters out and reports bad words parsed from stdin.\n\n");
+            printf("USAGE\n  ./banhammer [-hs] [-t size] [-f size]\n\n");
+            printf("OPTIONS\n");
+            printf("  -h           Program usage and help.\n");
+            printf("  -s           Print program statistics.\n");
+            printf("  -t size      Specify hash table size (default: 10000).\n");
+            printf("  -f size      Specify Bloom filter size (default: 2^20).\n");
+            break;
+
+        // Enables statistics printing option
+        case 's': stat_flag = true; break;
+
+        // Uses user hash table size
+        case 't': ht_size = atoi(optarg); break;
+
+        // Uses user bloom filter size
+        case 'f': bf_size = atoi(optarg); break;
+        }
+    }
+
+    // Initializes bloom filter
+    BloomFilter *bf = bf_create(bf_size);
+
+    // Initializes hash table
+    HashTable *ht = ht_create(ht_size);
+
+    // Opens badspeak.txt for reading
+    file = fopen(BADSPEAK_FILE, "r");
+
+    // Exits if unable to open badspeak.txt
+    if (file == NULL) {
+        printf("error file opening %s\n", BADSPEAK_FILE);
+        return -1;
+    }
+
+    // Loops until end of badspeak.txt
+    while (1) {
+        // Breaks if EOF reached
+        int count = fscanf(file, "%s\n", old);
+        if (count <= 0) {
+            break;
+        }
+
+        // Inserts oldspeak into bloom filter and hash table
+        bf_insert(bf, old);
+        ht_insert(ht, old, NULL);
+    }
+
+    // Closes badspeak.txt
+    fclose(file);
+
+    // Opens newspeak.txt
+    file = fopen(NEWSPEAK_FILE, "r");
+
+    // Exits if unable to open newspeak.txt
+    if (file == NULL) {
+        printf("error file opening %s\n", NEWSPEAK_FILE);
+        return -1;
+    }
+
+    // Scans until end of newspeak.txt
+    while (1) {
+        // Breaks if EOF reached
+        int count = fscanf(file, "%s %s\n", old, new);
+        if (count <= 0) {
+            break;
+        }
+
+        // Inserts oldspeak into bloom filter
+        bf_insert(bf, old);
+
+        // Inserts oldspeak and newspeak into hash table
+        ht_insert(ht, old, new);
+    }
+
+    // Closes newspeak.txt
+    fclose(file);
+
+    // Calls function to create necessary message
+    create_report(bf, ht, stat_flag);
+
+    // Frees memory
+    bf_delete(&bf);
+    ht_delete(&ht);
+
+    return 0;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// print_file()
 // Opens, reads, and prints file content
 // Used to print badspeak and/or old/newspeak in final message report
 // Used in create_report()
+///////////////////////////////////////////////////////////////////////////////
+
 void print_file(char *filename) {
     // Opens given file for reading
     FILE *fp = fopen(filename, "r");
@@ -34,7 +164,7 @@ void print_file(char *filename) {
 
     // Creates buffer for calling fgets() later
     // (assumes max size of each line)
-    char buffer[256];
+    char buffer[MAXLEN];
 
     // Loops to print file content until EOF
     while (1) {
@@ -52,8 +182,12 @@ void print_file(char *filename) {
     fclose(fp);
 }
 
+///////////////////////////////////////////////////////////////////////////////
+// create_report()
 // Generates message report
 // Uses parser module from assignment document
+///////////////////////////////////////////////////////////////////////////////
+
 void create_report(BloomFilter *bf, HashTable *ht, bool stat_flag) {
     // Files for storing badspeak and old/newspeak respectively
     FILE *badfile;
@@ -189,120 +323,4 @@ void create_report(BloomFilter *bf, HashTable *ht, bool stat_flag) {
         // Prints list of oldspeak used with newspeak translation
         print_file("rightfile.txt");
     }
-}
-
-// Main function
-int main(int argc, char **argv) {
-    // Variable for parsing options
-    int opt = 0;
-
-    // Default hash table size
-    uint32_t ht_size = 1 << 16;
-
-    // Default bloom filter size
-    uint32_t bf_size = 1 << 20;
-
-    // Flag for statistics option
-    bool stat_flag = false;
-
-    // File pointer for opening files
-    FILE *file;
-
-    // Buffers to hold scanned old/newspeak
-    char old[MAXLEN];
-    char new[MAXLEN];
-
-    // Parses through command line arguments
-    while ((opt = getopt(argc, argv, OPTIONS)) != -1) {
-        switch (opt) {
-
-        // Prints help message
-        case 'h':
-            printf("SYNOPSIS\n  A word filtering program for the GPRSC.\n");
-            printf("  Filters out and reports bad words parsed from stdin.\n\n");
-            printf("USAGE\n  ./banhammer [-hs] [-t size] [-f size]\n\n");
-            printf("OPTIONS\n");
-            printf("  -h           Program usage and help.\n");
-            printf("  -s           Print program statistics.\n");
-            printf("  -t size      Specify hash table size (default: 10000).\n");
-            printf("  -f size      Specify Bloom filter size (default: 2^20).\n");
-            break;
-
-        // Enables statistics printing option
-        case 's': stat_flag = true; break;
-
-        // Uses user hash table size
-        case 't': ht_size = atoi(optarg); break;
-
-        // Uses user bloom filter size
-        case 'f': bf_size = atoi(optarg); break;
-        }
-    }
-
-    // Initializes bloom filter
-    BloomFilter *bf = bf_create(bf_size);
-
-    // Initializes hash table
-    HashTable *ht = ht_create(ht_size);
-
-    // Opens badspeak.txt for reading
-    file = fopen(BADSPEAK_FILE, "r");
-
-    // Exits if unable to open badspeak.txt
-    if (file == NULL) {
-        printf("error file opening %s\n", BADSPEAK_FILE);
-        return -1;
-    }
-
-    // Loops until end of badspeak.txt
-    while (1) {
-        // Breaks if EOF reached
-        int count = fscanf(file, "%s\n", old);
-        if (count <= 0) {
-            break;
-        }
-
-        // Inserts oldspeak into bloom filter and hash table
-        bf_insert(bf, old);
-        ht_insert(ht, old, NULL);
-    }
-
-    // Closes badspeak.txt
-    fclose(file);
-
-    // Opens newspeak.txt
-    file = fopen(NEWSPEAK_FILE, "r");
-
-    // Exits if unable to open newspeak.txt
-    if (file == NULL) {
-        printf("error file opening %s\n", NEWSPEAK_FILE);
-        return -1;
-    }
-
-    // Scans until end of newspeak.txt
-    while (1) {
-        // Breaks if EOF reached
-        int count = fscanf(file, "%s %s\n", old, new);
-        if (count <= 0) {
-            break;
-        }
-
-        // Inserts oldspeak into bloom filter
-        bf_insert(bf, old);
-
-        // Inserts oldspeak and newspeak into hash table
-        ht_insert(ht, old, new);
-    }
-
-    // Closes newspeak.txt
-    fclose(file);
-
-    // Calls function to create necessary message
-    create_report(bf, ht, stat_flag);
-
-    // Frees memory
-    bf_delete(&bf);
-    ht_delete(&ht);
-
-    return 0;
 }
