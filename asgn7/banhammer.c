@@ -5,6 +5,7 @@
 #include "ht.h"
 #include "messages.h"
 #include "parser.h"
+
 #include <regex.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -14,144 +15,182 @@
 #define MAXLEN        1024
 #define BADSPEAK_FILE "badspeak.txt"
 #define NEWSPEAK_FILE "newspeak.txt"
-//#define WORD "([a-zA-Z0-9]+-)+[a-z]+"
-#define WORD "[a-zA-Z0-9\'_-]+"
+#define WORD          "[a-zA-Z0-9\'_-]+"
 
-// For testing bf_probe
-void test_bf(BloomFilter *bf, char *old) {
-    bool flag = bf_probe(bf, old);
-    if (flag == true) {
-        printf("%s is in bf\n", old);
-    } else {
-        printf("%s is not in bf\n", old);
-    }
-}
-
+// Opens, reads, and prints file content
+// Used to print badspeak and/or old/newspeak in final message report
+// Used in create_report()
 void print_file(char *filename) {
+    // Opens given file for reading
     FILE *fp = fopen(filename, "r");
+
+    // If opening file failed, prints error and stops
     if (fp == NULL) {
         printf("error opening %s\n", filename);
         return;
     }
+
+    // Creates buffer for calling fgets() later
+    // (assumes max size of each line)
+    char buffer[256];
+
+    // Loops to print file content until EOF
     while (1) {
-        // Breaks if EOF reached
-        char rd_buffer[256];
-        if (fgets(rd_buffer, 256, fp) == NULL) {
+        // Stores read characters in buffer
+        // Breaks at EOF
+        if (fgets(buffer, 256, fp) == NULL) {
             break;
         }
 
-        printf("%s", rd_buffer);
+        // Prints line contained in buffer
+        printf("%s", buffer);
     }
 }
 
+// Generates message report
+// Uses parser module from assignment document
 void create_report(BloomFilter *bf, HashTable *ht) {
+    // Files for storing badspeak and old/newspeak respectively
     FILE *badfile;
     FILE *rightfile;
 
+    // Initializes regex variable
     regex_t re;
 
+    // Compiles using WORD definition
+    // Stops if compilation failed
     if (regcomp(&re, WORD, REG_EXTENDED)) {
         printf("failed to compile\n");
+        return;
     }
 
-    char *word = NULL;
-
+    // Opens file for storing badspeak
+    // Stops if opening failed
     badfile = fopen("badfile.txt", "w");
     if (badfile == NULL) {
         printf("error openining file badfile.txt\n");
         return;
     }
 
+    // Opens file for storing oldspeak and newspeak
+    // Stops if opening failed
     rightfile = fopen("rightfile.txt", "w");
     if (rightfile == NULL) {
         printf("error openining file rightfile.txt\n");
         return;
     }
 
+    // Initializes variable for tracking number of badspeak
     int bad_count = 0;
+
+    // Initializes variable for tracking number of old/newspeak
     int right_count = 0;
+
+    // Creates variable to store characters (the word)
+    char *word = NULL;
+
+    // Loops while end of user statement not reached
+    // Calls next_word() in parser.h to check each word
     while ((word = next_word(stdin, &re)) != NULL) {
-        printf("word return %s\n", word);
+        // Checks if word is in bloom filter
+        // If word is not in bloom filter, continues looping
         if (bf_probe(bf, word) == false) {
             continue;
         }
+
+        // Word is in bloom filter at this point
+        // Checks if word is in hash table to confirm
+        // Stores pointer of word or NULL in ht_node
         Node *ht_node = ht_lookup(ht, word);
+
+        // If returned node is NULL, word is not in hash table
+        // Indicates false positive from bloom filter and continues looping
         if (ht_node == NULL) {
             continue;
         }
-        printf("found guilty\n");
-        node_print(ht_node);
 
+        // Word is definitely a forbidden word at this point
+
+        // Checks if word does not have a newspeak translation
+        // If so, it is a badspeak word
         if (ht_node->newspeak == NULL) {
+            // Increments badspeak counter by one
             bad_count++;
+
+            // Stores oldspeak (forbidden word) into file of badspeak
             fprintf(badfile, "%s\n", ht_node->oldspeak);
+
+            // Word must have a newspeak translation
         } else {
+            // Increments rightspeak counter by one
             right_count++;
+
+            // Stores oldspeak and newspeak into file of rightspeak
             fprintf(rightfile, "%s -> %s\n", ht_node->oldspeak, ht_node->newspeak);
         }
     }
 
-    printf("closing file\n");
+    // Closes files (not needed anymore)
     fclose(badfile);
     fclose(rightfile);
 
-    //printf("bad %d   right %d\n", bad_count, right_count);
-
+    // User used both badspeak and old/newspeak
     if (bad_count != 0 && right_count != 0) {
+        // Prints mispeak message from messages.h
         printf("%s", mixspeak_message);
+
+        // Prints list of badspeak used
         print_file("badfile.txt");
+
+        // Prints list of oldspeak used with newspeak translation
         print_file("rightfile.txt");
     }
 
+    // User used only badspeak
     else if (bad_count != 0 && right_count == 0) {
+        // Prints badspeak message from messages.h
         printf("%s", badspeak_message);
+
+        // Prints list of badspeak used
         print_file("badfile.txt");
     }
 
+    // User used only old/newspeak
     else if (bad_count == 0 && right_count != 0) {
+        // Prints goodspeak message from messages.h
         printf("%s", goodspeak_message);
+
+        // Prints list of oldspeak used with newspeak translation
         print_file("rightfile.txt");
     }
 }
 
+// Main function
 int main(int argc, char **argv) {
-
-#if 0
-    uint32_t height;
-    uint32_t size;
-    Node *root = bst_create();
-    height = bst_height(root);
-    size = bst_size(root);
-    printf("height = %u   size = %u\n", height, size);
-    bst_print(root);
-    root = bst_insert(root, "mmmm", "new");
-    bst_insert(root, "aaaa", "another1");
-    bst_insert(root, "ooo", "cat");
-    bst_insert(root, "pp", NULL);
-
-    height = bst_height(root);
-    size = bst_size(root);
-    printf("height = %u   size = %u\n", height, size);
-    bst_print(root);
-
-    Node *find = bst_create();
-    find = bst_find(root, "ooo");
-    bst_print(find);
-
-    return 0;
-#endif
-
+    // Variable for parsing options
     int opt = 0;
+
+    // Default hash table size
     uint32_t ht_size = 1 << 16;
+
+    // Default bloom filter size
     uint32_t bf_size = 1 << 20;
+
+    // Flag for statistics option
     bool stat_flag = false;
+
+    // File pointer for opening files
     FILE *file;
+
+    //
     char old[MAXLEN];
     char new[MAXLEN];
 
     // Parses through command line arguments
     while ((opt = getopt(argc, argv, OPTIONS)) != -1) {
         switch (opt) {
+
+        // Prints help message
         case 'h':
             printf("SYNOPSIS\n  A word filtering program for the GPRSC.\n");
             printf("  Filters out and reports bad words parsed from stdin.\n\n");
@@ -162,8 +201,14 @@ int main(int argc, char **argv) {
             printf("  -t size      Specify hash table size (default: 10000).\n");
             printf("  -f size      Specify Bloom filter size (default: 2^20).\n");
             break;
+
+        // Enables statistics printing option
         case 's': stat_flag = true; break;
+
+        // Uses user hash table size
         case 't': ht_size = atoi(optarg); break;
+
+        // Uses user bloom filter size
         case 'f': bf_size = atoi(optarg); break;
         }
     }
@@ -174,7 +219,7 @@ int main(int argc, char **argv) {
     // Initializes hash table
     HashTable *ht = ht_create(ht_size);
 
-    // Opens badspeak.txt
+    // Opens badspeak.txt for reading
     file = fopen(BADSPEAK_FILE, "r");
 
     // Exits if unable to open badspeak.txt
@@ -183,44 +228,18 @@ int main(int argc, char **argv) {
         return -1;
     }
 
-    //int wordcount = 0;
-    //printf("bf count %d\n", bf_count(bf));
-
-    // Scans until end of badspeak.txt
+    // Loops until end of badspeak.txt
     while (1) {
-        //wordcount++;
-
         // Breaks if EOF reached
         int count = fscanf(file, "%s\n", old);
         if (count <= 0) {
             break;
         }
 
-        //printf("%d %s\n", wordcount, word);
-
         // Inserts oldspeak into bloom filter and hash table
         bf_insert(bf, old);
         ht_insert(ht, old, NULL);
     }
-
-#if 0
-    //printf("bf count after %d\n", bf_count(bf));
-    //test_bf(bf, "teresa");
-    //test_bf(bf, "joseph");
-    //test_bf(bf, "misleader");
-
-    //bf_print(bf);
-    //ht_print(ht);
-
-    ht_insert(ht, "tj", "kkkk");
-    Node *node = ht_lookup(ht, "tj");
-    if (node == NULL) {
-        printf("lookup failed\n");
-    } else {
-        printf("lookup success %s\n", node->oldspeak);
-        printf("lookup success %s\n", node->newspeak);
-    }
-#endif
 
     // Closes badspeak.txt
     fclose(file);
@@ -234,19 +253,13 @@ int main(int argc, char **argv) {
         return -1;
     }
 
-    //wordcount = 0;
-
     // Scans until end of newspeak.txt
     while (1) {
-        //wordcount++;
-
         // Breaks if EOF reached
-        int count = fscanf(file, "%s %s\n", old, new); // scan badspeak
+        int count = fscanf(file, "%s %s\n", old, new);
         if (count <= 0) {
             break;
         }
-
-        //printf("%d %s %s\n", wordcount, old, new);
 
         // Inserts oldspeak into bloom filter
         bf_insert(bf, old);
@@ -258,38 +271,8 @@ int main(int argc, char **argv) {
     // Closes newspeak.txt
     fclose(file);
 
+    // Calls function to create necessary message
     create_report(bf, ht);
-
-#if 0
-
-    regex_t re;
-
-    if (regcomp(&re, WORD, REG_EXTENDED)){
-    	printf("failed to compile\n");
-	return -1;
-    }
-
-    create_report(bf, ht);
-
-    char *word = NULL;
-
-    while((word = next_word(stdin, &re)) != NULL){
-	printf("word return %s\n", word);
-    	if (bf_probe(bf, word) == false){
-		continue;
-	}
-	Node *ht_node = ht_lookup(ht, word);
-	if (ht_node == NULL){
-		continue;
-	}
-	printf("found guilty\n");
-	node_print(ht_node);
-
-	if (ht_node->newspeak == NULL){
-		printf("no newspeak\n");
-	}
-    }
-#endif
 
     // Checks if -s was enabled
     if (stat_flag) {
