@@ -26,9 +26,6 @@ Files:
 - newspeak.txt specifies the list of oldspeak terms with their newspeak translations
 - Makefile contains information for compiling, formatting, and removing object files and executables
 - README.md describes program and Makefile
-- DESIGN.pdf includes design/design process, pseudocode, and explanations
-- WRITEUP.pdf includes graphs and analyses
-
 
 Command Line Arguments (for banhammer):
 - -h : displays program synopsis and usage
@@ -37,8 +34,8 @@ Command Line Arguments (for banhammer):
 - -f: specifies size of bloom filter (default: 2^20)
 
 Assistance:
-- Watched both of Eugene’s recorded sections on YuJa multiple times (learned about the assignment overall/what we are expected to do, how the parsing module works, what the bloom filter and hash table should do, got ideas on what the regex pattern should look like, what average branches traversed is, how to scan in the different character formats, how to approach the WRITEUP questions, and followed some of his pseudocode (described in more detail below))
-- Attended Brian’s office hours (cleared up a question I had on salt array indices and setting up ht_create() and bf_create())
+- Watched both of TA Eugene’s recorded sections on YuJa multiple times (learned about the assignment overall/what we are expected to do, how the parsing module works, what the bloom filter and hash table should do, got ideas on what the regex pattern should look like, what average branches traversed is, how to scan in the different character formats, how to approach the WRITEUP questions, and followed some of his pseudocode (described in more detail below))
+- Attended TA Brian’s office hours (cleared up a question I had on salt array indices and setting up ht_create() and bf_create())
 - Referred to class discussions on ED (especially on what ht_delete() should do, which regex words are valid, and how to print the correct statistics)
 - Referred to lecture slides #18 and #26 on binary search trees and regular expression respectively (described in more detail below)
 - Referred to this website https://user-web.icecube.wisc.edu/~dglo/c_class/stdio.html like I did in the previous assignment to read about fgets()
