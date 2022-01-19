@@ -1,7 +1,6 @@
 # CSE13S Repo
 
-Repo to hold Computer Systems and C Programming work.
-September 2021 - December 2021
+Repo to hold Computer Systems and C Programming work (September 2021 - December 2021)
 
 
 
