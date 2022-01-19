@@ -23,7 +23,6 @@ Files:
 - huffman.h contains the Huffman ADT interface
 - Makefile contains information for compiling, formatting, and removing .o files and executables
 - README.md describes program and Makefile
-- DESIGN.pdf includes design/design process, pseudocode, and explanations
 
 Command Line Arguments (for both encode and decode):
 - h: prints help message describing what it is, what the purpose is, and which the command-line options it accepts
@@ -37,9 +36,9 @@ Command Line Arguments (for both encode and decode):
     - will be compressed in encode and decompressed in decode
 
 Assistance:
-- Watch both of Eugene’s recorded sections on YuJa (learned about the assignment overall, the process for encode.c and decode.c, and how to complete io.c functions)
-- Watched part of Chrtisian’s recorded section on YuJa (got ideas on how to implement pq.c and node.c)
-- Attended Brian’s section on October 29 and November 5 (learned enqueuing and dequeuing in more detail and got ideas on how to use byte and bit indices in code.c)
+- Watch both of TA Eugene’s recorded sections on YuJa (learned about the assignment overall, the process for encode.c and decode.c, and how to complete io.c functions)
+- Watched part of TA Chrtisian’s recorded section on YuJa (got ideas on how to implement pq.c and node.c)
+- Attended TA Brian’s section on October 29 and November 5 (learned enqueuing and dequeuing in more detail and got ideas on how to use byte and bit indices in code.c)
 - Learned about reading and writing files from my dad who taught me ways that I could implement it in encode.c and decode.c (specifically using lseek(), O_RDONLY, O_RDWR, and O_CREAT)
 - Referred to my assignment four files, especially for reading/writing files and completing stack.c as they were similar to what I needed to do here
 - Consulted portions of chapters 6, 7, and 8 of the textbook The C Programming Language
