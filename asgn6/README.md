@@ -16,7 +16,6 @@ Files:
 - decrypt.c contains the implementation and main() function for the decrypt program
 - Makefile contains information for compiling, formatting, and removing object files and executables
 - README.md describes program and Makefile
-- DESIGN.pdf includes design/design process, pseudocode, and explanations
 
 Command Line Arguments (for keygen):
 - -b : specifies the minimum bits needed for the public modulus n 
@@ -51,8 +50,8 @@ Assistance:
 
 - Read about stdin and stdout at https://user-web.icecube.wisc.edu/~dglo/c_class/stdio.html
 - Rewatched class lecture on cryptography and looked over lecture slides
-- Watch both of Eugene’s recorded sections on YuJa (learned about the assignment overall, how encryption and decryption work, how to write r as an odd number in Miller-Rabin, and how to go about doing rsa.c)
-- Watched Christian’s recorded section on YuJa (learned to navigate the gmp library and about the different kinds of variables and ways to complete arithmetic operations)
+- Watch both of TA Eugene’s recorded sections on YuJa (learned about the assignment overall, how encryption and decryption work, how to write r as an odd number in Miller-Rabin, and how to go about doing rsa.c)
+- Watched TA Christian’s recorded section on YuJa (learned to navigate the gmp library and about the different kinds of variables and ways to complete arithmetic operations)
 - Learned about what UNIX epoch time is and how it works from my dad
 - Referred to my assignment five and four files, especially for reading/writing files and setting default files as they were similar to what I needed to do here for this assignment
 - Referred to class discussions on ed (especially on when to call rsa_decrypt and how to debug certain issues)
