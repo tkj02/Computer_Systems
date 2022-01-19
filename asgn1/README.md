@@ -8,12 +8,11 @@ Files:
 - pig.c           Contains code and comments
 - names.h         Contains names array that is used in pig.c
 - Makefile        Contains information for compiling, formatting, and removing pig and pig.o
-- DESIGN.pdf      Contains game breakdown, pseudocode, explanations, and a diagram
 - README.md       Contains summary of this assignment
 
 Assistance:
-- Attended Eugene’s section on September 28 (learned to use Makefile and srandom()/random())
-- Attended Sloan’s office hours on October 1 (noticed a flaw in my pig rolling loops and suggested that I restructure my outermost loop)
+- Attended TA Eugene’s section on September 28 (learned to use Makefile and srandom()/random())
+- Attended TA Sloan’s office hours on October 1 (noticed a flaw in my pig rolling loops and suggested that I restructure my outermost loop)
 - Read chapter three of The C Programming Language by Kernighan & Ritchie (learned about loops and conditions)
 
 There are no known bugs/errors according to scan-build, and the program outputs the correct content and format in comparison to the example pig file under resources.
