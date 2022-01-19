@@ -31,10 +31,6 @@ Files:
         - Implements and specifies the interface for set usage
 - Makefile
         - Contains information for compiling, formatting, and removing .o files and executables
-- DESIGN.pdf
-        - Contains a detailed explanation of the files, all pseudocode, and notes
-- WRITEUP.pdf
-        - Contains outputs and graphs comparing the algorithms to each other
 - README.md
         - Contains a summary of this assignment
 
@@ -59,9 +55,9 @@ Command Line Options:
 > print program usage
 
 Assistance:
-- Watched Eugene’s recorded section on YuJa (learned about the assignment overall and how the algorithms work)
-- Watched Chrtisian’s recorded section on YuJa (learned to set up sorting.c and how to use set (insert_set and member_set especially))
-- Attended Brian’s section on October 15 (learned about gaps, malloc, and bit masking)
+- Watched TA Eugene’s recorded section on YuJa (learned about the assignment overall and how the algorithms work)
+- Watched TA Chrtisian’s recorded section on YuJa (learned to set up sorting.c and how to use set (insert_set and member_set especially))
+- Attended TA Brian’s section on October 15 (learned about gaps, malloc, and bit masking)
 - Learned more about malloc and received tips on how to implement gaps in heap.c from my dad
 
 Citations:
