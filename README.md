@@ -2,14 +2,12 @@
 
 Repo to hold Computer Systems and C Programming work (September 2021 - December 2021)
 
+    asgn1: Dice Game
 
+    asgn3: Sorting Algorithms
 
-asgn1: Dice Game
+    asgn5: Huffman Coding
 
-asgn3: Sorting Algorithms
+    asgn6: Public Key Encryption
 
-asgn5: Huffman Coding
-
-asgn6: Public Key Encryption
-
-asgn7: Hash Tables and Bloom Filters
+    asgn7: Hash Tables and Bloom Filters
